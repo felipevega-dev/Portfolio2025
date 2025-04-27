@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { ReactNode } from 'react'
+import StarField from '../effects/StarField'
 
 interface FloatingElementProps {
   children: ReactNode
@@ -11,9 +12,10 @@ const FloatingElement = ({ children, delay = 0 }: FloatingElementProps) => (
   <motion.div
     animate={{
       y: [0, -10, 0],
+      rotate: [0, 5, -5, 0],
     }}
     transition={{
-      duration: 4,
+      duration: 6,
       repeat: Infinity,
       repeatType: "reverse",
       ease: "easeInOut",
@@ -65,22 +67,30 @@ const Hero = () => {
   }
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center bg-white dark:bg-gray-900">
+    <section id="hero" className="relative min-h-screen flex items-center bg-white dark:bg-gray-900 overflow-hidden">
+      <StarField />
+
       {/* Background Number */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[20vw] font-bold text-gray-100 dark:text-gray-800 select-none">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[20vw] font-bold text-gray-100 dark:text-gray-800/50 select-none">
         01
       </div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <FloatingElement delay={0}>
-          <div className="absolute top-20 left-[20%] w-2 h-2 bg-purple-500 rounded-full" />
+          <div className="absolute top-20 left-[20%] w-3 h-3 bg-purple-500/30 dark:bg-purple-500/50 rounded-full blur-[1px]" />
         </FloatingElement>
         <FloatingElement delay={1}>
-          <div className="absolute top-40 right-[30%] w-2 h-2 bg-indigo-500 rounded-full" />
+          <div className="absolute top-40 right-[30%] w-3 h-3 bg-indigo-500/30 dark:bg-indigo-500/50 rounded-full blur-[1px]" />
         </FloatingElement>
         <FloatingElement delay={2}>
-          <div className="absolute bottom-32 left-[40%] w-2 h-2 bg-pink-500 rounded-full" />
+          <div className="absolute bottom-32 left-[40%] w-3 h-3 bg-pink-500/30 dark:bg-pink-500/50 rounded-full blur-[1px]" />
+        </FloatingElement>
+        <FloatingElement delay={3}>
+          <div className="absolute top-60 left-[60%] w-2 h-2 bg-blue-500/30 dark:bg-blue-500/50 rounded-full blur-[1px]" />
+        </FloatingElement>
+        <FloatingElement delay={4}>
+          <div className="absolute bottom-40 right-[25%] w-2 h-2 bg-violet-500/30 dark:bg-violet-500/50 rounded-full blur-[1px]" />
         </FloatingElement>
       </div>
 

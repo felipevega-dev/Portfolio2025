@@ -6,12 +6,14 @@ import Hero from './components/sections/Hero'
 import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
 import Contact from './components/sections/Contact'
+import MouseEffect from './components/effects/MouseEffect'
 import './i18n/config'
 
 // Layout component to wrap the main content
 const Layout = () => {
   return (
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+      <MouseEffect />
       <Header />
       <main>
         <Hero />
