@@ -5,6 +5,8 @@ import Header from './components/layout/Header'
 import Hero from './components/sections/Hero'
 import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
+import Technologies from './components/sections/Technologies'
+import Services from './components/sections/Services'
 import Contact from './components/sections/Contact'
 import MouseEffect from './components/effects/MouseEffect'
 import './i18n/config'
@@ -18,6 +20,7 @@ const Layout = () => {
       <main>
         <Hero />
         <Skills />
+        <Technologies />
         <Projects />
         <Contact />
       </main>

@@ -88,7 +88,7 @@ const Header = () => {
                 className="flex items-center space-x-1 p-1 rounded-full bg-gray-100 dark:bg-gray-800"
               >
                 <motion.button
-                  onClick={() => i18n.changeLanguage('es')}
+                  onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en')}
                   className={`px-2 py-1 rounded-full transition-all ${
                     i18n.language === 'es' 
                       ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm' 
@@ -100,7 +100,7 @@ const Header = () => {
                   ES
                 </motion.button>
                 <motion.button
-                  onClick={() => i18n.changeLanguage('en')}
+                  onClick={() => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es')}
                   className={`px-2 py-1 rounded-full transition-all ${
                     i18n.language === 'en'
                       ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
@@ -186,7 +186,7 @@ const Header = () => {
               className="flex items-center space-x-1 p-1 rounded-full bg-gray-100 dark:bg-gray-800"
             >
               <motion.button
-                onClick={() => i18n.changeLanguage('es')}
+                onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en')}
                 className={`px-2 py-1 rounded-full transition-all ${
                   i18n.language === 'es' 
                     ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm' 
@@ -198,7 +198,7 @@ const Header = () => {
                 ES
               </motion.button>
               <motion.button
-                onClick={() => i18n.changeLanguage('en')}
+                onClick={() => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es')}
                 className={`px-2 py-1 rounded-full transition-all ${
                   i18n.language === 'en'
                     ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
