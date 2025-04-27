@@ -31,7 +31,7 @@ const MouseEffect = () => {
         <>
           {/* Main cursor */}
           <motion.div
-            className="fixed pointer-events-none z-50 mix-blend-difference"
+            className="fixed pointer-events-none z-[100] mix-blend-difference"
             animate={{
               x: mousePosition.x - 4,
               y: mousePosition.y - 4,
@@ -55,7 +55,7 @@ const MouseEffect = () => {
           
           {/* Outer ring */}
           <motion.div
-            className="fixed pointer-events-none z-50 mix-blend-difference"
+            className="fixed pointer-events-none z-[100] mix-blend-difference"
             animate={{
               x: mousePosition.x - 16,
               y: mousePosition.y - 16,
@@ -74,7 +74,7 @@ const MouseEffect = () => {
               height: "32px",
             }}
           >
-            <div className="w-full h-full border border-white rounded-full opacity-50" />
+            <div className="w-full h-full border-2 border-white rounded-full opacity-75" />
           </motion.div>
         </>
       )}
