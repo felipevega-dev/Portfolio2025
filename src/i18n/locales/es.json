@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "projects": "Proyectos",
+    "resume": "Curriculum"
+  },
+  "hero": {
+    "greeting": "Hola, Soy",
+    "role": "Desarrollador de Software",
+    "description": "Especializado en el desarrollo de aplicaciones web y móviles. Combino creatividad y experiencia técnica para crear soluciones digitales elegantes y funcionales, utilizando las últimas tecnologías y mejores prácticas de la industria.",
+    "downloadCV": "Descargar CV",
+    "contact": "Contáctame"
+  },
+  "stats": {
+    "experience": "Años de experiencia",
+    "projects": "Proyectos Completados",
+    "technologies": "Tecnologías masterizadas"
+  },
+  "projects": {
+    "title": "Proyectos Destacados",
+    "description": "Una selección de mis trabajos más recientes y significativos. Cada proyecto representa un desafío único y una oportunidad para aprender y crecer.",
+    "viewDemo": "Ver Demo",
+    "viewCode": "Ver Código"
+  },
+  "skills": {
+    "title": "Habilidades y Servicios",
+    "description": "Ofrezco soluciones completas de desarrollo, desde el frontend hasta el backend, utilizando las tecnologías más modernas y eficientes del mercado."
+  }
+} 

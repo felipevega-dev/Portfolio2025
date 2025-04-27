@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "projects": "Projects",
+    "resume": "Resume"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "role": "Software Developer",
+    "description": "Specialized in web and mobile application development. I combine creativity and technical expertise to create elegant and functional digital solutions, using the latest technologies and industry best practices.",
+    "downloadCV": "Download CV",
+    "contact": "Contact Me"
+  },
+  "stats": {
+    "experience": "Years of Experience",
+    "projects": "Completed Projects",
+    "technologies": "Mastered Technologies"
+  },
+  "projects": {
+    "title": "Featured Projects",
+    "description": "A selection of my most recent and meaningful work. Each project represents a unique challenge and an opportunity to learn and grow.",
+    "viewDemo": "View Demo",
+    "viewCode": "View Code"
+  },
+  "skills": {
+    "title": "Skills & Services",
+    "description": "I offer comprehensive development solutions, from frontend to backend, using the most modern and efficient technologies in the market."
+  }
+} 
