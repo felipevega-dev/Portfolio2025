@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
@@ -14,9 +13,9 @@ interface Project {
 const projects: Project[] = [
   {
     id: 'project1',
-    title: 'Project 1',
-    description: 'Short description',
-    image: '/projects/project1.jpg',
+    title: 'Portfolio 2024',
+    description: 'Portfolio 2024',
+    image: '/images/projects/portfolio.png',
     technologies: ['React', 'Node.js', 'MongoDB']
   },
   // Aquí puedes agregar más proyectos
