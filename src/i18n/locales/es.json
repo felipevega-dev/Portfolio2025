@@ -3,7 +3,8 @@
     "home": "Inicio",
     "services": "Servicios",
     "projects": "Proyectos",
-    "resume": "Curriculum"
+    "resume": "Curriculum",
+    "contact": "Contacto"
   },
   "hero": {
     "greeting": "Hola, Soy",
@@ -26,5 +27,25 @@
   "skills": {
     "title": "Habilidades y Servicios",
     "description": "Ofrezco soluciones completas de desarrollo, desde el frontend hasta el backend, utilizando las tecnologías más modernas y eficientes del mercado."
+  },
+  "contact": {
+    "title": "Contáctame",
+    "getInTouch": "Hablemos",
+    "description": "Siempre estoy interesado en escuchar sobre nuevos proyectos y oportunidades. ¡No dudes en contactarme!",
+    "connect": "Conéctate conmigo",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "message": "Mensaje",
+      "send": "Enviar mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado con éxito!",
+      "error": "Error al enviar el mensaje. Por favor, intenta de nuevo."
+    },
+    "location": {
+      "title": "Ubicación",
+      "based": "Basado en Santiago, Chile",
+      "remote": "Disponible para trabajo remoto"
+    }
   }
 } 

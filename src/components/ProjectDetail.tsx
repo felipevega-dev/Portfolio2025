@@ -18,17 +18,21 @@ interface Project {
 const projects: Record<string, Project> = {
   project1: {
     id: 'project1',
-    title: 'Project 1',
+    title: 'Portfolio 2024',
     description: 'Short description',
-    fullDescription: 'Full detailed description of the project...',
+    fullDescription: 'This is my portfolio from 2024, it was my first portfolio and I made it with NextJS, TailwindCSS, React and Typescript. I made it to show my skills and projects.',
     image: '/projects/project1.jpg',
-    technologies: ['React', 'Node.js', 'MongoDB'],
+    technologies: ['NextJS', 'TailwindCSS', 'React', 'Typescript'],
     features: [
-      'Feature 1 description',
-      'Feature 2 description',
-      'Feature 3 description',
+      'Responsive design',
+      'Typescript',
+      'NextJS',
+      'TailwindCSS',
+      'React',
+      'Framer Motion',
+      'React Hook Form',
     ],
-    demoUrl: 'https://demo.com',
+    demoUrl: 'https://portfolio-felipevega.vercel.app/',
     githubUrl: 'https://github.com/user/repo',
     screenshots: [
       '/projects/project1/screenshot1.jpg',

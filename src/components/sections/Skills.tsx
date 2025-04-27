@@ -8,28 +8,28 @@ const skills = [
     iconDark: '/icons/front-light.png',
     title: 'Frontend Development',
     description: 'Desarrollo de interfaces modernas y responsivas con las últimas tecnologías web.',
-    technologies: ['React', 'TypeScript', 'Next.js', 'TailwindCSS', 'Framer Motion']
+    technologies: ['React', 'TypeScript', 'Next.js', 'TailwindCSS', 'Wordpress']
   },
   {
     iconLight: '/icons/backend.png',
     iconDark: '/icons/backend-light.png',
     title: 'Backend Development',
     description: 'Construcción de APIs robustas y escalables con arquitecturas modernas.',
-    technologies: ['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'REST', 'GraphQL']
+    technologies: ['Node.js', 'PostgreSQL', 'MongoDB', 'REST', 'PHP', 'Laravel']
   },
   {
     iconLight: '/icons/mobile.png',
     iconDark: '/icons/mobile-light.png',
     title: 'Mobile Development',
     description: 'Desarrollo de aplicaciones móviles multiplataforma con tecnologías web.',
-    technologies: ['React Native', 'Expo', 'Firebase', 'Redux']
+    technologies: ['React Native', 'Expo', 'Ionic']
   },
   {
     iconLight: '/icons/tools.png',
     iconDark: '/icons/tools-light.png',
     title: 'Development Tools',
     description: 'Uso de herramientas modernas para optimizar el flujo de desarrollo.',
-    technologies: ['Git', 'Docker', 'AWS', 'CI/CD', 'Jest', 'Cypress']
+    technologies: ['Git', 'Docker', 'AWS', 'CI/CD', 'Firebase']
   }
 ]
 
