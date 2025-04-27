@@ -1,5 +1,49 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { ReactNode } from 'react'
+
+interface FloatingElementProps {
+  children: ReactNode
+  delay?: number
+}
+
+const FloatingElement = ({ children, delay = 0 }: FloatingElementProps) => (
+  <motion.div
+    animate={{
+      y: [0, -10, 0],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      repeatType: "reverse",
+      ease: "easeInOut",
+      delay,
+    }}
+  >
+    {children}
+  </motion.div>
+)
+
+const smoothScrollTo = (elementId: string) => {
+  const element = document.getElementById(elementId)
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
+}
+
+const NavLink = ({ href, children }: { href: string, children: ReactNode }) => (
+  <motion.button
+    onClick={() => smoothScrollTo(href.slice(1))}
+    className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors"
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+  >
+    {children}
+  </motion.button>
+)
 
 const Hero = () => {
   const { t } = useTranslation()
@@ -21,11 +65,48 @@ const Hero = () => {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="absolute inset-0 grid grid-cols-6 gap-2 opacity-5 dark:opacity-10 pointer-events-none">
-        {[...Array(24)].map((_, i) => (
-          <div key={i} className="h-full w-full border-r border-gray-200 dark:border-gray-700" />
-        ))}
+    <section className="relative min-h-screen flex items-center bg-white dark:bg-gray-900">
+      {/* Navigation */}
+      <motion.nav 
+        className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <motion.span 
+              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
+              whileHover={{ scale: 1.05 }}
+            >
+              Felipe.
+            </motion.span>
+            <div className="flex gap-8">
+              <NavLink href="#services">{t('nav.services')}</NavLink>
+              <NavLink href="#skills">{t('nav.skills')}</NavLink>
+              <NavLink href="#projects">{t('nav.projects')}</NavLink>
+              <NavLink href="#contact">{t('nav.contact')}</NavLink>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Background Number */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[20vw] font-bold text-gray-100 dark:text-gray-800 select-none">
+        01
+      </div>
+
+      {/* Floating Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <FloatingElement delay={0}>
+          <div className="absolute top-20 left-[20%] w-2 h-2 bg-purple-500 rounded-full" />
+        </FloatingElement>
+        <FloatingElement delay={1}>
+          <div className="absolute top-40 right-[30%] w-2 h-2 bg-indigo-500 rounded-full" />
+        </FloatingElement>
+        <FloatingElement delay={2}>
+          <div className="absolute bottom-32 left-[40%] w-2 h-2 bg-pink-500 rounded-full" />
+        </FloatingElement>
       </div>
 
       <motion.div 
@@ -34,78 +115,113 @@ const Hero = () => {
         initial="hidden"
         animate="visible"
       >
-        <div className="max-w-4xl">
-          <motion.p 
-            variants={itemVariants}
-            className="text-lg text-indigo-600 dark:text-indigo-400 font-medium mb-4"
-          >
-            {t('hero.welcome')}
-          </motion.p>
+        <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+          <div className="max-w-2xl">
+            <motion.div variants={itemVariants} className="mb-8">
+              <span className="text-lg font-mono text-indigo-600 dark:text-indigo-400">
+                {t('hero.welcome')} 
+                <span className="inline-block w-12 h-[1px] ml-2 bg-indigo-600 dark:bg-indigo-400 align-middle" />
+              </span>
+            </motion.div>
 
-          <motion.h1 
-            variants={itemVariants}
-            className="text-5xl md:text-7xl font-bold mb-6"
-          >
-            {t('hero.greeting')}{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
-              Felipe Vega
-            </span>
-          </motion.h1>
-
-          <motion.h2 
-            variants={itemVariants}
-            className="text-2xl md:text-3xl text-gray-600 dark:text-gray-300 font-medium mb-8"
-          >
-            {t('hero.role')}
-          </motion.h2>
-
-          <motion.p 
-            variants={itemVariants}
-            className="text-lg text-gray-600 dark:text-gray-400 mb-12 max-w-2xl"
-          >
-            {t('hero.description')}
-          </motion.p>
-
-          <motion.div 
-            variants={itemVariants}
-            className="flex gap-4"
-          >
-            <motion.a
-              href="/CV-FelipeVega.pdf"
-              className="px-8 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              download
+            <motion.h1 
+              variants={itemVariants}
+              className="text-6xl md:text-7xl font-bold mb-4 leading-tight"
             >
-              {t('hero.downloadCV')}
-            </motion.a>
-            
-            <motion.a
-              href="#contact"
-              className="px-8 py-3 border-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors duration-200"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {t('hero.contact')}
-            </motion.a>
-          </motion.div>
+              Hola, Soy{' '}
+              <div className="mt-2">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
+                  Felipe
+                </span>{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600">
+                  Vega
+                </span>
+              </div>
+            </motion.h1>
 
+            <motion.h2 
+              variants={itemVariants}
+              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-medium mb-6"
+            >
+              {t('hero.role')}
+            </motion.h2>
+
+            <motion.p 
+              variants={itemVariants}
+              className="text-lg text-gray-600 dark:text-gray-400 mb-12 leading-relaxed"
+            >
+              {t('hero.description')}
+            </motion.p>
+
+            <motion.div 
+              variants={itemVariants}
+              className="flex flex-wrap gap-4"
+            >
+              <motion.a
+                href="/CV-FelipeVega.pdf"
+                className="group relative px-8 py-3 text-white bg-indigo-600 rounded-lg overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                download
+              >
+                <span className="relative z-10">{t('hero.downloadCV')}</span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600"
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.a>
+              
+              <motion.button
+                onClick={() => smoothScrollTo('contact')}
+                className="relative px-8 py-3 text-indigo-600 dark:text-indigo-400 rounded-lg overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="relative z-10">{t('hero.contact')}</span>
+                <div className="absolute inset-0 border-2 border-indigo-600 dark:border-indigo-400 rounded-lg" />
+              </motion.button>
+            </motion.div>
+          </div>
+
+          {/* Photo Section */}
           <motion.div
             variants={itemVariants}
-            className="mt-16 flex items-center gap-8"
+            className="relative w-full max-w-[400px] aspect-square mx-auto lg:ml-auto order-first lg:order-last"
           >
-            <div className="flex items-center gap-2">
-              <span className="text-4xl font-bold text-indigo-600">5+</span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">Years of<br/>Experience</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-4xl font-bold text-indigo-600">50+</span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">Projects<br/>Completed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-4xl font-bold text-indigo-600">10+</span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">Technologies<br/>Mastered</span>
-            </div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 blur-2xl opacity-30 dark:opacity-40" />
+            <motion.div 
+              className="relative h-full rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 p-1"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img
+                src="/images/profile.png"
+                alt="Felipe Vega"
+                className="w-full h-full object-cover rounded-full bg-gray-100 dark:bg-gray-800"
+              />
+            </motion.div>
+
+            {/* Tech Tags */}
+            <motion.div
+              className="absolute -left-4 top-8 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.1, x: 10 }}
+            >
+              <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400">developer</span>
+            </motion.div>
+            <motion.div
+              className="absolute -right-4 top-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.1, x: -10 }}
+            >
+              <span className="font-mono text-sm text-purple-600 dark:text-purple-400">designer</span>
+            </motion.div>
+            <motion.div
+              className="absolute -left-4 bottom-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.1, x: 10 }}
+            >
+              <span className="font-mono text-sm text-pink-600 dark:text-pink-400">creative</span>
+            </motion.div>
           </motion.div>
         </div>
       </motion.div>
