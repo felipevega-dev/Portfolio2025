@@ -1,9 +1,9 @@
 {
   "nav": {
     "home": "Home",
-    "services": "Services",
+    "welcome": "Welcome",
+    "skills": "Skills & Services",
     "projects": "Projects",
-    "resume": "Resume",
     "contact": "Contact"
   },
   "hero": {

@@ -65,32 +65,7 @@ const Hero = () => {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center bg-white dark:bg-gray-900">
-      {/* Navigation */}
-      <motion.nav 
-        className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <motion.span 
-              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
-              whileHover={{ scale: 1.05 }}
-            >
-              Felipe.
-            </motion.span>
-            <div className="flex gap-8">
-              <NavLink href="#services">{t('nav.services')}</NavLink>
-              <NavLink href="#skills">{t('nav.skills')}</NavLink>
-              <NavLink href="#projects">{t('nav.projects')}</NavLink>
-              <NavLink href="#contact">{t('nav.contact')}</NavLink>
-            </div>
-          </div>
-        </div>
-      </motion.nav>
-
+    <section id="hero" className="relative min-h-screen flex items-center bg-white dark:bg-gray-900">
       {/* Background Number */}
       <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[20vw] font-bold text-gray-100 dark:text-gray-800 select-none">
         01
@@ -117,7 +92,7 @@ const Hero = () => {
       >
         <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
           <div className="max-w-2xl">
-            <motion.div variants={itemVariants} className="mb-8">
+            <motion.div variants={itemVariants} className="mb-8 relative z-10">
               <span className="text-lg font-mono text-indigo-600 dark:text-indigo-400">
                 {t('hero.welcome')} 
                 <span className="inline-block w-12 h-[1px] ml-2 bg-indigo-600 dark:bg-indigo-400 align-middle" />

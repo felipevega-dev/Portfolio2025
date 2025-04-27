@@ -6,8 +6,6 @@ import Hero from './components/sections/Hero'
 import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
 import Contact from './components/sections/Contact'
-import ThemeToggle from './components/ThemeToggle'
-import LanguageToggle from './components/LanguageToggle'
 import './i18n/config'
 
 // Layout component to wrap the main content
@@ -21,8 +19,6 @@ const Layout = () => {
         <Projects />
         <Contact />
       </main>
-      <ThemeToggle />
-      <LanguageToggle />
     </div>
   )
 }

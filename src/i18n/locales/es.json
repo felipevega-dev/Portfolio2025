@@ -1,15 +1,15 @@
 {
   "nav": {
     "home": "Inicio",
-    "services": "Servicios",
+    "welcome": "Bienvenida",
+    "skills": "Habilidades y Servicios",
     "projects": "Proyectos",
-    "resume": "Curriculum",
     "contact": "Contacto"
   },
   "hero": {
     "greeting": "Hola, Soy",
     "role": "Desarrollador de Software",
-    "description": "Especializado en el desarrollo de aplicaciones web y móviles. Combino creatividad y experiencia técnica para crear soluciones digitales elegantes y funcionales, utilizando las últimas tecnologías y mejores prácticas de la industria.",
+    "description": "Especializado en el desarrollo de aplicaciones web y móviles. Combino creatividad y experiencia técnica para crear soluciones digitales elegantes y funcionales, utilizando las últimas tecnologías y mejores prácticas.",
     "downloadCV": "Descargar CV",
     "contact": "Contáctame"
   },
