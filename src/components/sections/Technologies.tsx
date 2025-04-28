@@ -1,6 +1,6 @@
-import { motion, useAnimation, Reorder } from 'framer-motion'
+import { motion, useAnimation, Reorder, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { 
   SiHtml5, SiCss3, SiJavascript, SiTypescript, 
   SiTailwindcss, SiReact, SiNodedotjs, SiNextdotjs, 
@@ -22,8 +22,82 @@ const Technologies = () => {
   const [hoveredTech, setHoveredTech] = useState<string | null>(null)
   const [showMessage, setShowMessage] = useState<string | null>(null)
   const [hoverTimer, setHoverTimer] = useState<number | null>(null)
+  const [isReordering, setIsReordering] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  
+  // Código Matrix - caracteres aleatorios
+  const matrixChars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01234567890123456789/*-+.?:;!@#$%^&*()_+=[]{}|<>";
+  
+  // Generar columnas de código para el fondo de Matrix
+  const [matrixColumns, setMatrixColumns] = useState<Array<{chars: string[], speed: number, color: string}>>([]);
+  
+  // Detectar si es dispositivo móvil
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check initially
+    checkIfMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+  
+  useEffect(() => {
+    // Crear columnas de códigos con caracteres aleatorios
+    const columns = [];
+    const numColumns = 30; // Número de columnas
+    
+    for (let i = 0; i < numColumns; i++) {
+      const numChars = 15 + Math.floor(Math.random() * 15); // 15-30 caracteres por columna
+      const chars = [];
+      
+      for (let j = 0; j < numChars; j++) {
+        chars.push(matrixChars.charAt(Math.floor(Math.random() * matrixChars.length)));
+      }
+      
+      // Colores tech variados pero discretos
+      const colors = [
+        'rgba(97, 218, 251, 0.7)', // React
+        'rgba(240, 219, 79, 0.7)',  // JS
+        'rgba(49, 120, 198, 0.7)',  // TS
+        'rgba(227, 79, 38, 0.7)',   // HTML
+        'rgba(21, 114, 182, 0.7)',  // CSS
+        'rgba(51, 153, 51, 0.7)',   // Node
+        'rgba(6, 182, 212, 0.7)',   // Tailwind
+      ];
+      
+      columns.push({
+        chars,
+        speed: 0.5 + Math.random() * 2, // Velocidad aleatoria
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+    
+    setMatrixColumns(columns);
+  }, []);
+
+  // Limpiar timers al desmontar
+  useEffect(() => {
+    return () => {
+      if (hoverTimer) window.clearTimeout(hoverTimer)
+    }
+  }, [hoverTimer])
 
   const handleMouseEnter = (techId: string) => {
+    // Cancelar cualquier timer previo
+    if (hoverTimer) {
+      window.clearTimeout(hoverTimer)
+    }
+    
+    // No mostrar tooltip si estamos reordenando
+    if (isReordering) return
+    
     const timer = window.setTimeout(() => {
       setHoveredTech(techId)
     }, 800) // Mostrar tooltip después de 800ms
@@ -33,15 +107,52 @@ const Technologies = () => {
   const handleMouseLeave = () => {
     if (hoverTimer) {
       window.clearTimeout(hoverTimer)
+      setHoverTimer(null)
     }
     setHoveredTech(null)
   }
 
   const handleClick = (tech: Technology) => {
-    if (hoveredTech === tech.id) {
+    if (hoveredTech === tech.id && !isReordering) {
       setShowMessage(tech.id)
-      setTimeout(() => setShowMessage(null), 8000) // Ocultar mensaje después de 5 segundos
+      setTimeout(() => setShowMessage(null), 8000) // Ocultar mensaje después de 8 segundos
     }
+  }
+
+  // Para móviles - toque largo
+  const handleTouchStart = (techId: string) => {
+    if (isMobile && !isReordering) {
+      const timer = window.setTimeout(() => {
+        setShowMessage(techId);
+        setTimeout(() => setShowMessage(null), 8000);
+      }, 800);
+      setHoverTimer(timer);
+    }
+  };
+  
+  const handleTouchEnd = () => {
+    if (hoverTimer) {
+      window.clearTimeout(hoverTimer);
+      setHoverTimer(null);
+    }
+  };
+
+  const handleDragStart = () => {
+    setIsReordering(true)
+    // Ocultar tooltip y mensaje durante el drag
+    setHoveredTech(null)
+    setShowMessage(null)
+    if (hoverTimer) {
+      window.clearTimeout(hoverTimer)
+      setHoverTimer(null)
+    }
+  }
+
+  const handleDragEnd = () => {
+    // Pequeño delay para evitar activar tooltips justo después de soltar
+    setTimeout(() => {
+      setIsReordering(false)
+    }, 500)
   }
 
   const [items, setItems] = useState<Technology[]>([
@@ -203,9 +314,23 @@ const Technologies = () => {
     }
   })
 
+  // Instrucciones para móviles
+  const MobileInstructions = () => (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="mb-8 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-sm text-center border border-blue-200 dark:border-blue-800"
+    >
+      <p className="mb-2 font-medium">✨ ¡Interactúa con tus tecnologías!</p>
+      <ul className="text-xs text-gray-600 dark:text-gray-300 flex flex-col gap-1">
+        <li>• Mantén pulsada una tecnología para conocer más sobre ella</li>
+        <li>• Arrastra las tecnologías para reorganizarlas a tu gusto</li>
+      </ul>
+    </motion.div>
+  );
+
   return (
     <section className="py-20 relative overflow-hidden">
-      {/* Fondo animado */}
       <div className="absolute inset-0 opacity-5">
         <motion.div
           className="absolute top-10 left-10 w-64 h-64 bg-gradient-to-r from-indigo-300 to-purple-300 rounded-full blur-3xl"
@@ -249,108 +374,134 @@ const Technologies = () => {
             {t('technologies.description')}
           </p>
         </motion.div>
+        
+        {isMobile && <MobileInstructions />}
 
-        <Reorder.Group 
-          values={items} 
-          onReorder={setItems}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 relative p-8 rounded-2xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-xl"
-          style={{
-            touchAction: "none",
-          }}
+        <div 
+          className="relative p-8 rounded-2xl bg-slate-50/70 dark:bg-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden"
+          ref={containerRef}
         >
-          {items.map((tech: Technology, index: number) => {
-            const Icon = tech.icon
-            return (
-              <Reorder.Item
-                key={tech.id}
-                value={tech}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 flex flex-col items-center group relative isolate overflow-visible cursor-move shadow-lg border border-gray-100 dark:border-gray-700"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 1.05, cursor: "grabbing" }}
-                drag
-                dragConstraints={{
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0
+          {/* Matrix-like animated code background */}
+          <div className="absolute inset-0 overflow-hidden opacity-30 dark:opacity-20 pointer-events-none">
+            {matrixColumns.map((column, colIndex) => (
+              <motion.div 
+                key={colIndex}
+                className="absolute top-0 text-xs font-mono"
+                style={{ 
+                  left: `${(colIndex / matrixColumns.length) * 100}%`,
+                  color: column.color
                 }}
-                dragElastic={0.1}
-                dragMomentum={false}
-                layout
-                onMouseEnter={() => handleMouseEnter(tech.id)}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => handleClick(tech)}
+                animate={{
+                  y: ["0%", "100%"],
+                }}
+                transition={{
+                  duration: column.speed * 10,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  ease: "linear",
+                  delay: colIndex * 0.2
+                }}
               >
-                {/* RPG Tooltip */}
-                {hoveredTech === tech.id && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, y: 10 }}
-                    className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-black text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap z-50 pointer-events-none"
-                  >
-                    Click para más info
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-0 h-0 border-8 border-transparent border-t-black" />
-                  </motion.div>
-                )}
-
-                {/* RPG Message */}
-                {showMessage === tech.id && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                    className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white p-4 rounded-xl text-sm w-64 shadow-xl border border-gray-200 dark:border-gray-700 z-50"
-                  >
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-t border-l border-gray-200 dark:border-gray-700 rotate-45" />
-                    {tech.message}
-                  </motion.div>
-                )}
-
-                {/* Enhanced Spotlight effect */}
-                <div className="absolute inset-0 -z-10">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 via-purple-600/0 to-purple-600/0 group-hover:from-purple-600/40 group-hover:via-purple-600/20 group-hover:to-purple-600/5 dark:group-hover:from-purple-400/30 dark:group-hover:via-purple-400/10 dark:group-hover:to-purple-400/0 transition-all duration-500 rounded-xl blur-2xl scale-110" />
-                </div>
-
-                {/* Enhanced Card glow effect */}
-                <motion.div
-                  className="absolute inset-0 -z-10 bg-gradient-to-br from-purple-600/0 via-transparent to-transparent group-hover:from-purple-600/30 dark:group-hover:from-purple-400/20 rounded-xl transition-all duration-500"
-                />
-
-                {/* Enhanced Content shadow */}
-                <div className="absolute inset-0 -z-10 bg-white dark:bg-gray-800 rounded-xl shadow-lg shadow-purple-600/0 group-hover:shadow-purple-600/40 dark:group-hover:shadow-purple-400/30 transition-all duration-500" />
-
-                {/* Shine effect */}
-                <div className="absolute inset-0 translate-x-full group-hover:translate-x-[-250%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 ease-in-out -z-10" />
-
-                <motion.div 
-                  className="relative w-16 h-16 mb-4 flex items-center justify-center"
-                  animate={floatingAnimation(index)}
+                {column.chars.map((char, i) => (
+                  <div key={i} className="opacity-80">
+                    {char}
+                  </div>
+                ))}
+              </motion.div>
+            ))}
+          </div>
+          
+          <Reorder.Group 
+            values={items} 
+            onReorder={setItems}
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 relative"
+            axis="y"
+            style={{
+              touchAction: "none",
+            }}
+          >
+            {items.map((tech: Technology, index: number) => {
+              const Icon = tech.icon
+              return (
+                <Reorder.Item
+                  key={tech.id}
+                  value={tech}
+                  className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-6 flex flex-col items-center group relative isolate overflow-visible cursor-move shadow-lg border border-gray-100 dark:border-gray-700"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
+                  whileTap={{ scale: 1.05, cursor: "grabbing" }}
+                  drag={!isMobile || (isMobile && showMessage === null)}
+                  dragConstraints={containerRef}
+                  dragElastic={0.1}
+                  dragMomentum={false}
+                  dragSnapToOrigin={false}
+                  layout="position"
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                  onMouseEnter={() => handleMouseEnter(tech.id)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleClick(tech)}
+                  onTouchStart={() => handleTouchStart(tech.id)}
+                  onTouchEnd={handleTouchEnd}
                 >
-                  <Icon 
-                    className="w-12 h-12 transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_12px_rgba(147,51,234,0.7)] dark:group-hover:drop-shadow-[0_0_12px_rgba(167,139,250,0.5)]" 
-                    style={{ 
-                      color: tech.color,
-                      filter: 'var(--tw-prose-invert, none) var(--tw-prose-body, brightness(1.3))'
-                    }}
-                  />
-                </motion.div>
-                <motion.h3 
-                  className="text-lg font-semibold text-center text-gray-800 dark:text-gray-200 transition-colors duration-300 group-hover:text-purple-700 dark:group-hover:text-purple-400"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 + 0.3 }}
-                >
-                  {tech.name}
-                </motion.h3>
-              </Reorder.Item>
-            )
-          })}
-        </Reorder.Group>
+                  {/* RPG Tooltip - solo para desktop */}
+                  <AnimatePresence>
+                    {hoveredTech === tech.id && !isReordering && !isMobile && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                        className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-black dark:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap z-50 pointer-events-none text-center shadow-lg border border-gray-800 dark:border-gray-600"
+                      >
+                        Click para más info
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-0 h-0 border-8 border-transparent border-t-black dark:border-t-gray-900" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* RPG Message */}
+                  <AnimatePresence>
+                    {showMessage === tech.id && !isReordering && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                        className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 translate-y-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white p-4 rounded-xl text-sm md:w-64 w-[250px] shadow-xl border border-gray-200 dark:border-gray-700 z-50 text-center"
+                      >
+                        <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-t border-l border-gray-200 dark:border-gray-700 rotate-45" />
+                        {tech.message}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div 
+                    className="relative w-16 h-16 mb-4 flex items-center justify-center"
+                    animate={floatingAnimation(index)}
+                  >
+                    <Icon 
+                      className="w-12 h-12 transition-all duration-300 group-hover:scale-110" 
+                      style={{ 
+                        color: tech.color,
+                        filter: 'var(--tw-dark) ? brightness(1.2) contrast(1.1) : contrast(0.95) brightness(0.95)'
+                      }}
+                    />
+                  </motion.div>
+                  <motion.h3 
+                    className="text-lg font-semibold text-center text-gray-800 dark:text-gray-200 transition-colors duration-300 group-hover:text-purple-700 dark:group-hover:text-purple-400"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 0.3 }}
+                  >
+                    {tech.name}
+                  </motion.h3>
+                </Reorder.Item>
+              )
+            })}
+          </Reorder.Group>
+        </div>
       </div>
     </section>
   )
