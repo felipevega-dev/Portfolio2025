@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cursor-size: 1rem;
+  --scroll-multiplier: 1;
+}
+
+@layer components {
+  .rpg-button {
+    @apply flex flex-col items-center justify-center px-3 py-2 bg-gray-800 rounded-lg 
+           border-2 border-gray-700 hover:border-indigo-500 transition-all duration-200
+           hover:bg-gray-700/50 active:scale-95;
+  }
+}
+
+body {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23834ce1" stroke="%23ffffff" stroke-width="2"><path d="M4 11.5l5.5-9.5 1.5 9.5-7 5z"/><circle cx="9" cy="10" r="0.5" fill="white"/></svg>') 0 0, auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 70, 229, 0.6) rgba(17, 24, 39, 0.3);
+}
+
+/* Scrollbar personalizado para webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.8);
+} 

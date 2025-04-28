@@ -70,9 +70,9 @@ const Contact = () => {
   ]
 
   return (
-    <section id="contact" className="py-20 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-50/30 to-indigo-100/20 dark:from-transparent dark:via-indigo-950/20 dark:to-indigo-900/10"></div>
+    <section id="contact" className="py-20 mb-0 relative overflow-hidden">
+      {/* Background decoration - Extended to cover the gap */}
+      <div className="absolute inset-0 bottom-[-100px] bg-gradient-to-b from-transparent via-indigo-50/30 to-gray-900/95 dark:from-transparent dark:via-indigo-950/20 dark:to-gray-900/95"></div>
       
       {/* Blurred circles */}
       <div className="absolute top-1/4 -left-28 w-96 h-96 bg-indigo-300/20 rounded-full filter blur-3xl dark:bg-indigo-700/20"></div>

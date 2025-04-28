@@ -67,7 +67,7 @@ const Header = () => {
             className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
             whileHover={{ scale: 1.05 }}
           >
-            Felipe.
+            Felipe.dev
           </motion.button>
 
           {/* Desktop Menu */}

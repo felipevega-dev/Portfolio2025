@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import projects, { getProjectsByTechnology } from '../data/projects'
+import projects from '../data/projects'
 
 // Define extended project data for detailed pages
 interface ProjectDetail {

@@ -1,0 +1,20 @@
+{
+  "nav": {
+    "welcome": "Inicio",
+    "skills": "Habilidades",
+    "projects": "Proyectos",
+    "contact": "Contacto"
+  },
+  "footer": {
+    "inventory": "Inventario",
+    "quests": "Misiones",
+    "stats": "Estadísticas",
+    "statPoints": "Puntos disponibles",
+    "scrollSpeed": "Velocidad de scroll",
+    "cursorSize": "Tamaño del cursor",
+    "cursorSpeed": "Velocidad del cursor",
+    "clickPower": "Poder de click",
+    "levelUp": "¡Subiste de nivel!",
+    "newLevel": "Nivel {{level}} alcanzado"
+  }
+} 

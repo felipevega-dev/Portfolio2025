@@ -1,0 +1,20 @@
+{
+  "nav": {
+    "welcome": "Welcome",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "footer": {
+    "inventory": "Inventory",
+    "quests": "Quests",
+    "stats": "Stats",
+    "statPoints": "Available points",
+    "scrollSpeed": "Scroll speed",
+    "cursorSize": "Cursor size",
+    "cursorSpeed": "Cursor speed",
+    "clickPower": "Click power",
+    "levelUp": "Level up!",
+    "newLevel": "Level {{level}} reached"
+  }
+} 

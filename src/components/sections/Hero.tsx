@@ -36,17 +36,6 @@ const smoothScrollTo = (elementId: string) => {
   }
 }
 
-const NavLink = ({ href, children }: { href: string, children: ReactNode }) => (
-  <motion.button
-    onClick={() => smoothScrollTo(href.slice(1))}
-    className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors"
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-  >
-    {children}
-  </motion.button>
-)
-
 const Hero = () => {
   const { t } = useTranslation()
 

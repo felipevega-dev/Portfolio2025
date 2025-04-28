@@ -7,6 +7,7 @@ import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
 import Technologies from './components/sections/Technologies'
 import Contact from './components/sections/Contact'
+import Footer from './components/layout/Footer'
 import './i18n/config'
 
 // Layout component to wrap the main content
@@ -21,6 +22,7 @@ const Layout = () => {
         <Projects />
         <Contact />
       </main>
+      <Footer />
     </div>
   )
 }
