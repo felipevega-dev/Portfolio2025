@@ -47,8 +47,8 @@
     }
   },
   "technologies": {
-    "title": "Tecnologías y Herramientas",
-    "description": "Mi stack tecnológico principal. Un conjunto de herramientas modernas que me permiten crear soluciones web robustas y escalables."
+    "title": "Tecnologías",
+    "description": "Estas son las tecnologías que utilizo en mi día a día como desarrollador. Puedes arrastrarlas para reorganizarlas a tu gusto."
   },
   "contact": {
     "title": "Contáctame",
@@ -68,6 +68,14 @@
       "title": "Ubicación",
       "based": "Basado en Santiago, Chile",
       "remote": "Disponible para trabajo remoto"
+    }
+  },
+  "dialog": {
+    "options": {
+      "whyCaptured": "¿Por qué te usa Felipe?",
+      "tellMeMore": "Cuéntame más sobre ti",
+      "didntAsk": "En realidad no pregunté...",
+      "close": "Cerrar diálogo"
     }
   }
 } 

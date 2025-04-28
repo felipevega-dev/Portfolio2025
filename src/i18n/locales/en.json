@@ -47,8 +47,8 @@
     }
   },
   "technologies": {
-    "title": "Technologies and Tools",
-    "description": "My main tech stack. A set of modern tools that allow me to create robust and scalable web solutions."
+    "title": "Technologies",
+    "description": "These are the technologies I use in my day-to-day work as a developer. You can drag them to reorganize as you like."
   },
   "contact": {
     "title": "Let's Connect",
@@ -68,6 +68,14 @@
       "title": "Location",
       "based": "Based in Santiago, Chile",
       "remote": "Open to remote opportunities"
+    }
+  },
+  "dialog": {
+    "options": {
+      "whyCaptured": "Why does Felipe use you?",
+      "tellMeMore": "Tell me more about yourself",
+      "didntAsk": "I didn't actually ask...",
+      "close": "Close dialog"
     }
   }
 } 

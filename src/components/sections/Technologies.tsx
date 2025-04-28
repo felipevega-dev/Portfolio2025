@@ -170,7 +170,7 @@ const Technologies = () => {
       icon: SiHtml5, 
       color: 'rgb(227, 79, 38)', 
       darkColor: 'rgb(255, 122, 89)',
-      message: "¡Hola! Soy HTML, el esqueleto de la web. Sin mí, las páginas web serían como libros sin páginas. Me encanta organizar el contenido y darle estructura a todo. ¡Soy el mejor amigo de los desarrolladores desde 1993! 🏗️"
+      message: t('technologies.HTML.initial')
     },
     { 
       id: '2', 
@@ -178,7 +178,7 @@ const Technologies = () => {
       icon: SiCss3, 
       color: 'rgb(21, 114, 182)', 
       darkColor: 'rgb(41, 160, 255)',
-      message: "¡Qué tal! Soy CSS, la artista de la web. Me encargo de que todo se vea hermoso y responda a tus acciones. Sin mí, la web sería tan aburrida como un documento en blanco y negro. ¡Amo los gradientes y las animaciones! 🎨"
+      message: t('technologies.CSS.initial')
     },
     { 
       id: '3', 
@@ -186,7 +186,7 @@ const Technologies = () => {
       icon: SiJavascript, 
       color: 'rgb(247, 223, 30)', 
       darkColor: 'rgb(255, 238, 88)',
-      message: "¡Hey! Soy JavaScript, el alma de la interactividad web. Puedo hacer cualquier cosa: desde validar formularios hasta crear juegos completos. ¡Soy el lenguaje más versátil que conocerás! ⚡"
+      message: t('technologies.JavaScript.initial')
     },
     { 
       id: '4', 
@@ -194,7 +194,7 @@ const Technologies = () => {
       icon: SiTypescript, 
       color: 'rgb(49, 120, 198)', 
       darkColor: 'rgb(78, 176, 255)',
-      message: "Saludos, soy TypeScript. Soy como JavaScript pero con superpoderes. Me aseguro de que todo esté bien tipado y organizado. ¡Detecto errores antes de que sucedan! 🛡️"
+      message: t('technologies.TypeScript.initial')
     },
     { 
       id: '5', 
@@ -202,7 +202,7 @@ const Technologies = () => {
       icon: SiTailwindcss, 
       color: 'rgb(6, 182, 212)', 
       darkColor: 'rgb(34, 211, 238)',
-      message: "¡Hola! Soy Tailwind, el framework CSS que hace tu vida más fácil. ¿Clases utilitarias? ¡Son mi especialidad! Hago que el diseño sea rápido y consistente. 🌪️"
+      message: t('technologies.Tailwind.initial')
     },
     { 
       id: '6', 
@@ -210,7 +210,7 @@ const Technologies = () => {
       icon: SiPhp, 
       color: 'rgb(71, 82, 107)', 
       darkColor: 'rgb(255, 123, 211)',
-      message: "¡Hola mundo! Soy PHP, el veterano del backend. He estado alimentando la web desde 1995. WordPress me ama, y yo amo los arrays asociativos. ¿Sabías que el 78% de la web me usa? 🐘"
+      message: t('technologies.PHP.initial')
     },
     { 
       id: '7', 
@@ -218,7 +218,7 @@ const Technologies = () => {
       icon: SiReact, 
       color: 'rgb(97, 218, 251)', 
       darkColor: 'rgb(139, 228, 255)',
-      message: "¡Hola! Soy React, la biblioteca que revolucionó la web. Me encanta ser componente y reutilizable. ¡Y mi hook useState es el más popular de todos! ⚛️"
+      message: t('technologies.React.initial')
     },
     { 
       id: '8', 
@@ -226,7 +226,7 @@ const Technologies = () => {
       icon: SiNodedotjs, 
       color: 'rgb(51, 153, 51)', 
       darkColor: 'rgb(83, 207, 83)',
-      message: "¡Hey! Soy Node.js, llevo JavaScript al servidor. Soy rápido, asíncrono y tengo miles de paquetes en npm. ¡El mundo del backend nunca fue tan divertido! 🚀"
+      message: t('technologies.Node.js.initial')
     },
     { 
       id: '9', 
@@ -234,7 +234,7 @@ const Technologies = () => {
       icon: SiNextdotjs, 
       color: 'rgb(50, 50, 50)', 
       darkColor: 'rgb(255, 255, 255)',
-      message: "¡Saludos! Soy Next.js, el framework que hace que React brille aún más. SSR, SSG, ISR... ¡tengo todas las siglas que necesitas! 🌟"
+      message: t('technologies.Next.js.initial')
     },
     { 
       id: '10', 
@@ -242,7 +242,7 @@ const Technologies = () => {
       icon: SiWordpress, 
       color: 'rgb(71, 132, 143)', 
       darkColor: 'rgb(102, 189, 204)',
-      message: "¡Hola! Soy WordPress, el CMS más popular del mundo. ¡Impulso el 43% de la web! Plugins, temas... ¡tengo de todo! 📝"
+      message: t('technologies.Wordpress.initial')
     },
     { 
       id: '11', 
@@ -250,7 +250,7 @@ const Technologies = () => {
       icon: SiPython, 
       color: 'rgb(48, 105, 152)', 
       darkColor: 'rgb(78, 154, 221)',
-      message: "¡Hola! Soy Python, el lenguaje más amigable que conocerás. Me encanta la IA, el análisis de datos y la simplicidad. ¡Incluso las serpientes reales me tienen envidia! 🐍"
+      message: t('technologies.Python.initial')
     },
     { 
       id: '12', 
@@ -258,7 +258,7 @@ const Technologies = () => {
       icon: SiFirebase, 
       color: 'rgb(255, 202, 40)', 
       darkColor: 'rgb(255, 213, 79)',
-      message: "¡Hola! Soy Firebase, tu backend en la nube. Autenticación, base de datos en tiempo real, hosting... ¡Lo hago todo! ¡Y en tiempo real! 🔥"
+      message: t('technologies.Firebase.initial')
     },
     { 
       id: '13', 
@@ -266,7 +266,7 @@ const Technologies = () => {
       icon: SiDocker, 
       color: 'rgb(23, 117, 205)', 
       darkColor: 'rgb(35, 151, 240)',
-      message: "¡Ahoy! Soy Docker, el rey de los contenedores. Empaqueto aplicaciones con todo lo que necesitan. ¡Funciona en mi máquina y en todas las demás! 🐳"
+      message: t('technologies.Docker.initial')
     },
     { 
       id: '14', 
@@ -274,7 +274,7 @@ const Technologies = () => {
       icon: SiGit, 
       color: 'rgb(220, 70, 50)', 
       darkColor: 'rgb(255, 122, 89)',
-      message: "¡Hola! Soy Git, el guardián del código. Guardo cada cambio que haces y puedo viajar en el tiempo. ¡Nunca perderás tu código conmigo! 🌳"
+      message: t('technologies.Git.initial')
     },
     { 
       id: '15', 
@@ -282,7 +282,7 @@ const Technologies = () => {
       icon: SiVite, 
       color: 'rgb(63, 184, 204)', 
       darkColor: 'rgb(102, 219, 240)',
-      message: "¡Hola! Soy Vite, el build tool más rápido del oeste. HMR instantáneo y builds ultrarrápidos son mi especialidad. ¡Soy veloz como un rayo! ⚡"
+      message: t('technologies.Vite.initial')
     },
     { 
       id: '16', 
@@ -290,7 +290,7 @@ const Technologies = () => {
       icon: SiSupabase, 
       color: 'rgb(23, 117, 205)', 
       darkColor: 'rgb(35, 151, 240)',
-      message: "¡Hey! Soy Supabase, la alternativa open source a Firebase. PostgreSQL, autenticación y APIs en tiempo real. ¡Y todo con SQL! 🚀"
+      message: t('technologies.Supabase.initial')
     },
     { 
       id: '17', 
@@ -298,7 +298,7 @@ const Technologies = () => {
       icon: SiLaragon, 
       color: 'rgb(23, 117, 205)', 
       darkColor: 'rgb(35, 151, 240)',
-      message: "¡Hola! Soy Laragon, el entorno de desarrollo más amigable para Windows. Apache, MySQL, PHP... ¡todo en un solo clic! 🎯"
+      message: t('technologies.Laragon.initial')
     },
     { 
       id: '18', 
@@ -306,7 +306,7 @@ const Technologies = () => {
       icon: SiPostgresql, 
       color: 'rgb(51, 103, 145)', 
       darkColor: 'rgb(81, 163, 229)',
-      message: "¡Saludos! Soy PostgreSQL, la base de datos relacional más avanzada. ACID, JSON nativo y extensiones poderosas. ¡Soy el elefante que nunca olvida tus datos! 🐘"
+      message: t('technologies.PostgreSQL.initial')
     }
   ])
 
@@ -344,8 +344,7 @@ const Technologies = () => {
         <RPGDialog
           isOpen={dialogOpen}
           onClose={() => setDialogOpen(false)}
-          message={activeTech.message}
-          name={activeTech.name}
+          technology={activeTech.name}
           icon={activeTech.icon}
           iconColor={activeTech.darkColor}
         />

@@ -1,30 +1,51 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
+import { useTranslation } from 'react-i18next';
 
 interface RPGDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  message: string;
-  name: string;
+  technology: string;
   icon: React.ElementType;
   iconColor: string;
 }
 
+type DialogStage = 'initial' | 'options' | 'whyCaptured' | 'tellMeMore' | 'didntAsk';
+
 const RPGDialog: React.FC<RPGDialogProps> = ({ 
   isOpen, 
   onClose, 
-  message, 
-  name, 
+  technology, 
   icon: Icon, 
   iconColor 
 }) => {
+  const { t, i18n } = useTranslation();
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [dialogStage, setDialogStage] = useState<DialogStage>('initial');
   const textRef = useRef<HTMLParagraphElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
   const activeTimersRef = useRef<number[]>([]);
+  
+  // Obtener el texto actual basado en la etapa del diálogo
+  const getCurrentText = () => {
+    const path = `technologies.${technology}`;
+    
+    switch (dialogStage) {
+      case 'initial':
+        return t(`${path}.initial`);
+      case 'whyCaptured':
+        return t(`${path}.whyCaptured`);
+      case 'tellMeMore':
+        return t(`${path}.tellMeMore`);
+      case 'didntAsk':
+        return t(`${path}.didntAsk`);
+      default:
+        return '';
+    }
+  };
   
   // Limpiar todos los timers activos
   const clearAllTimers = () => {
@@ -53,6 +74,14 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       }
     };
   }, []);
+  
+  // Reiniciar el diálogo cuando se abre
+  useEffect(() => {
+    if (isOpen) {
+      setDialogStage('initial');
+      setIsTyping(true);
+    }
+  }, [isOpen]);
   
   // Gestionar el sonido de tipeo
   const startTypingSound = () => {
@@ -107,11 +136,15 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       return;
     }
     
+    const message = getCurrentText();
+    if (!message) return;
+    
     let index = 0;
     const messageLength = message.length;
     
-    // Resetear el texto cuando se abre
+    // Resetear el texto cuando cambia el mensaje
     setDisplayedText('');
+    setIsTyping(true);
     
     // Función para animar la escritura
     const typeWriter = () => {
@@ -134,6 +167,14 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       } else {
         setIsTyping(false);
         stopTypingSound();
+        
+        // Si estamos en el mensaje inicial, mostrar opciones después de completar
+        if (dialogStage === 'initial') {
+          const timerId = window.setTimeout(() => {
+            setDialogStage('options');
+          }, 500);
+          activeTimersRef.current.push(timerId);
+        }
       }
     };
     
@@ -146,18 +187,27 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     return () => {
       clearAllTimers();
     };
-  }, [isOpen, message]);
+  }, [isOpen, dialogStage]);
   
   // Completar el texto inmediatamente al hacer clic
   const completeText = () => {
     if (isTyping) {
       // Detener la animación de escritura
       clearAllTimers();
-      setDisplayedText(message);
+      setDisplayedText(getCurrentText());
       setIsTyping(false);
       stopTypingSound();
-    } else {
-      onClose();
+      
+      // Si estamos en el mensaje inicial, mostrar opciones después de completar
+      if (dialogStage === 'initial') {
+        const timerId = window.setTimeout(() => {
+          setDialogStage('options');
+        }, 500);
+        activeTimersRef.current.push(timerId);
+      }
+    } else if (dialogStage !== 'options') {
+      // Si no estamos mostrando opciones, volver a ellas
+      setDialogStage('options');
     }
   };
   
@@ -167,6 +217,41 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       onClose();
     }
   };
+  
+  // Manejar selección de opción
+  const handleOptionClick = (option: DialogStage) => {
+    setDialogStage(option);
+  };
+  
+  // Renderizar opciones de diálogo
+  const renderOptions = () => (
+    <div className="mt-4 flex flex-col gap-2">
+      <button 
+        onClick={() => handleOptionClick('whyCaptured')}
+        className="text-left px-3 py-2 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/50 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
+      >
+        {t('dialog.options.whyCaptured')}
+      </button>
+      <button 
+        onClick={() => handleOptionClick('tellMeMore')}
+        className="text-left px-3 py-2 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/50 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
+      >
+        {t('dialog.options.tellMeMore')}
+      </button>
+      <button 
+        onClick={() => handleOptionClick('didntAsk')}
+        className="text-left px-3 py-2 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/50 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
+      >
+        {t('dialog.options.didntAsk')}
+      </button>
+      <button 
+        onClick={onClose}
+        className="text-left px-3 py-2 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-800/50 rounded-md text-red-700 dark:text-red-300 transition-colors text-sm font-medium mt-2"
+      >
+        {t('dialog.options.close')}
+      </button>
+    </div>
+  );
   
   return (
     <AnimatePresence>
@@ -187,7 +272,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
           >
             {/* Header con nombre y botón de cerrar */}
             <div className="bg-indigo-600 dark:bg-indigo-800 text-white p-4 flex justify-between items-center">
-              <h3 className="font-medium text-lg">{name}</h3>
+              <h3 className="font-medium text-lg">{technology}</h3>
               <button 
                 onClick={onClose}
                 className="rounded-full p-1 hover:bg-white/20 transition-colors"
@@ -227,13 +312,15 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                 >
                   <p 
                     ref={textRef}
-                    className={`text-sm text-gray-800 dark:text-gray-200 font-pixel min-h-[80px] ${isTyping ? 'typing' : ''}`}
+                    className={`text-sm text-gray-800 dark:text-gray-200 min-h-[80px] ${isTyping ? 'typing' : ''}`}
                   >
                     {displayedText}
                   </p>
                   
-                  {/* Indicador para continuar */}
-                  {!isTyping && (
+                  {/* Opciones o indicador para continuar */}
+                  {!isTyping && dialogStage === 'options' ? (
+                    renderOptions()
+                  ) : !isTyping && (
                     <motion.div
                       className="absolute bottom-2 right-2"
                       animate={{ y: [0, 3, 0] }}

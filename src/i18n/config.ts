@@ -3,16 +3,27 @@ import { initReactI18next } from 'react-i18next'
 
 import enTranslations from './locales/en.json'
 import esTranslations from './locales/es.json'
+import techDialogsEs from './locales/tech-dialogs-es.json'
+import techDialogsEn from './locales/tech-dialogs-en.json'
 
-i18n.use(initReactI18next).init({
-  resources: {
-    en: {
-      translation: enTranslations,
-    },
-    es: {
-      translation: esTranslations,
+// Combinar los diálogos con las traducciones principales
+const resources = {
+  en: {
+    translation: {
+      ...enTranslations,
+      ...techDialogsEn
     },
   },
+  es: {
+    translation: {
+      ...esTranslations,
+      ...techDialogsEs
+    },
+  },
+}
+
+i18n.use(initReactI18next).init({
+  resources,
   lng: 'es', // default language
   fallbackLng: 'en',
   interpolation: {
