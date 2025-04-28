@@ -1,6 +1,6 @@
-import { motion, Reorder, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { useState, useRef, useEffect, useMemo, memo } from 'react'
+import { useState, useEffect, useMemo, memo } from 'react'
 import { 
   SiHtml5, SiCss3, SiJavascript, SiTypescript, 
   SiTailwindcss, SiReact, SiNodedotjs, SiNextdotjs, 
@@ -22,29 +22,21 @@ interface Technology {
 // Componente memo para cada tarjeta de tecnología
 const TechCard = memo(({ 
   tech, 
-  isReordering, 
   hoveredTech,  
   handleMouseEnter, 
   handleMouseLeave, 
   handleClick,  
-  handleTouchEnd, 
-  handleDragStart,
-  handleDragEnd,
-  index,
-  containerRef
+  handleTouchEnd,
+  index
 }: { 
   tech: Technology, 
-  isReordering: boolean, 
   hoveredTech: string | null, 
   showMessage: string | null,
   handleMouseEnter: (id: string) => void,
   handleMouseLeave: () => void,
   handleClick: (tech: Technology) => void,
   handleTouchEnd: () => void,
-  handleDragStart: () => void,
-  handleDragEnd: () => void,
-  index: number,
-  containerRef: React.RefObject<HTMLDivElement>
+  index: number
 }) => {
   const Icon = tech.icon
   
@@ -61,32 +53,29 @@ const TechCard = memo(({
   }
   
   return (
-    <Reorder.Item
+    <motion.div
       key={tech.id}
-      value={tech}
-      className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-6 flex flex-col items-center group relative isolate overflow-visible cursor-move shadow-lg border border-gray-100 dark:border-gray-700"
+      className="rpg-card bg-amber-50 dark:bg-gray-800/90 rounded-md p-6 flex flex-col items-center group relative isolate overflow-visible cursor-pointer shadow-md border-2 border-amber-700/50 dark:border-amber-900/70"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
-      whileTap={{ scale: 1.05, cursor: "grabbing" }}
-      drag={true}
-      dragConstraints={containerRef}
-      dragElastic={0.1}
-      dragMomentum={false}
-      dragSnapToOrigin={false}
-      layout="position"
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      whileTap={{ scale: 0.98 }}
       onMouseEnter={() => handleMouseEnter(tech.id)}
       onMouseLeave={handleMouseLeave}
       onClick={() => handleClick(tech)}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Decorative corners for RPG style */}
+      <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-amber-900/70 dark:border-amber-700/70 -translate-x-0.5 -translate-y-0.5"></div>
+      <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-amber-900/70 dark:border-amber-700/70 translate-x-0.5 -translate-y-0.5"></div>
+      <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-amber-900/70 dark:border-amber-700/70 -translate-x-0.5 translate-y-0.5"></div>
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-amber-900/70 dark:border-amber-700/70 translate-x-0.5 translate-y-0.5"></div>
+      
       {/* RPG Tooltip - solo para desktop */}
       <AnimatePresence>
-        {hoveredTech === tech.id && !isReordering && (
+        {hoveredTech === tech.id && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -121,64 +110,20 @@ const TechCard = memo(({
       >
         {tech.name}
       </motion.h3>
-    </Reorder.Item>
+    </motion.div>
   )
 })
 
 TechCard.displayName = 'TechCard'
-
-// Componente memo para el fondo de matriz
-const MatrixBackground = memo(({ columns }: { columns: Array<{chars: string[], speed: number, color: string}> }) => {
-  return (
-    <div className="absolute inset-0 overflow-hidden opacity-30 dark:opacity-20 pointer-events-none">
-      {columns.map((column, colIndex) => (
-        <motion.div 
-          key={colIndex}
-          className="absolute top-0 text-xs font-mono"
-          style={{ 
-            left: `${(colIndex / columns.length) * 100}%`,
-            color: column.color
-          }}
-          animate={{
-            y: ["0%", "100%"],
-          }}
-          transition={{
-            duration: column.speed * 10,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "linear",
-            delay: colIndex * 0.2
-          }}
-        >
-          {column.chars.map((char, i) => (
-            <div key={i} className="opacity-80">
-              {char}
-            </div>
-          ))}
-        </motion.div>
-      ))}
-    </div>
-  )
-})
-
-MatrixBackground.displayName = 'MatrixBackground'
 
 const Technologies = () => {
   const { t } = useTranslation()
   const [hoveredTech, setHoveredTech] = useState<string | null>(null)
   const [showMessage, setShowMessage] = useState<string | null>(null)
   const [hoverTimer, setHoverTimer] = useState<number | null>(null)
-  const [isReordering, setIsReordering] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [activeTech, setActiveTech] = useState<Technology | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  
-  // Código Matrix - caracteres aleatorios
-  const matrixChars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01234567890123456789/*-+.?:;!@#$%^&*()_+=[]{}|<>";
-  
-  // Generar columnas de código para el fondo de Matrix
-  const [matrixColumns, setMatrixColumns] = useState<Array<{chars: string[], speed: number, color: string}>>([]);
   
   // Detectar si es dispositivo móvil
   useEffect(() => {
@@ -195,41 +140,6 @@ const Technologies = () => {
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
-  
-  // Crear columnas de Matrix una sola vez
-  useEffect(() => {
-    // Crear columnas de códigos con caracteres aleatorios
-    const columns = [];
-    const numColumns = 30; // Número de columnas
-    
-    for (let i = 0; i < numColumns; i++) {
-      const numChars = 15 + Math.floor(Math.random() * 15); // 15-30 caracteres por columna
-      const chars = [];
-      
-      for (let j = 0; j < numChars; j++) {
-        chars.push(matrixChars.charAt(Math.floor(Math.random() * matrixChars.length)));
-      }
-      
-      // Colores tech variados pero discretos
-      const colors = [
-        'rgba(97, 218, 251, 0.7)', // React
-        'rgba(240, 219, 79, 0.7)',  // JS
-        'rgba(49, 120, 198, 0.7)',  // TS
-        'rgba(227, 79, 38, 0.7)',   // HTML
-        'rgba(21, 114, 182, 0.7)',  // CSS
-        'rgba(51, 153, 51, 0.7)',   // Node
-        'rgba(6, 182, 212, 0.7)',   // Tailwind
-      ];
-      
-      columns.push({
-        chars,
-        speed: 0.5 + Math.random() * 2, // Velocidad aleatoria
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
-    
-    setMatrixColumns(columns);
-  }, []);
 
   // Limpiar timers al desmontar
   useEffect(() => {
@@ -243,9 +153,6 @@ const Technologies = () => {
     if (hoverTimer) {
       window.clearTimeout(hoverTimer)
     }
-    
-    // No mostrar tooltip si estamos reordenando
-    if (isReordering) return
     
     const timer = window.setTimeout(() => {
       setHoveredTech(techId)
@@ -274,26 +181,8 @@ const Technologies = () => {
     }
   };
 
-  const handleDragStart = () => {
-    setIsReordering(true)
-    // Ocultar tooltip y mensaje durante el drag
-    setHoveredTech(null)
-    setShowMessage(null)
-    if (hoverTimer) {
-      window.clearTimeout(hoverTimer)
-      setHoverTimer(null)
-    }
-  }
-
-  const handleDragEnd = () => {
-    // Pequeño delay para evitar activar tooltips justo después de soltar
-    setTimeout(() => {
-      setIsReordering(false)
-    }, 500)
-  }
-
   // Agrupación inicial de tecnologías por categoría
-  const initialTechList: Technology[] = useMemo(() => [
+  const techList: Technology[] = useMemo(() => [
     // Frontend
     { 
       id: '1', 
@@ -467,8 +356,6 @@ const Technologies = () => {
     },
   ], [t]);
 
-  const [items, setItems] = useState<Technology[]>(initialTechList);
-
   // Instrucciones para móviles
   const MobileInstructions = () => (
     <motion.div 
@@ -479,46 +366,28 @@ const Technologies = () => {
       <p className="mb-2 font-medium">✨ ¡Interactúa con tus tecnologías!</p>
       <ul className="text-xs text-gray-600 dark:text-gray-300 flex flex-col gap-1">
         <li>• Toca una tecnología para conocer más sobre ella</li>
-        <li>• Arrastra las tecnologías para reorganizarlas a tu gusto</li>
       </ul>
     </motion.div>
   );
 
-  // Botón para restaurar el orden original
-  const restoreOriginalOrder = () => {
-    setItems(initialTechList);
-  };
-
-  // Para optimizar renderizado - solo renderizamos cuando cambian items
+  // Para optimizar renderizado
   const techGridContent = useMemo(() => (
-    <Reorder.Group 
-      values={items} 
-      onReorder={setItems}
-      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 relative"
-      axis="y"
-      style={{
-        touchAction: "none",
-      }}
-    >
-      {items.map((tech: Technology, index: number) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 relative">
+      {techList.map((tech: Technology, index: number) => (
         <TechCard
           key={tech.id}
           tech={tech}
-          isReordering={isReordering}
           hoveredTech={hoveredTech}
           showMessage={showMessage}
           handleMouseEnter={handleMouseEnter}
           handleMouseLeave={handleMouseLeave}
           handleClick={handleClick}
           handleTouchEnd={handleTouchEnd}
-          handleDragStart={handleDragStart}
-          handleDragEnd={handleDragEnd}
           index={index}
-          containerRef={containerRef}
         />
       ))}
-    </Reorder.Group>
-  ), [items, isReordering, hoveredTech, showMessage]);
+    </div>
+  ), [hoveredTech, showMessage, techList]);
 
   return (
     <section className="py-20 relative overflow-hidden">
@@ -575,27 +444,19 @@ const Technologies = () => {
           <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {t('technologies.description')}
           </p>
-          
-          {/* Botón para restaurar orden original */}
-          <button
-            onClick={restoreOriginalOrder}
-            className="mt-4 px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 hover:bg-indigo-200 dark:hover:bg-indigo-800 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-medium transition-colors"
-            title="Restaurar orden original"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-          </button>
         </motion.div>
 
         {isMobile && <MobileInstructions />}
 
         <div 
-          className="relative p-8 rounded-2xl bg-slate-50/70 dark:bg-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden"
-          ref={containerRef}
+          className="relative p-8 rounded-2xl bg-[url('/images/wood-texture.jpg')] dark:bg-[url('/images/dark-wood-texture.jpg')] bg-repeat border-4 border-amber-900/70 dark:border-amber-700/70 shadow-xl overflow-hidden"
+          style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)' }}
         >
-          {/* Matrix-like animated code background - Memoizado para mejor rendimiento */}
-          <MatrixBackground columns={matrixColumns} />
+          {/* RPG style corner decorations */}
+          <div className="absolute top-0 left-0 w-8 h-8 border-l-4 border-t-4 border-amber-900/80 dark:border-amber-700/80 -translate-x-1 -translate-y-1"></div>
+          <div className="absolute top-0 right-0 w-8 h-8 border-r-4 border-t-4 border-amber-900/80 dark:border-amber-700/80 translate-x-1 -translate-y-1"></div>
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-l-4 border-b-4 border-amber-900/80 dark:border-amber-700/80 -translate-x-1 translate-y-1"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-amber-900/80 dark:border-amber-700/80 translate-x-1 translate-y-1"></div>
           
           {/* Tecnologías grid - Memoizado para mejor rendimiento */}
           {techGridContent}
