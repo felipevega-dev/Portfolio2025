@@ -29,6 +29,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   const textRef = useRef<HTMLParagraphElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
+  const selectorSoundRef = useRef<HTMLAudioElement | null>(null);
   const activeTimersRef = useRef<number[]>([]);
   const relatedProjects = getProjectsByTechnology(technology);
   
@@ -64,6 +65,14 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     activeTimersRef.current = [];
   };
   
+  // Reproducir sonido de selección
+  const playSelectSound = () => {
+    if (selectorSoundRef.current) {
+      selectorSoundRef.current.currentTime = 0;
+      selectorSoundRef.current.play().catch(e => console.log('Error playing selector sound', e));
+    }
+  };
+  
   // Crear el elemento de audio cuando el componente se monta
   useEffect(() => {
     audioRef.current = new Audio('/sounds/typing.MP3');
@@ -71,6 +80,10 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     audioRef.current.playbackRate = 1.2;
     // Comenzar desde el segundo 2, solo reproducir hasta el segundo 5 y luego repetir
     audioRef.current.currentTime = 2;
+    
+    // Crear el sonido de selección
+    selectorSoundRef.current = new Audio('/sounds/selector1.mp3');
+    selectorSoundRef.current.volume = 0.3;
     
     // Limpiar cuando se desmonta
     return () => {
@@ -82,6 +95,10 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
+      }
+      if (selectorSoundRef.current) {
+        selectorSoundRef.current.pause();
+        selectorSoundRef.current = null;
       }
     };
   }, []);
@@ -213,8 +230,6 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
           }, 300);
           activeTimersRef.current.push(timerId);
         }
-        
-        // Ya no cerramos automáticamente el didntAsk
       }
     };
     
@@ -245,6 +260,9 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
         }, 300);
         activeTimersRef.current.push(timerId);
       }
+    } else if (dialogStage === 'didntAsk') {
+      // Si es "didntAsk" y ya terminó de escribir, cerramos el diálogo
+      onClose();
     } else if (dialogStage !== 'options') {
       // Si no estamos mostrando opciones, volver a opciones
       setDialogStage('options');
@@ -260,6 +278,9 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   
   // Manejar selección de opción
   const handleOptionClick = (option: DialogStage) => {
+    // Reproducir sonido de selección
+    playSelectSound();
+    
     if (option === 'options') {
       // Reset to initial message when going back to options
       setDialogStage(option);
@@ -444,7 +465,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                 )}
                 
                 {/* Botón de volver al inicio (visible después de cada diálogo excepto en options) */}
-                {!isTyping && dialogStage !== 'options' && dialogStage !== 'initial' && (
+                {!isTyping && dialogStage !== 'options' && dialogStage !== 'initial' && dialogStage !== 'didntAsk' && (
                   <button 
                     onClick={() => handleOptionClick('options')}
                     className="mt-4 text-center w-full px-3 py-2 bg-indigo-100 dark:bg-indigo-900/50 hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"

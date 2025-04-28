@@ -22,18 +22,11 @@ interface Technology {
 // Componente memo para cada tarjeta de tecnología
 const TechCard = memo(({ 
   tech, 
-  hoveredTech,  
-  handleMouseEnter, 
-  handleMouseLeave, 
   handleClick,  
   handleTouchEnd,
   index
 }: { 
   tech: Technology, 
-  hoveredTech: string | null, 
-  showMessage: string | null,
-  handleMouseEnter: (id: string) => void,
-  handleMouseLeave: () => void,
   handleClick: (tech: Technology) => void,
   handleTouchEnd: () => void,
   index: number
@@ -55,38 +48,21 @@ const TechCard = memo(({
   return (
     <motion.div
       key={tech.id}
-      className="rpg-card bg-amber-50 dark:bg-gray-800/90 rounded-md p-6 flex flex-col items-center group relative isolate overflow-visible cursor-pointer shadow-md border-2 border-amber-700/50 dark:border-amber-900/70"
+      className="rpg-card bg-cream-50 dark:bg-gray-800/90 rounded-md p-6 flex flex-col items-center group relative isolate overflow-visible cursor-pointer shadow-md border-2 border-indigo-600/30 dark:border-indigo-400/30"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
       whileTap={{ scale: 0.98 }}
-      onMouseEnter={() => handleMouseEnter(tech.id)}
-      onMouseLeave={handleMouseLeave}
       onClick={() => handleClick(tech)}
       onTouchEnd={handleTouchEnd}
     >
       {/* Decorative corners for RPG style */}
-      <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-amber-900/70 dark:border-amber-700/70 -translate-x-0.5 -translate-y-0.5"></div>
-      <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-amber-900/70 dark:border-amber-700/70 translate-x-0.5 -translate-y-0.5"></div>
-      <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-amber-900/70 dark:border-amber-700/70 -translate-x-0.5 translate-y-0.5"></div>
-      <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-amber-900/70 dark:border-amber-700/70 translate-x-0.5 translate-y-0.5"></div>
-      
-      {/* RPG Tooltip - solo para desktop */}
-      <AnimatePresence>
-        {hoveredTech === tech.id && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-black dark:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap z-50 pointer-events-none text-center shadow-lg border border-gray-800 dark:border-gray-600"
-          >
-            Click para más info
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-0 h-0 border-8 border-transparent border-t-black dark:border-t-gray-900" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-indigo-600/50 dark:border-indigo-400/50 -translate-x-0.5 -translate-y-0.5"></div>
+      <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-indigo-600/50 dark:border-indigo-400/50 translate-x-0.5 -translate-y-0.5"></div>
+      <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-indigo-600/50 dark:border-indigo-400/50 -translate-x-0.5 translate-y-0.5"></div>
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-indigo-600/50 dark:border-indigo-400/50 translate-x-0.5 translate-y-0.5"></div>
 
       <motion.div 
         className="relative w-16 h-16 mb-4 flex items-center justify-center"
@@ -118,9 +94,6 @@ TechCard.displayName = 'TechCard'
 
 const Technologies = () => {
   const { t } = useTranslation()
-  const [hoveredTech, setHoveredTech] = useState<string | null>(null)
-  const [showMessage, setShowMessage] = useState<string | null>(null)
-  const [hoverTimer, setHoverTimer] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [activeTech, setActiveTech] = useState<Technology | null>(null)
@@ -141,33 +114,6 @@ const Technologies = () => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Limpiar timers al desmontar
-  useEffect(() => {
-    return () => {
-      if (hoverTimer) window.clearTimeout(hoverTimer)
-    }
-  }, [hoverTimer])
-
-  const handleMouseEnter = (techId: string) => {
-    // Cancelar cualquier timer previo
-    if (hoverTimer) {
-      window.clearTimeout(hoverTimer)
-    }
-    
-    const timer = window.setTimeout(() => {
-      setHoveredTech(techId)
-    }, 800) // Mostrar tooltip después de 800ms
-    setHoverTimer(timer)
-  }
-
-  const handleMouseLeave = () => {
-    if (hoverTimer) {
-      window.clearTimeout(hoverTimer)
-      setHoverTimer(null)
-    }
-    setHoveredTech(null)
-  }
-
   const handleClick = (tech: Technology) => {
     // Tanto en móvil como en desktop, abrir el diálogo RPG
     setActiveTech(tech);
@@ -175,10 +121,7 @@ const Technologies = () => {
   }
   
   const handleTouchEnd = () => {
-    if (hoverTimer) {
-      window.clearTimeout(hoverTimer);
-      setHoverTimer(null);
-    }
+    // Placeholder para compatibilidad con touch devices
   };
 
   // Agrupación inicial de tecnologías por categoría
@@ -377,17 +320,13 @@ const Technologies = () => {
         <TechCard
           key={tech.id}
           tech={tech}
-          hoveredTech={hoveredTech}
-          showMessage={showMessage}
-          handleMouseEnter={handleMouseEnter}
-          handleMouseLeave={handleMouseLeave}
           handleClick={handleClick}
           handleTouchEnd={handleTouchEnd}
           index={index}
         />
       ))}
     </div>
-  ), [hoveredTech, showMessage, techList]);
+  ), [techList]);
 
   return (
     <section className="py-20 relative overflow-hidden">
@@ -449,14 +388,14 @@ const Technologies = () => {
         {isMobile && <MobileInstructions />}
 
         <div 
-          className="relative p-8 rounded-2xl bg-[url('/images/wood-texture.jpg')] dark:bg-[url('/images/dark-wood-texture.jpg')] bg-repeat border-4 border-amber-900/70 dark:border-amber-700/70 shadow-xl overflow-hidden"
-          style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)' }}
+          className="relative p-8 rounded-2xl bg-gradient-to-br from-white to-indigo-50 dark:from-gray-900 dark:to-indigo-950/40 border-4 border-indigo-600/20 dark:border-indigo-400/20 shadow-xl overflow-hidden"
+          style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.2), inset 0 0 30px rgba(99, 102, 241, 0.1)' }}
         >
           {/* RPG style corner decorations */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-l-4 border-t-4 border-amber-900/80 dark:border-amber-700/80 -translate-x-1 -translate-y-1"></div>
-          <div className="absolute top-0 right-0 w-8 h-8 border-r-4 border-t-4 border-amber-900/80 dark:border-amber-700/80 translate-x-1 -translate-y-1"></div>
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-l-4 border-b-4 border-amber-900/80 dark:border-amber-700/80 -translate-x-1 translate-y-1"></div>
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-amber-900/80 dark:border-amber-700/80 translate-x-1 translate-y-1"></div>
+          <div className="absolute top-0 left-0 w-8 h-8 border-l-4 border-t-4 border-indigo-600/40 dark:border-indigo-400/40 -translate-x-1 -translate-y-1"></div>
+          <div className="absolute top-0 right-0 w-8 h-8 border-r-4 border-t-4 border-indigo-600/40 dark:border-indigo-400/40 translate-x-1 -translate-y-1"></div>
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-l-4 border-b-4 border-indigo-600/40 dark:border-indigo-400/40 -translate-x-1 translate-y-1"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-indigo-600/40 dark:border-indigo-400/40 translate-x-1 translate-y-1"></div>
           
           {/* Tecnologías grid - Memoizado para mejor rendimiento */}
           {techGridContent}
