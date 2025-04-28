@@ -236,26 +236,24 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <motion.div
-          className={`lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm ${isOpen ? 'block' : 'hidden'}`}
-          onClick={() => setIsOpen(false)}
+          className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}
+          initial={false}
+          animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <motion.div
-            className="absolute right-0 top-0 h-screen w-64 bg-white dark:bg-gray-900 p-6 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col space-y-4 mt-16">
-              {menuItems.map((item) => (
-                <motion.button
-                  key={item.href}
-                  onClick={() => handleMobileMenuClick(item.href.slice(1))}
-                  className="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                  whileHover={{ x: 10 }}
-                >
-                  {item.label}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
+          <div className="py-4 space-y-4">
+            {menuItems.map((item) => (
+              <motion.button
+                key={item.href}
+                onClick={() => handleMobileMenuClick(item.href.slice(1))}
+                className="block w-full text-left px-6 py-2 text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
+                whileHover={{ x: 10 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {item.label}
+              </motion.button>
+            ))}
+          </div>
         </motion.div>
       </nav>
     </header>

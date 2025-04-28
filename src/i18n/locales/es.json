@@ -26,7 +26,29 @@
   },
   "skills": {
     "title": "Habilidades y Servicios",
-    "description": "Ofrezco soluciones completas de desarrollo, desde el frontend hasta el backend, utilizando las tecnologías más modernas y eficientes del mercado."
+    "description": "Ofrezco soluciones completas de desarrollo, desde el frontend hasta el backend, utilizando las tecnologías más modernas y eficientes del mercado.",
+    "cards": {
+      "frontend": {
+        "title": "Desarrollo Frontend",
+        "description": "Desarrollo de interfaces modernas y responsivas con las últimas tecnologías web."
+      },
+      "backend": {
+        "title": "Desarrollo Backend",
+        "description": "Construcción de APIs robustas y escalables con arquitecturas modernas."
+      },
+      "mobile": {
+        "title": "Desarrollo Móvil",
+        "description": "Desarrollo de aplicaciones móviles multiplataforma con tecnologías web."
+      },
+      "tools": {
+        "title": "Herramientas de Desarrollo",
+        "description": "Uso de herramientas modernas para optimizar el flujo de desarrollo."
+      }
+    }
+  },
+  "technologies": {
+    "title": "Tecnologías y Herramientas",
+    "description": "Mi stack tecnológico principal. Un conjunto de herramientas modernas que me permiten crear soluciones web robustas y escalables."
   },
   "contact": {
     "title": "Contáctame",

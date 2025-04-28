@@ -1,16 +1,18 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface SkillCardProps {
   iconLight: string
   iconDark: string
-  title: string
-  description: string
-  technologies: string[]
+  titleKey: string
+  descriptionKey: string
+  technologiesKeys: string[]
 }
 
-const SkillCard = ({ iconLight, iconDark, title, description, technologies }: SkillCardProps) => {
+const SkillCard = ({ iconLight, iconDark, titleKey, descriptionKey, technologiesKeys }: SkillCardProps) => {
   const [isDark, setIsDark] = useState(false)
+  const { t } = useTranslation()
 
   // Observa cambios en el modo oscuro
   useEffect(() => {
@@ -49,7 +51,7 @@ const SkillCard = ({ iconLight, iconDark, title, description, technologies }: Sk
       >
         <motion.img
           src={isDark ? iconDark : iconLight}
-          alt={title}
+          alt={titleKey}
           className="w-full h-full object-contain"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -62,20 +64,20 @@ const SkillCard = ({ iconLight, iconDark, title, description, technologies }: Sk
 
       {/* Content */}
       <h3 className="text-xl font-bold text-center mb-3 text-gray-900 dark:text-white">
-        {title}
+        {t(titleKey)}
       </h3>
       <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
-        {description}
+        {t(descriptionKey)}
       </p>
 
       {/* Technologies */}
       <div className="flex flex-wrap gap-2 justify-center">
-        {technologies.map((tech) => (
+        {technologiesKeys?.map((techKey) => (
           <span
-            key={tech}
+            key={techKey}
             className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors"
           >
-            {tech}
+            {techKey}
           </span>
         ))}
       </div>

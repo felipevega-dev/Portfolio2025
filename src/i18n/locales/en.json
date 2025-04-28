@@ -26,7 +26,29 @@
   },
   "skills": {
     "title": "Skills & Services",
-    "description": "I offer comprehensive development solutions, from frontend to backend, using the most modern and efficient technologies in the market."
+    "description": "I offer comprehensive development solutions, from frontend to backend, using the most modern and efficient technologies in the market.",
+    "cards": {
+      "frontend": {
+        "title": "Frontend Development",
+        "description": "Development of modern and responsive interfaces with the latest web technologies."
+      },
+      "backend": {
+        "title": "Backend Development",
+        "description": "Building robust and scalable APIs with modern architectures."
+      },
+      "mobile": {
+        "title": "Mobile Development",
+        "description": "Development of cross-platform mobile applications with web technologies."
+      },
+      "tools": {
+        "title": "Development Tools",
+        "description": "Use of modern tools to optimize the development workflow."
+      }
+    }
+  },
+  "technologies": {
+    "title": "Technologies and Tools",
+    "description": "My main tech stack. A set of modern tools that allow me to create robust and scalable web solutions."
   },
   "contact": {
     "title": "Let's Connect",

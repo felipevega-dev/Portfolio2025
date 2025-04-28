@@ -6,30 +6,30 @@ const skills = [
   {
     iconLight: '/icons/frontend.png',
     iconDark: '/icons/front-light.png',
-    title: 'Frontend Development',
-    description: 'Desarrollo de interfaces modernas y responsivas con las últimas tecnologías web.',
-    technologies: ['React', 'TypeScript', 'Next.js', 'TailwindCSS', 'Wordpress']
+    titleKey: 'skills.cards.frontend.title',
+    descriptionKey: 'skills.cards.frontend.description',
+    technologiesKeys: ['React', 'TypeScript', 'Next.js', 'TailwindCSS', 'Wordpress']
   },
   {
     iconLight: '/icons/backend.png',
     iconDark: '/icons/backend-light.png',
-    title: 'Backend Development',
-    description: 'Construcción de APIs robustas y escalables con arquitecturas modernas.',
-    technologies: ['Node.js', 'PostgreSQL', 'MongoDB', 'REST', 'PHP', 'Laravel']
+    titleKey: 'skills.cards.backend.title',
+    descriptionKey: 'skills.cards.backend.description',
+    technologiesKeys: ['Node.js', 'PostgreSQL', 'MongoDB', 'REST', 'PHP', 'Laravel']
   },
   {
     iconLight: '/icons/mobile.png',
     iconDark: '/icons/mobile-light.png',
-    title: 'Mobile Development',
-    description: 'Desarrollo de aplicaciones móviles multiplataforma con tecnologías web.',
-    technologies: ['React Native', 'Expo', 'Ionic']
+    titleKey: 'skills.cards.mobile.title',
+    descriptionKey: 'skills.cards.mobile.description',
+    technologiesKeys: ['React Native', 'Expo', 'Ionic']
   },
   {
     iconLight: '/icons/tools.png',
     iconDark: '/icons/tools-light.png',
-    title: 'Development Tools',
-    description: 'Uso de herramientas modernas para optimizar el flujo de desarrollo.',
-    technologies: ['Git', 'Docker', 'AWS', 'CI/CD', 'Firebase']
+    titleKey: 'skills.cards.tools.title',
+    descriptionKey: 'skills.cards.tools.description',
+    technologiesKeys: ['Git', 'Docker', 'AWS', 'CI/CD', 'Firebase']
   }
 ]
 
@@ -56,7 +56,7 @@ const Skills = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {skills.map((skill) => (
-            <SkillCard key={skill.title} {...skill} />
+            <SkillCard key={skill.titleKey} {...skill} />
           ))}
         </div>
       </div>
