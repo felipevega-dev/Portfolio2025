@@ -11,13 +11,19 @@ const resources = {
   en: {
     translation: {
       ...enTranslations,
-      ...techDialogsEn
+      technologies: {
+        ...enTranslations.technologies,
+        ...techDialogsEn.technologies
+      }
     },
   },
   es: {
     translation: {
       ...esTranslations,
-      ...techDialogsEs
+      technologies: {
+        ...esTranslations.technologies,
+        ...techDialogsEs.technologies
+      }
     },
   },
 }

@@ -75,7 +75,13 @@
       "whyCaptured": "¿Por qué te usa Felipe?",
       "tellMeMore": "Cuéntame más sobre ti",
       "didntAsk": "En realidad no pregunté...",
-      "close": "Cerrar diálogo"
-    }
+      "close": "Cerrar diálogo",
+      "relatedProjects": "Ver proyectos relacionados ({{count}})"
+    },
+    "projects": {
+      "available": "He participado en {{count}} proyecto(s) usando esta tecnología. ¡Échales un vistazo!",
+      "notAvailable": "Aún no hay proyectos públicos que utilicen esta tecnología, pero esto cambiará pronto."
+    },
+    "backToOptions": "Volver a opciones"
   }
 } 
