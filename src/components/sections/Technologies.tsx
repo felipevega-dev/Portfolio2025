@@ -116,18 +116,9 @@ const Technologies = () => {
   }
 
   const handleClick = (tech: Technology) => {
-    if (isMobile) {
-      // En móvil, abrir el diálogo RPG directamente
-      setActiveTech(tech);
-      setDialogOpen(true);
-      return;
-    }
-    
-    // En desktop, mantener el comportamiento actual
-    if (hoveredTech === tech.id && !isReordering) {
-      setShowMessage(tech.id)
-      setTimeout(() => setShowMessage(null), 8000) // Ocultar mensaje después de 8 segundos
-    }
+    // Tanto en móvil como en desktop, abrir el diálogo RPG
+    setActiveTech(tech);
+    setDialogOpen(true);
   }
 
   // Para móviles - toque largo (ya no necesario, pero lo mantenemos para compatibilidad)

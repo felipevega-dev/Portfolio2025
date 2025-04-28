@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { getProjectsByTechnology } from '../data/projects';
+import { getProjectsByTechnology, Project } from '../data/projects';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
 interface RPGDialogProps {
@@ -13,7 +13,7 @@ interface RPGDialogProps {
   iconColor: string;
 }
 
-type DialogStage = 'initial' | 'options' | 'whyCaptured' | 'tellMeMore' | 'didntAsk' | 'relatedProjects';
+type DialogStage = 'initial' | 'options' | 'whyCaptured' | 'tellMeMore' | 'didntAsk';
 
 const RPGDialog: React.FC<RPGDialogProps> = ({ 
   isOpen, 
@@ -39,16 +39,20 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     switch (dialogStage) {
       case 'initial':
         return t(`${path}.initial`);
-      case 'whyCaptured':
-        return t(`${path}.whyCaptured`);
+      case 'whyCaptured': {
+        let text = t(`${path}.whyCaptured`);
+        
+        // Solo agregamos el texto de proyectos si hay proyectos relacionados
+        if (relatedProjects.length > 0) {
+          text += '\n\n' + t('dialog.projects.usedIn');
+        }
+        
+        return text;
+      }
       case 'tellMeMore':
         return t(`${path}.tellMeMore`);
       case 'didntAsk':
         return t(`${path}.didntAsk`);
-      case 'relatedProjects':
-        return relatedProjects.length > 0 
-          ? t('dialog.projects.available', { count: relatedProjects.length })
-          : t('dialog.projects.notAvailable');
       default:
         return '';
     }
@@ -158,8 +162,36 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       // Iniciar el sonido al comienzo de la animación
       if (index === 0) {
         startTypingSound();
-        setDisplayedText(message.charAt(0)); // Mostrar la primera letra inmediatamente
-        index = 1; // Comenzar desde la segunda letra en la próxima iteración
+        // Mostrar la primera letra correctamente
+        setDisplayedText(message.charAt(0));
+        index = 1;
+        
+        // Continuar con la siguiente letra inmediatamente
+        const timerId = window.setTimeout(() => {
+          if (index < messageLength) {
+            setDisplayedText(prev => prev + message.charAt(index));
+            index++;
+            
+            // Velocidad más rápida para la animación
+            const nextSpeed = Math.random() * 10 + 10;
+            const nextTimerId = window.setTimeout(typeWriter, nextSpeed);
+            activeTimersRef.current.push(nextTimerId);
+          } else {
+            setIsTyping(false);
+            stopTypingSound();
+            
+            // Si estamos en el mensaje inicial, mostrar opciones después de completar
+            if (dialogStage === 'initial') {
+              const optionsTimerId = window.setTimeout(() => {
+                setDialogStage('options');
+              }, 300);
+              activeTimersRef.current.push(optionsTimerId);
+            }
+          }
+        }, 10);
+        
+        activeTimersRef.current.push(timerId);
+        return;
       }
       
       if (index < messageLength) {
@@ -178,24 +210,18 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
         if (dialogStage === 'initial') {
           const timerId = window.setTimeout(() => {
             setDialogStage('options');
-          }, 300); // Reducido de 500ms a 300ms
+          }, 300);
           activeTimersRef.current.push(timerId);
         }
         
-        // Si estamos en el mensaje "didntAsk", cerrar el diálogo después de 1 segundo
-        if (dialogStage === 'didntAsk') {
-          const timerId = window.setTimeout(() => {
-            onClose();
-          }, 1000);
-          activeTimersRef.current.push(timerId);
-        }
+        // Ya no cerramos automáticamente el didntAsk
       }
     };
     
     // Comenzar animación
     const timerId = window.setTimeout(() => {
       typeWriter();
-    }, 300); // Reducido de 500ms a 300ms
+    }, 300);
     activeTimersRef.current.push(timerId);
     
     return () => {
@@ -216,22 +242,13 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       if (dialogStage === 'initial') {
         const timerId = window.setTimeout(() => {
           setDialogStage('options');
-        }, 300); // Reducido de 500ms a 300ms
+        }, 300);
         activeTimersRef.current.push(timerId);
       }
       
-      // Si estamos en el mensaje "didntAsk", cerrar el diálogo después de 1 segundo
-      if (dialogStage === 'didntAsk') {
-        const timerId = window.setTimeout(() => {
-          onClose();
-        }, 1000);
-        activeTimersRef.current.push(timerId);
-      }
-    } else if (dialogStage !== 'options' && dialogStage !== 'relatedProjects') {
-      // Si no estamos mostrando opciones o proyectos, volver a opciones
-      setDialogStage('options');
-    } else if (dialogStage === 'relatedProjects') {
-      // Si estamos en proyectos, volver a opciones
+      // Ya no cerramos automáticamente el didntAsk
+    } else if (dialogStage !== 'options') {
+      // Si no estamos mostrando opciones, volver a opciones
       setDialogStage('options');
     }
   };
@@ -246,6 +263,54 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   // Manejar selección de opción
   const handleOptionClick = (option: DialogStage) => {
     setDialogStage(option);
+  };
+  
+  // Renderizar proyectos relacionados
+  const renderRelatedProjects = () => {
+    if (relatedProjects.length === 0) return null;
+    
+    return (
+      <div className="mt-4 flex flex-col gap-3">
+        {relatedProjects.map(project => (
+          <a 
+            key={project.id}
+            href={`/projects/${project.id}`}
+            className="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden hover:shadow-md transition-shadow"
+          >
+            <div className="p-3">
+              <h4 className="font-medium text-gray-800 dark:text-gray-200">{project.title}</h4>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{project.description}</p>
+              <div className="flex justify-end gap-2 mt-2">
+                {project.codeUrl && (
+                  <a 
+                    href={project.codeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    title={t('projects.viewCode')}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <FaGithub size={16} />
+                  </a>
+                )}
+                {project.demoUrl && (
+                  <a 
+                    href={project.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    title={t('projects.viewDemo')}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <FaExternalLinkAlt size={14} />
+                  </a>
+                )}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    );
   };
   
   // Renderizar opciones de diálogo
@@ -263,14 +328,6 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       >
         {t('dialog.options.tellMeMore')}
       </button>
-      {relatedProjects.length > 0 && (
-        <button 
-          onClick={() => handleOptionClick('relatedProjects')}
-          className="text-left px-3 py-2 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/50 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
-        >
-          {t('dialog.options.relatedProjects', { count: relatedProjects.length })}
-        </button>
-      )}
       <button 
         onClick={() => handleOptionClick('didntAsk')}
         className="text-left px-3 py-2 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-800/50 rounded-md text-red-700 dark:text-red-300 transition-colors text-sm font-medium"
@@ -280,52 +337,17 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     </div>
   );
   
-  // Renderizar proyectos relacionados
-  const renderRelatedProjects = () => (
-    <div className="mt-4 flex flex-col gap-3">
-      {relatedProjects.map(project => (
-        <div 
-          key={project.id}
-          className="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden"
-        >
-          <div className="p-3">
-            <h4 className="font-medium text-gray-800 dark:text-gray-200">{project.title}</h4>
-            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{project.description}</p>
-            <div className="flex justify-end gap-2 mt-2">
-              {project.codeUrl && (
-                <a 
-                  href={project.codeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                  title={t('projects.viewCode')}
-                >
-                  <FaGithub size={16} />
-                </a>
-              )}
-              {project.demoUrl && (
-                <a 
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                  title={t('projects.viewDemo')}
-                >
-                  <FaExternalLinkAlt size={14} />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      ))}
-      <button 
-        onClick={() => setDialogStage('options')}
-        className="self-center mt-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md text-gray-700 dark:text-gray-300 transition-colors text-xs font-medium"
-      >
-        {t('dialog.backToOptions')}
-      </button>
-    </div>
-  );
+  // Formatear el texto para mostrar saltos de línea
+  const formatDisplayedText = () => {
+    if (!displayedText) return '';
+    
+    return displayedText.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < displayedText.split('\n').length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
   
   return (
     <AnimatePresence>
@@ -388,15 +410,18 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                     ref={textRef}
                     className={`text-sm text-gray-800 dark:text-gray-200 min-h-[80px] ${isTyping ? 'typing' : ''}`}
                   >
-                    {displayedText}
+                    {formatDisplayedText()}
                   </p>
                   
-                  {/* Opciones, proyectos o indicador para continuar */}
+                  {/* Proyectos relacionados (solo se muestran en whyCaptured y después de terminar de escribir) */}
+                  {!isTyping && dialogStage === 'whyCaptured' && relatedProjects.length > 0 && (
+                    renderRelatedProjects()
+                  )}
+                  
+                  {/* Opciones o indicador para continuar */}
                   {!isTyping && dialogStage === 'options' ? (
                     renderOptions()
-                  ) : !isTyping && dialogStage === 'relatedProjects' ? (
-                    renderRelatedProjects()
-                  ) : !isTyping && (
+                  ) : !isTyping && dialogStage !== 'whyCaptured' && (
                     <motion.div
                       className="absolute bottom-2 right-2"
                       animate={{ y: [0, 3, 0] }}

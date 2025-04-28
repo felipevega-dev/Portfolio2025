@@ -80,7 +80,8 @@
     },
     "projects": {
       "available": "He participado en {{count}} proyecto(s) usando esta tecnología. ¡Échales un vistazo!",
-      "notAvailable": "Aún no hay proyectos públicos que utilicen esta tecnología, pero esto cambiará pronto."
+      "notAvailable": "Aún no hay proyectos públicos que utilicen esta tecnología, pero esto cambiará pronto.",
+      "usedIn": "Proyectos en los que me utilizó:"
     },
     "backToOptions": "Volver a opciones"
   }

@@ -80,7 +80,8 @@
     },
     "projects": {
       "available": "I've been used in {{count}} project(s). Take a look!",
-      "notAvailable": "There are no public projects using this technology yet, but this will change soon."
+      "notAvailable": "There are no public projects using this technology yet, but this will change soon.",
+      "usedIn": "Projects where I've been used:"
     },
     "backToOptions": "Back to options"
   }
