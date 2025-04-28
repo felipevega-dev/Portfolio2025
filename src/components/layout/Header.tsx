@@ -39,47 +39,48 @@ const Header = () => {
   }, [])
 
   const smoothScrollTo = (elementId: string) => {
-    const element = document.getElementById(elementId.slice(1))
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-      setIsOpen(false)
-    }
+    const element = document.getElementById(elementId)
+    if (!element) return
+
+    const header = document.querySelector('header')
+    const headerHeight = header?.offsetHeight || 0
+    const elementPosition = element.getBoundingClientRect().top + window.scrollY
+    const offsetPosition = elementPosition - headerHeight
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    })
+  }
+
+  const handleMobileMenuClick = (elementId: string) => {
+    setIsOpen(false)
+    setTimeout(() => smoothScrollTo(elementId), 300)
   }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <motion.a 
-            href="#hero"
-            onClick={(e) => {
-              e.preventDefault()
-              smoothScrollTo('#hero')
-            }}
+          <motion.button
+            onClick={() => smoothScrollTo('hero')}
             className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400"
             whileHover={{ scale: 1.05 }}
           >
             Felipe.
-          </motion.a>
+          </motion.button>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {menuItems.map((item) => (
-              <motion.a
+              <motion.button
                 key={item.href}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  smoothScrollTo(item.href)
-                }}
+                onClick={() => smoothScrollTo(item.href.slice(1))}
                 className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors"
                 whileHover={{ y: -2 }}
               >
                 {item.label}
-              </motion.a>
+              </motion.button>
             ))}
 
             <div className="flex items-center space-x-4">
@@ -235,29 +236,26 @@ const Header = () => {
 
         {/* Mobile Menu */}
         <motion.div
-          className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}
-          initial={false}
-          animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          className={`lg:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm ${isOpen ? 'block' : 'hidden'}`}
+          onClick={() => setIsOpen(false)}
         >
-          <div className="py-4 space-y-4">
-            {menuItems.map((item) => (
-              <motion.a
-                key={item.href}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  smoothScrollTo(item.href.slice(1))
-                  setIsOpen(false)
-                }}
-                className="block px-6 py-2 text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
-                whileHover={{ x: 10 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {item.label}
-              </motion.a>
-            ))}
-          </div>
+          <motion.div
+            className="absolute right-0 top-0 h-screen w-64 bg-white dark:bg-gray-900 p-6 shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col space-y-4 mt-16">
+              {menuItems.map((item) => (
+                <motion.button
+                  key={item.href}
+                  onClick={() => handleMobileMenuClick(item.href.slice(1))}
+                  className="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  whileHover={{ x: 10 }}
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
         </motion.div>
       </nav>
     </header>

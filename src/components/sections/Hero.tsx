@@ -67,7 +67,7 @@ const Hero = () => {
   }
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center bg-white dark:bg-gray-900 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center bg-white dark:bg-gray-900 overflow-hidden pt-24 lg:pt-0">
       <StarField />
 
       {/* Background Number */}
@@ -101,10 +101,10 @@ const Hero = () => {
         animate="visible"
       >
         <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
-          {/* Photo Section - Moved up in mobile */}
+          {/* Photo Section - Right side in desktop */}
           <motion.div
             variants={itemVariants}
-            className="relative w-full max-w-[300px] lg:max-w-[400px] aspect-square mx-auto lg:ml-auto order-first"
+            className="relative w-full max-w-[300px] lg:max-w-[400px] aspect-square mx-auto lg:ml-auto order-first lg:order-last"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 blur-2xl opacity-30 dark:opacity-40" />
             <motion.div 
