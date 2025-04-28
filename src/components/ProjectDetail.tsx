@@ -1,54 +1,121 @@
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import projects, { getProjectsByTechnology } from '../data/projects'
 
-interface Project {
-  id: string
-  title: string
-  description: string
-  fullDescription: string
-  image: string
-  technologies: string[]
-  features: string[]
-  demoUrl?: string
-  githubUrl?: string
-  screenshots: string[]
+// Define extended project data for detailed pages
+interface ProjectDetail {
+  id: string;
+  title: string;
+  description: string;
+  fullDescription: string;
+  imageUrl: string;
+  technologies: string[];
+  features: string[];
+  demoUrl?: string;
+  codeUrl?: string;
+  screenshots: string[];
 }
 
-const projects: Record<string, Project> = {
-  project1: {
-    id: 'project1',
-    title: 'Portfolio 2024',
-    description: 'Short description',
-    fullDescription: 'This is my portfolio from 2024, it was my first portfolio and I made it with NextJS, TailwindCSS, React and Typescript. I made it to show my skills and projects.',
-    image: '/projects/project1.jpg',
-    technologies: ['NextJS', 'TailwindCSS', 'React', 'Typescript'],
+// Extended data for project details
+const projectDetails: Record<string, Partial<ProjectDetail>> = {
+  "portfolio-2025": {
+    fullDescription: "Portfolio personal construido con React, Next.js y Tailwind CSS. Este sitio muestra mis proyectos, habilidades y experiencia como desarrollador de software. Implementa un diseño moderno con animaciones fluidas usando Framer Motion y un sistema de internacionalización completo.",
     features: [
-      'Responsive design',
-      'Typescript',
-      'NextJS',
-      'TailwindCSS',
-      'React',
-      'Framer Motion',
-      'React Hook Form',
+      "Diseño completamente responsive optimizado para móviles y desktop",
+      "Animaciones fluidas con Framer Motion",
+      "Modo claro/oscuro adaptado a las preferencias del sistema",
+      "Internacionalización con soporte para inglés y español",
+      "Diálogos interactivos tipo RPG para las tecnologías",
+      "Optimización SEO y de rendimiento"
     ],
-    demoUrl: 'https://portfolio-felipevega.vercel.app/',
-    githubUrl: 'https://github.com/user/repo',
     screenshots: [
-      '/projects/project1/screenshot1.jpg',
-      '/projects/project1/screenshot2.jpg',
+      "/images/projects/portfolio/screenshot1.png",
+      "/images/projects/portfolio/screenshot2.png"
     ]
   },
-  // Add more projects
-}
+  "featuring": {
+    fullDescription: "Featuring es una aplicación móvil desarrollada con React Native y Expo, diseñada específicamente para músicos que buscan colaborar. La plataforma permite a los artistas conectarse, compartir contenido musical, realizar colaboraciones y recibir valoraciones de la comunidad. Incluye un completo panel de administración para gestionar el contenido de la plataforma.",
+    features: [
+      "Sistema de perfiles para artistas con valoraciones y estadísticas",
+      "Feed de publicaciones para compartir música y videos cortos",
+      "Sistema de match basado en preferencias musicales y filtros",
+      "Colaboraciones entre artistas con sistema de valoración mutua",
+      "Reproductor de audio y video integrado",
+      "Notificaciones push para nuevas interacciones",
+      "Panel de administración completo para gestionar contenido",
+      "Integración con APIs de divisas para pagos internacionales",
+      "Nivel premium con características adicionales",
+      "Sistema de reportes y moderación de contenido"
+    ],
+    screenshots: [
+      "/images/projects/featuring/screenshot1.png",
+      "/images/projects/featuring/screenshot2.png"
+    ]
+  },
+  "ikintsugi-theme": {
+    fullDescription: "Tema personalizado para WordPress desarrollado desde cero para la institución Ikintsugi. Implementado con Sage, un starter theme que utiliza Laravel Blade y modern frontend tooling. El diseño se basó en especificaciones proporcionadas por la diseñadora del cliente, y se implementó con un enfoque en rendimiento, accesibilidad y experiencia de usuario.",
+    features: [
+      "Implementación exacta del diseño Figma proporcionado por el cliente",
+      "Diseño completamente responsive para todas las pantallas",
+      "Optimización de rendimiento con puntuación alta en PageSpeed",
+      "Animaciones sutiles para mejorar la experiencia de usuario",
+      "Configuración de bloques de Gutenberg personalizados",
+      "Uso de TailwindCSS para estilos consistentes y mantenibles",
+      "Workflow moderno con Vite para desarrollo rápido",
+      "Templates Blade organizados y reutilizables",
+      "Optimización SEO siguiendo mejores prácticas"
+    ],
+    screenshots: [
+      "/images/projects/ikintsugi/screenshot1.png",
+      "/images/projects/ikintsugi/screenshot2.png"
+    ],
+    demoUrl: "https://ikintsugi.cl"
+  },
+  "plugin-reservas": {
+    fullDescription: "Plugin de WordPress desarrollado para extender WooCommerce, permitiendo a los clientes suscribirse a productos sin stock. El sistema gestiona las notificaciones automáticas cuando el producto vuelve a estar disponible y proporciona un completo panel de administración para analizar las suscripciones y tendencias de productos.",
+    features: [
+      "Integración con el inventario de WooCommerce",
+      "Sistema de suscripción a productos sin stock",
+      "Panel de administración con estadísticas y filtros",
+      "Notificaciones automáticas por email cuando se repone el stock",
+      "Plantillas de email personalizables",
+      "Soporte para productos con variaciones (tallas, colores, etc.)",
+      "Estadísticas detalladas por producto y variación",
+      "Exportación de datos a Excel",
+      "Gestión de usuarios y sus suscripciones",
+      "Configuración flexible del sistema"
+    ],
+    screenshots: [
+      "/images/projects/plugin-reservas/screenshot1.png",
+      "/images/projects/plugin-reservas/screenshot2.png"
+    ]
+  },
+};
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const project = id ? projects[id] : null
-
-  if (!project) return null
+  
+  // Find the base project data
+  const baseProject = projects.find(project => project.id === id);
+  
+  if (!baseProject) return null;
+  
+  // Get the extended details for this project
+  const details = projectDetails[baseProject.id as keyof typeof projectDetails] || {};
+  
+  // Combine base project with details
+  const project = {
+    ...baseProject,
+    image: baseProject.imageUrl,
+    githubUrl: baseProject.codeUrl,
+    technologies: baseProject.tags,
+    fullDescription: details.fullDescription || baseProject.description,
+    features: details.features || [],
+    screenshots: details.screenshots || [],
+  };
 
   return (
     <div className="min-h-screen py-20">
@@ -107,24 +174,26 @@ const ProjectDetail = () => {
                 </div>
               </motion.div>
 
-              <motion.div 
-                className="mb-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <h2 className="text-2xl font-bold mb-4">{t('projects.features')}</h2>
-                <ul className="space-y-2">
-                  {project.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <svg className="w-6 h-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
+              {project.features.length > 0 && (
+                <motion.div 
+                  className="mb-8"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <h2 className="text-2xl font-bold mb-4">{t('projects.features')}</h2>
+                  <ul className="space-y-2">
+                    {project.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <svg className="w-6 h-6 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
 
               <motion.div 
                 className="flex gap-4"
@@ -176,26 +245,28 @@ const ProjectDetail = () => {
                 />
               </motion.div>
 
-              <motion.div 
-                className="grid grid-cols-2 gap-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                {project.screenshots.map((screenshot, index) => (
-                  <motion.div
-                    key={index}
-                    className="rounded-lg overflow-hidden shadow-lg"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <img
-                      src={screenshot}
-                      alt={`${project.title} screenshot ${index + 1}`}
-                      className="w-full h-auto"
-                    />
-                  </motion.div>
-                ))}
-              </motion.div>
+              {project.screenshots.length > 0 && (
+                <motion.div 
+                  className="grid grid-cols-2 gap-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  {project.screenshots.map((screenshot, index) => (
+                    <motion.div
+                      key={index}
+                      className="rounded-lg overflow-hidden shadow-lg"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <img
+                        src={screenshot}
+                        alt={`${project.title} screenshot ${index + 1}`}
+                        className="w-full h-auto"
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
             </div>
           </div>
         </motion.div>

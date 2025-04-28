@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { getProjectsByTechnology, Project } from '../data/projects';
+import { getProjectsByTechnology } from '../data/projects';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
 interface RPGDialogProps {
@@ -22,7 +22,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   icon: Icon, 
   iconColor 
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [dialogStage, setDialogStage] = useState<DialogStage>('initial');
@@ -245,8 +245,6 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
         }, 300);
         activeTimersRef.current.push(timerId);
       }
-      
-      // Ya no cerramos automáticamente el didntAsk
     } else if (dialogStage !== 'options') {
       // Si no estamos mostrando opciones, volver a opciones
       setDialogStage('options');
@@ -262,53 +260,84 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   
   // Manejar selección de opción
   const handleOptionClick = (option: DialogStage) => {
-    setDialogStage(option);
+    if (option === 'options') {
+      // Reset to initial message when going back to options
+      setDialogStage(option);
+      setDisplayedText(t(`technologies.${technology}.initial`));
+    } else {
+      setDialogStage(option);
+    }
   };
   
   // Renderizar proyectos relacionados
   const renderRelatedProjects = () => {
-    if (relatedProjects.length === 0) return null;
-    
+    if (relatedProjects.length === 0) {
+      return (
+        <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-center text-sm">
+          <p className="text-gray-600 dark:text-gray-300">
+            {t('dialog.projects.notAvailable')}
+          </p>
+        </div>
+      );
+    }
+
     return (
-      <div className="mt-4 flex flex-col gap-3">
-        {relatedProjects.map(project => (
-          <a 
-            key={project.id}
-            href={`/projects/${project.id}`}
-            className="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden hover:shadow-md transition-shadow"
-          >
-            <div className="p-3">
-              <h4 className="font-medium text-gray-800 dark:text-gray-200">{project.title}</h4>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{project.description}</p>
-              <div className="flex justify-end gap-2 mt-2">
-                {project.codeUrl && (
-                  <a 
-                    href={project.codeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    title={t('projects.viewCode')}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <FaGithub size={16} />
-                  </a>
-                )}
-                {project.demoUrl && (
-                  <a 
-                    href={project.demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    title={t('projects.viewDemo')}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <FaExternalLinkAlt size={14} />
-                  </a>
-                )}
+      <div className="mt-4">
+        <p className="mb-3 text-indigo-600 dark:text-indigo-400 font-medium">
+          {t('dialog.projects.available', { count: relatedProjects.length })}
+        </p>
+        <div className="flex flex-col gap-3">
+          {relatedProjects.map(project => (
+            <motion.a 
+              key={project.id}
+              href={`/projects/${project.id}`}
+              className="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden hover:shadow-md transition-shadow"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="flex items-center">
+                <div className="w-16 h-16 overflow-hidden flex-shrink-0">
+                  <img 
+                    src={project.imageUrl} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-2 flex-1">
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">{project.title}</h4>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-1">{project.description}</p>
+                  
+                  <div className="flex justify-end gap-2 mt-1">
+                    {project.codeUrl && (
+                      <a 
+                        href={project.codeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                        title={t('projects.viewCode')}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FaGithub size={14} />
+                      </a>
+                    )}
+                    {project.demoUrl && (
+                      <a 
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                        title={t('projects.viewDemo')}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FaExternalLinkAlt size={12} />
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </a>
-        ))}
+            </motion.a>
+          ))}
+        </div>
       </div>
     );
   };
@@ -368,7 +397,25 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
           >
             {/* Header con nombre y botón de cerrar */}
             <div className="bg-indigo-600 dark:bg-indigo-800 text-white p-4 flex justify-between items-center">
-              <h3 className="font-medium text-lg">{technology}</h3>
+              <div className="flex items-center gap-3">
+                <motion.div
+                  className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 p-1"
+                  animate={{
+                    scale: isTyping ? [1, 1.05, 1] : 1,
+                  }}
+                  transition={{
+                    repeat: isTyping ? Infinity : 0,
+                    duration: 0.5,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <Icon 
+                    className="w-6 h-6"
+                    style={{ color: iconColor }}
+                  />
+                </motion.div>
+                <h3 className="font-medium text-lg">{technology}</h3>
+              </div>
               <button 
                 onClick={onClose}
                 className="rounded-full p-1 hover:bg-white/20 transition-colors"
@@ -378,59 +425,46 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
               </button>
             </div>
             
-            {/* Contenido del diálogo */}
+            {/* Contenido del diálogo - ahora a ancho completo */}
             <div className="p-6">
-              <div className="flex gap-6">
-                {/* Avatar con animación */}
-                <div className="flex-shrink-0">
-                  <motion.div
-                    className="w-20 h-20 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-700 p-2"
-                    animate={{
-                      scale: isTyping ? [1, 1.05, 1] : 1,
-                    }}
-                    transition={{
-                      repeat: isTyping ? Infinity : 0,
-                      duration: 0.5,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <Icon 
-                      className="w-12 h-12"
-                      style={{ color: iconColor }}
-                    />
-                  </motion.div>
-                </div>
-                
-                {/* Texto del mensaje con estilo RPG */}
-                <div 
-                  className="flex-1 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 relative cursor-pointer"
-                  onClick={completeText}
+              <div 
+                className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 relative cursor-pointer"
+                onClick={completeText}
+              >
+                <p 
+                  ref={textRef}
+                  className={`text-sm text-gray-800 dark:text-gray-200 min-h-[80px] ${isTyping ? 'typing' : ''}`}
                 >
-                  <p 
-                    ref={textRef}
-                    className={`text-sm text-gray-800 dark:text-gray-200 min-h-[80px] ${isTyping ? 'typing' : ''}`}
+                  {formatDisplayedText()}
+                </p>
+                
+                {/* Proyectos relacionados (solo se muestran en whyCaptured y después de terminar de escribir) */}
+                {!isTyping && dialogStage === 'whyCaptured' && relatedProjects.length > 0 && (
+                  renderRelatedProjects()
+                )}
+                
+                {/* Botón de volver al inicio (visible después de cada diálogo excepto en options) */}
+                {!isTyping && dialogStage !== 'options' && dialogStage !== 'initial' && (
+                  <button 
+                    onClick={() => handleOptionClick('options')}
+                    className="mt-4 text-center w-full px-3 py-2 bg-indigo-100 dark:bg-indigo-900/50 hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
                   >
-                    {formatDisplayedText()}
-                  </p>
-                  
-                  {/* Proyectos relacionados (solo se muestran en whyCaptured y después de terminar de escribir) */}
-                  {!isTyping && dialogStage === 'whyCaptured' && relatedProjects.length > 0 && (
-                    renderRelatedProjects()
-                  )}
-                  
-                  {/* Opciones o indicador para continuar */}
-                  {!isTyping && dialogStage === 'options' ? (
-                    renderOptions()
-                  ) : !isTyping && dialogStage !== 'whyCaptured' && (
-                    <motion.div
-                      className="absolute bottom-2 right-2"
-                      animate={{ y: [0, 3, 0] }}
-                      transition={{ repeat: Infinity, duration: 1 }}
-                    >
-                      <div className="w-0 h-0 border-l-[8px] border-l-transparent border-t-[12px] border-t-indigo-500 border-r-[8px] border-r-transparent" />
-                    </motion.div>
-                  )}
-                </div>
+                    {t('dialog.backToOptions')}
+                  </button>
+                )}
+                
+                {/* Opciones o indicador para continuar */}
+                {!isTyping && dialogStage === 'options' ? (
+                  renderOptions()
+                ) : !isTyping && dialogStage !== 'whyCaptured' && (
+                  <motion.div
+                    className="absolute bottom-2 right-2"
+                    animate={{ y: [0, 3, 0] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  >
+                    <div className="w-0 h-0 border-l-[8px] border-l-transparent border-t-[12px] border-t-indigo-500 border-r-[8px] border-r-transparent" />
+                  </motion.div>
+                )}
               </div>
             </div>
           </motion.div>
