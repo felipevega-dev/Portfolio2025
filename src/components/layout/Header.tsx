@@ -213,20 +213,21 @@ const Header = () => {
 
             {/* Menu Button */}
             <button
-              className="p-2"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
             >
               <span className="sr-only">Menu</span>
-              <div className="w-6 h-6 flex items-center justify-center">
-                <span className={`transform transition-all duration-300 ${
-                  isOpen ? 'rotate-45 translate-y-1.5' : ''
-                } block absolute h-0.5 w-6 bg-current`}></span>
-                <span className={`transition-opacity duration-300 ${
-                  isOpen ? 'opacity-0' : 'opacity-100'
-                } block absolute h-0.5 w-6 bg-current`}></span>
-                <span className={`transform transition-all duration-300 ${
-                  isOpen ? '-rotate-45 -translate-y-1.5' : ''
-                } block absolute h-0.5 w-6 bg-current`}></span>
+              <div className="w-6 h-5 flex flex-col justify-between">
+                <span className={`block h-0.5 w-6 bg-current transform transition-all duration-300 ${
+                  isOpen ? 'rotate-45 translate-y-2' : ''
+                }`} />
+                <span className={`block h-0.5 w-6 bg-current transition-all duration-300 ${
+                  isOpen ? 'opacity-0' : ''
+                }`} />
+                <span className={`block h-0.5 w-6 bg-current transform transition-all duration-300 ${
+                  isOpen ? '-rotate-45 -translate-y-2' : ''
+                }`} />
               </div>
             </button>
           </div>
@@ -239,19 +240,22 @@ const Header = () => {
           animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="pt-4 pb-3 space-y-3">
+          <div className="py-4 space-y-4">
             {menuItems.map((item) => (
-              <a
+              <motion.a
                 key={item.href}
                 href={item.href}
                 onClick={(e) => {
                   e.preventDefault()
-                  smoothScrollTo(item.href)
+                  smoothScrollTo(item.href.slice(1))
+                  setIsOpen(false)
                 }}
-                className="block text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400"
+                className="block px-6 py-2 text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
+                whileHover={{ x: 10 }}
+                whileTap={{ scale: 0.98 }}
               >
                 {item.label}
-              </a>
+              </motion.a>
             ))}
           </div>
         </motion.div>

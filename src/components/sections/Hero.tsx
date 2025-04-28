@@ -101,6 +101,45 @@ const Hero = () => {
         animate="visible"
       >
         <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+          {/* Photo Section - Moved up in mobile */}
+          <motion.div
+            variants={itemVariants}
+            className="relative w-full max-w-[300px] lg:max-w-[400px] aspect-square mx-auto lg:ml-auto order-first"
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 blur-2xl opacity-30 dark:opacity-40" />
+            <motion.div 
+              className="relative h-full rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 p-1"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img
+                src="/images/profile.png"
+                alt="Felipe Vega"
+                className="w-full h-full object-cover rounded-full bg-gray-100 dark:bg-gray-800"
+              />
+            </motion.div>
+
+            {/* Tech Tags - Hidden in mobile */}
+            <motion.div
+              className="hidden lg:block absolute -left-4 top-8 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.1, x: 10 }}
+            >
+              <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400">developer</span>
+            </motion.div>
+            <motion.div
+              className="hidden lg:block absolute -right-4 top-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.1, x: -10 }}
+            >
+              <span className="font-mono text-sm text-purple-600 dark:text-purple-400">designer</span>
+            </motion.div>
+            <motion.div
+              className="hidden lg:block absolute -left-4 bottom-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              whileHover={{ scale: 1.1, x: 10 }}
+            >
+              <span className="font-mono text-sm text-pink-600 dark:text-pink-400">creative</span>
+            </motion.div>
+          </motion.div>
+
           <div className="max-w-2xl">
             <motion.div variants={itemVariants} className="mb-8 relative z-10">
               <span className="text-lg font-mono text-indigo-600 dark:text-indigo-400">
@@ -111,7 +150,7 @@ const Hero = () => {
 
             <motion.h1 
               variants={itemVariants}
-              className="text-6xl md:text-7xl font-bold mb-4 leading-tight"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight"
             >
               Hola, Soy{' '}
               <div className="mt-2">
@@ -126,25 +165,25 @@ const Hero = () => {
 
             <motion.h2 
               variants={itemVariants}
-              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-medium mb-6"
+              className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 font-medium mb-6"
             >
               {t('hero.role')}
             </motion.h2>
 
             <motion.p 
               variants={itemVariants}
-              className="text-lg text-gray-600 dark:text-gray-400 mb-12 leading-relaxed"
+              className="text-base lg:text-lg text-gray-600 dark:text-gray-400 mb-12 leading-relaxed"
             >
               {t('hero.description')}
             </motion.p>
 
             <motion.div 
               variants={itemVariants}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap justify-center lg:justify-start gap-4"
             >
               <motion.a
                 href="/CV-FelipeVega.pdf"
-                className="group relative px-8 py-3 text-white bg-indigo-600 rounded-lg overflow-hidden"
+                className="group relative px-8 py-3 text-white bg-indigo-600 rounded-lg overflow-hidden w-full sm:w-auto text-center"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 download
@@ -160,7 +199,7 @@ const Hero = () => {
               
               <motion.button
                 onClick={() => smoothScrollTo('contact')}
-                className="relative px-8 py-3 text-indigo-600 dark:text-indigo-400 rounded-lg overflow-hidden"
+                className="relative px-8 py-3 text-indigo-600 dark:text-indigo-400 rounded-lg overflow-hidden w-full sm:w-auto text-center"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -169,45 +208,6 @@ const Hero = () => {
               </motion.button>
             </motion.div>
           </div>
-
-          {/* Photo Section */}
-          <motion.div
-            variants={itemVariants}
-            className="relative w-full max-w-[400px] aspect-square mx-auto lg:ml-auto order-first lg:order-last"
-          >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 blur-2xl opacity-30 dark:opacity-40" />
-            <motion.div 
-              className="relative h-full rounded-full overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 p-1"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <img
-                src="/images/profile.png"
-                alt="Felipe Vega"
-                className="w-full h-full object-cover rounded-full bg-gray-100 dark:bg-gray-800"
-              />
-            </motion.div>
-
-            {/* Tech Tags */}
-            <motion.div
-              className="absolute -left-4 top-8 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
-              whileHover={{ scale: 1.1, x: 10 }}
-            >
-              <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400">developer</span>
-            </motion.div>
-            <motion.div
-              className="absolute -right-4 top-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
-              whileHover={{ scale: 1.1, x: -10 }}
-            >
-              <span className="font-mono text-sm text-purple-600 dark:text-purple-400">designer</span>
-            </motion.div>
-            <motion.div
-              className="absolute -left-4 bottom-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
-              whileHover={{ scale: 1.1, x: 10 }}
-            >
-              <span className="font-mono text-sm text-pink-600 dark:text-pink-400">creative</span>
-            </motion.div>
-          </motion.div>
         </div>
       </motion.div>
     </section>
