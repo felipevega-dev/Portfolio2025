@@ -7,6 +7,7 @@ import {
   SiPython, SiPostgresql, SiFirebase, SiDocker,
   SiGit, SiVite, SiSupabase, SiLaragon, SiPhp, SiWordpress
 } from 'react-icons/si'
+import RPGDialog from '../RPGDialog'
 
 interface Technology {
   id: string
@@ -24,6 +25,8 @@ const Technologies = () => {
   const [hoverTimer, setHoverTimer] = useState<number | null>(null)
   const [isReordering, setIsReordering] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [activeTech, setActiveTech] = useState<Technology | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   
   // Código Matrix - caracteres aleatorios
@@ -113,20 +116,25 @@ const Technologies = () => {
   }
 
   const handleClick = (tech: Technology) => {
+    if (isMobile) {
+      // En móvil, abrir el diálogo RPG directamente
+      setActiveTech(tech);
+      setDialogOpen(true);
+      return;
+    }
+    
+    // En desktop, mantener el comportamiento actual
     if (hoveredTech === tech.id && !isReordering) {
       setShowMessage(tech.id)
       setTimeout(() => setShowMessage(null), 8000) // Ocultar mensaje después de 8 segundos
     }
   }
 
-  // Para móviles - toque largo
+  // Para móviles - toque largo (ya no necesario, pero lo mantenemos para compatibilidad)
   const handleTouchStart = (techId: string) => {
     if (isMobile && !isReordering) {
-      const timer = window.setTimeout(() => {
-        setShowMessage(techId);
-        setTimeout(() => setShowMessage(null), 8000);
-      }, 800);
-      setHoverTimer(timer);
+      // Ya no usamos el timer para mostrar el mensaje
+      // Solo para compatibilidad con versiones anteriores
     }
   };
   
@@ -282,7 +290,7 @@ const Technologies = () => {
       icon: SiSupabase, 
       color: 'rgb(23, 117, 205)', 
       darkColor: 'rgb(35, 151, 240)',
-      message: "¡Hey! Soy Supabase, la alternativa open source a Firebase. PostgreSQL, autenticación, y APIs en tiempo real. ¡Y todo con SQL! 🚀"
+      message: "¡Hey! Soy Supabase, la alternativa open source a Firebase. PostgreSQL, autenticación y APIs en tiempo real. ¡Y todo con SQL! 🚀"
     },
     { 
       id: '17', 
@@ -290,7 +298,7 @@ const Technologies = () => {
       icon: SiLaragon, 
       color: 'rgb(23, 117, 205)', 
       darkColor: 'rgb(35, 151, 240)',
-      message: "¡Hola! Soy Laragon, el entorno de desarrollo más amigable para Windows. Apache, MySQL, PHP... ¡todo en un solo click! 🎯"
+      message: "¡Hola! Soy Laragon, el entorno de desarrollo más amigable para Windows. Apache, MySQL, PHP... ¡todo en un solo clic! 🎯"
     },
     { 
       id: '18', 
@@ -298,7 +306,7 @@ const Technologies = () => {
       icon: SiPostgresql, 
       color: 'rgb(51, 103, 145)', 
       darkColor: 'rgb(81, 163, 229)',
-      message: "¡Saludos! Soy PostgreSQL, la base de datos relacional más avanzada. ACID, JSON nativo, y extensiones poderosas. ¡Soy el elefante que nunca olvida tus datos! 🐘"
+      message: "¡Saludos! Soy PostgreSQL, la base de datos relacional más avanzada. ACID, JSON nativo y extensiones poderosas. ¡Soy el elefante que nunca olvida tus datos! 🐘"
     }
   ])
 
@@ -323,7 +331,7 @@ const Technologies = () => {
     >
       <p className="mb-2 font-medium">✨ ¡Interactúa con tus tecnologías!</p>
       <ul className="text-xs text-gray-600 dark:text-gray-300 flex flex-col gap-1">
-        <li>• Mantén pulsada una tecnología para conocer más sobre ella</li>
+        <li>• Toca una tecnología para conocer más sobre ella</li>
         <li>• Arrastra las tecnologías para reorganizarlas a tu gusto</li>
       </ul>
     </motion.div>
@@ -331,6 +339,18 @@ const Technologies = () => {
 
   return (
     <section className="py-20 relative overflow-hidden">
+      {/* Diálogo RPG */}
+      {activeTech && (
+        <RPGDialog
+          isOpen={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          message={activeTech.message}
+          name={activeTech.name}
+          icon={activeTech.icon}
+          iconColor={activeTech.darkColor}
+        />
+      )}
+
       <div className="absolute inset-0 opacity-5">
         <motion.div
           className="absolute top-10 left-10 w-64 h-64 bg-gradient-to-r from-indigo-300 to-purple-300 rounded-full blur-3xl"
@@ -433,7 +453,7 @@ const Technologies = () => {
                   viewport={{ once: true }}
                   whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 1.05, cursor: "grabbing" }}
-                  drag={!isMobile || (isMobile && showMessage === null)}
+                  drag={!isMobile || (isMobile && !dialogOpen)}
                   dragConstraints={containerRef}
                   dragElastic={0.1}
                   dragMomentum={false}

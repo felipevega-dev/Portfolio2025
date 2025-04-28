@@ -1,3 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Font for RPG dialog */
+.font-pixel {
+  font-family: 'VT323', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* RPG typing effect */
+@keyframes rpgCursorBlink {
+  0%, 75% { opacity: 1; }
+  76%, 100% { opacity: 0; }
+}
+
+.font-pixel.typing::after {
+  content: '▌';
+  display: inline-block;
+  margin-left: 2px;
+  animation: rpgCursorBlink 0.8s infinite;
+  color: currentColor;
+}
