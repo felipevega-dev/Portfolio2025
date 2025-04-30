@@ -378,7 +378,7 @@ const Technologies = () => {
       color: 'rgb(23, 117, 205)', 
       darkColor: 'rgb(35, 151, 240)',
       message: t('technologies.Supabase.initial'),
-      category: 'database'
+      category: 'backend'
     },
     
     // Herramientas y Bases de datos

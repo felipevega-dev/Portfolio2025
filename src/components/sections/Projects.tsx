@@ -1,9 +1,9 @@
 import { motion, useAnimation } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useState, useRef } from 'react'
-import allProjects from '../../data/projects'
-import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar, FaInfoCircle } from 'react-icons/fa'
+import { useState, useRef, useEffect } from 'react'
+import allProjects, { searchProjects } from '../../data/projects'
+import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar, FaInfoCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import SectionHeading from '../shared/SectionHeading'
 import { Button } from '../ui/Button'
 import { useSoundContext } from '../../context/SoundContext'
@@ -290,22 +290,41 @@ const Projects = () => {
   const { t } = useTranslation()
   const [currentTab, setCurrentTab] = useState('all')
   const [visibleProjects, setVisibleProjects] = useState(6)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(0)
+  const projectsPerPage = 3
   const { play } = useSoundContext()
   
-  // Filtrar proyectos según la categoría
+  // Filtrar proyectos según la categoría y búsqueda
   const filteredProjects = currentTab === 'all' 
-    ? allProjects 
-    : allProjects.filter(project => 
+    ? (searchTerm ? searchProjects(searchTerm) : allProjects)
+    : (searchTerm 
+      ? searchProjects(searchTerm).filter(project => 
         project.tags.some(tag => 
           tag.toLowerCase().includes(currentTab.toLowerCase())
         )
       )
+      : allProjects.filter(project => 
+        project.tags.some(tag => 
+          tag.toLowerCase().includes(currentTab.toLowerCase())
+        )
+      )
+    )
   
   // Obtener proyectos destacados y limitarlos a máximo 3
   const featuredProjects = filteredProjects.filter(project => project.featured).slice(0, 3)
   
   // Obtener el resto de proyectos (no destacados)
   const regularProjects = filteredProjects.filter(project => !project.featured)
+  
+  // Calcular número de páginas para el carrusel
+  const totalPages = Math.ceil(regularProjects.length / projectsPerPage)
+  
+  // Obtener proyectos para la página actual
+  const currentProjects = regularProjects.slice(
+    currentPage * projectsPerPage, 
+    (currentPage + 1) * projectsPerPage
+  )
   
   // Categorías para las pestañas con iconos
   const categories = [
@@ -317,6 +336,23 @@ const Projects = () => {
     { id: 'backend', label: 'Backend', icon: <FaDatabase className="w-4 h-4" /> }
   ]
 
+  // Controladores de navegación carrusel
+  const nextPage = () => {
+    play()
+    setCurrentPage(prev => (prev + 1) % totalPages)
+  }
+
+  const prevPage = () => {
+    play()
+    setCurrentPage(prev => (prev - 1 + totalPages) % totalPages)
+  }
+
+  // Controlador de búsqueda
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+    setCurrentPage(0) // Resetear a primera página al buscar
+  }
+
   const handleLoadMore = () => {
     play() // Play sound
     setVisibleProjects(prev => Math.min(prev + 3, regularProjects.length))
@@ -326,6 +362,11 @@ const Projects = () => {
     play() // Play sound
     setVisibleProjects(6)
   }
+  
+  // Handler for navigating to all projects page
+  const handleViewAllProjects = () => {
+    play() // Play sound when clicking
+  }
 
   return (
     <section id="projects" className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-neutral-900/30 dark:to-gray-900/50">
@@ -334,6 +375,29 @@ const Projects = () => {
           title="Proyectos"
           subtitle="Conoce mis trabajos más recientes"
         />
+
+        {/* Barra de búsqueda con estilo RPG */}
+        <div className="relative mb-8 mx-auto max-w-2xl">
+          <div className="relative bg-white dark:bg-gray-800 rounded-full shadow-lg border-2 border-indigo-100 dark:border-indigo-900/50">
+            {/* RPG Corners */}
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5 rounded-tl-full"></div>
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5 rounded-tr-full"></div>
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
+            
+            <div className="flex items-center pl-6 pr-4">
+              <FaSearch className="text-gray-400 dark:text-gray-500" />
+              <input
+                type="text"
+                placeholder="Buscar proyectos por nombre, descripción o tecnología..."
+                className="w-full py-3 px-4 outline-none bg-transparent text-gray-700 dark:text-gray-300"
+                value={searchTerm}
+                onChange={handleSearch}
+                onFocus={() => play()}
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Filtros con efecto visual mejorado */}
         <div className="flex flex-wrap justify-center gap-3 mt-8 mb-12 max-w-3xl mx-auto">
@@ -433,7 +497,7 @@ const Projects = () => {
           </>
         )}
 
-        {/* Proyectos regulares con animación escalonada y envueltos en un contenedor RPG */}
+        {/* Proyectos regulares con carrusel */}
         <motion.div 
           className="bg-white/50 dark:bg-gray-900/30 rounded-xl p-6 shadow-lg border-2 border-indigo-100 dark:border-indigo-900/50 relative"
           initial={{ opacity: 0 }}
@@ -445,97 +509,75 @@ const Projects = () => {
           <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5"></div>
           <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5"></div>
           <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5"></div>
-          
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6"
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1
-                }
-              }
-            }}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-50px" }}
-          >
-            {regularProjects.slice(0, visibleProjects).map((project, index) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
-                index={index} 
-              />
-            ))}
-          </motion.div>
-        </motion.div>
-        
-        {/* Mensajes cuando no hay proyectos */}
-        {regularProjects.length === 0 && featuredProjects.length === 0 && (
-          <motion.div 
-            className="text-center py-12 px-8 bg-white dark:bg-gray-800/80 rounded-lg border-2 border-indigo-200 dark:border-indigo-800 relative"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* RPG Corners para el mensaje */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5"></div>
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5"></div>
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5"></div>
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5"></div>
-            
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
-              No hay proyectos que coincidan con el filtro actual.
-            </p>
-            <Button 
-              variant="outline" 
-              onClick={() => setCurrentTab('all')}
-            >
-              Ver todos los proyectos
-            </Button>
-          </motion.div>
-        )}
-        
-        {/* Load More / Show Less Button con animación y estilo RPG */}
-        {regularProjects.length > 6 && (
-          <motion.div 
-            className="flex justify-center mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            {visibleProjects < regularProjects.length ? (
-              <Button 
-                onClick={handleLoadMore} 
-                size="lg" 
-                className="px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 relative"
-              >
-                {/* RPG Button Corners */}
-                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/30"></div>
-                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/30"></div>
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/30"></div>
-                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/30"></div>
-                Ver Más Proyectos
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleShowLess} 
-                variant="outline" 
-                size="lg" 
-                className="px-8 relative"
-              >
-                {/* RPG Button Corners */}
-                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-indigo-400/50"></div>
-                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-indigo-400/50"></div>
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-indigo-400/50"></div>
-                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-indigo-400/50"></div>
-                Mostrar Menos
-              </Button>
+
+          {/* Título y botones de navegación */}
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+              <span>Página:</span>
+              {regularProjects.length > 0 && (
+                <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">
+                  {currentPage + 1}/{totalPages}
+                </span>
+              )}
+            </h3>
+
+            {totalPages > 1 && (
+              <div className="flex gap-2">
+                <button
+                  onClick={prevPage}
+                  className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors"
+                  aria-label="Página anterior"
+                >
+                  <FaChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                </button>
+                <button
+                  onClick={nextPage}
+                  className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors"
+                  aria-label="Página siguiente"
+                >
+                  <FaChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                </button>
+              </div>
             )}
-          </motion.div>
-        )}
+          </div>
+          
+          {regularProjects.length > 0 ? (
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              key={currentPage}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {currentProjects.map((project, index) => (
+                <ProjectCard 
+                  key={`${project.id}-${currentPage}-${index}`} 
+                  project={project} 
+                  index={index} 
+                />
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div 
+              className="text-center py-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
+                No se encontraron proyectos que coincidan con tu búsqueda.
+              </p>
+              {searchTerm && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setSearchTerm('')}
+                >
+                  Limpiar búsqueda
+                </Button>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     </section>
   )

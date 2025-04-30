@@ -4,6 +4,7 @@
     "welcome": "Welcome",
     "skills": "Skills & Services",
     "projects": "Projects",
+    "allProjects": "All Projects",
     "contact": "Contact"
   },
   "hero": {
@@ -27,7 +28,14 @@
     "viewAll": "View all projects",
     "technologies": "Technologies",
     "features": "Features",
-    "backToProjects": "Back to projects"
+    "backToProjects": "Back to projects",
+    "featuredExplanation": "These are my featured projects",
+    "allProjects": "All Projects",
+    "searchPlaceholder": "Search for projects by name, description or technology...",
+    "projectsFound": "project(s) found",
+    "noProjectsFound": "No projects match your search criteria.",
+    "resetFilters": "Reset filters",
+    "noDescription": "No description available for this project."
   },
   "skills": {
     "title": "Skills & Services",

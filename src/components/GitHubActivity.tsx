@@ -20,7 +20,7 @@ interface GitHubActivityProps {
   limit?: number
 }
 
-const GitHubActivity = ({ username, limit = 5 }: GitHubActivityProps) => {
+const GitHubActivity = ({ username, limit = 6 }: GitHubActivityProps) => {
   const [repos, setRepos] = useState<GitHubRepo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

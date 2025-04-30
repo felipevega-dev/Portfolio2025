@@ -4,6 +4,7 @@
     "welcome": "Bienvenida",
     "skills": "Habilidades y Servicios",
     "projects": "Proyectos",
+    "allProjects": "Todos los Proyectos",
     "contact": "Contacto"
   },
   "hero": {
@@ -27,7 +28,14 @@
     "viewAll": "Ver todos los proyectos",
     "technologies": "Tecnologías",
     "features": "Características",
-    "backToProjects": "Volver a proyectos"
+    "backToProjects": "Volver a proyectos",
+    "featuredExplanation": "Estos son mis proyectos destacados",
+    "allProjects": "Todos los Proyectos",
+    "searchPlaceholder": "Buscar proyectos por nombre, descripción o tecnología...",
+    "projectsFound": "proyecto(s) encontrado(s)",
+    "noProjectsFound": "No se encontraron proyectos que coincidan con tu búsqueda.",
+    "resetFilters": "Reiniciar filtros",
+    "noDescription": "No hay descripción disponible para este proyecto."
   },
   "skills": {
     "title": "Habilidades y Servicios",
@@ -114,7 +122,7 @@
     "readMore": "Leer más"
   },
   "footer": {
-    "rights": "© 2025 Felipe Vega. Todos los derechos reservados.",
+    "rights": "Todos los derechos reservados.",
     "builtWith": "Construido con React, TypeScript y Tailwind CSS",
     "social": "Encuéntrame en",
     "stats": {

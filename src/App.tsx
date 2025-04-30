@@ -31,8 +31,8 @@ const HomePage = () => {
     <>
       <Hero />
       <Skills />
+      <Projects />  
       <Technologies />
-      <Projects />
       <GitHubActivity username="felipevega-dev" />
       <Contact />
     </>

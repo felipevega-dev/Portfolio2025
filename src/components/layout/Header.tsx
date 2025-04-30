@@ -35,8 +35,8 @@ const Header = () => {
   const menuItems = [
     { label: t('nav.welcome'), href: '#hero' },
     { label: t('nav.skills'), href: '#skills' },
-    { label: t('technologies.title'), href: '#technologies' },
     { label: t('nav.projects'), href: '#projects' },
+    { label: t('technologies.title'), href: '#technologies' },
     { label: t('nav.contact'), href: '#contact' }
   ]
 
