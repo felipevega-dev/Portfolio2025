@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { useState, useEffect, useMemo, memo } from 'react'
+import { useState, useEffect, useMemo, memo, useRef } from 'react'
 import { 
   SiHtml5, SiCss3, SiJavascript, SiTypescript, 
   SiTailwindcss, SiReact, SiNodedotjs, SiNextdotjs, 
@@ -8,6 +8,43 @@ import {
   SiGit, SiVite, SiSupabase, SiLaragon, SiPhp, SiWordpress
 } from 'react-icons/si'
 import RPGDialog from '../RPGDialog'
+import { GiSpellBook, GiScrollUnfurled, GiMagicSwirl } from 'react-icons/gi'
+
+// Componente para el "pergamino" de título
+const SectionTitleScroll = ({ title }: { title: string }) => (
+  <div className="relative mb-16">
+    <div className="relative bg-cream-50 dark:bg-gray-800 border-2 border-indigo-200 dark:border-indigo-800 p-6 rounded-lg shadow-md w-full md:w-1/2 mx-auto text-center">
+      {/* Esquinas decorativas */}
+      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5"></div>
+      <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5"></div>
+      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5"></div>
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5"></div>
+      
+      <div className="flex justify-center mb-2">
+        <GiScrollUnfurled className="text-3xl text-indigo-600 dark:text-indigo-400" />
+      </div>
+      <h2 className="text-2xl md:text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">{title}</h2>
+      <div className="h-1 w-24 bg-gradient-to-r from-indigo-400 to-purple-500 mx-auto rounded-full"></div>
+    </div>
+    
+    {/* Iconos decorativos */}
+    <motion.div 
+      className="absolute -top-6 -left-4 text-indigo-500/20 dark:text-indigo-400/20"
+      animate={{ rotate: 360 }}
+      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+    >
+      <GiMagicSwirl size={40} />
+    </motion.div>
+    
+    <motion.div 
+      className="absolute -bottom-6 -right-4 text-purple-500/20 dark:text-purple-400/20"
+      animate={{ rotate: -360 }}
+      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+    >
+      <GiMagicSwirl size={40} />
+    </motion.div>
+  </div>
+);
 
 interface Technology {
   id: string
@@ -92,11 +129,54 @@ const TechCard = memo(({
 
 TechCard.displayName = 'TechCard'
 
+// Componente de filtro de categoría estilo RPG
+const CategoryButton = ({ 
+  label, 
+  active, 
+  onClick 
+}: { 
+  label: string, 
+  active: boolean, 
+  onClick: () => void 
+}) => (
+  <motion.button
+    className={`relative px-4 py-2 font-medium transition-all duration-300 ${
+      active 
+        ? 'text-white' 
+        : 'text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400'
+    } focus:outline-none`}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={onClick}
+  >
+    {/* Fondo activo */}
+    {active && (
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-md -z-10"
+        layoutId="categoryBackground"
+        initial={false}
+        transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
+      />
+    )}
+    
+    {/* Bordes decorativos RPG */}
+    <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-indigo-400/50 dark:border-indigo-400/70"></div>
+    <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-indigo-400/50 dark:border-indigo-400/70"></div>
+    <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-indigo-400/50 dark:border-indigo-400/70"></div>
+    <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-indigo-400/50 dark:border-indigo-400/70"></div>
+    
+    {/* Texto con efecto de brillo en hover */}
+    <span className="relative z-10">{label}</span>
+  </motion.button>
+)
+
 const Technologies = () => {
   const { t } = useTranslation()
   const [isMobile, setIsMobile] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [activeTech, setActiveTech] = useState<Technology | null>(null)
+  const [activeCategory, setActiveCategory] = useState<string>('all')
+  const sectionRef = useRef<HTMLElement>(null)
   
   // Detectar si es dispositivo móvil
   useEffect(() => {
@@ -112,6 +192,31 @@ const Technologies = () => {
     
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  // Efecto para arreglar la navegación al ancla
+  useEffect(() => {
+    // Función para manejar el evento de hash change
+    const handleHashChange = () => {
+      if (window.location.hash === '#technologies' && sectionRef.current) {
+        const yOffset = -80; // Ajusta esto según el tamaño de tu navbar
+        const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    };
+
+    // Verificar el hash inicial cuando se carga la página
+    if (window.location.hash === '#technologies') {
+      // Pequeño retraso para asegurar que el componente esté renderizado
+      setTimeout(handleHashChange, 500);
+    }
+
+    // Agregar listener para cambios en el hash
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
 
   const handleClick = (tech: Technology) => {
@@ -249,160 +354,160 @@ const Technologies = () => {
       category: 'database'
     },
     
-    // Bases de datos
-    { 
-      id: '18', 
-      name: 'PostgreSQL', 
-      icon: SiPostgresql, 
-      color: 'rgb(51, 103, 145)', 
-      darkColor: 'rgb(81, 163, 229)',
-      message: t('technologies.PostgreSQL.initial'),
-      category: 'database'
-    },
-    
     // Herramientas
     { 
       id: '13', 
+      name: 'PostgreSQL', 
+      icon: SiPostgresql, 
+      color: 'rgb(51, 103, 145)', 
+      darkColor: 'rgb(83, 147, 200)',
+      message: t('technologies.PostgreSQL.initial'),
+      category: 'database'
+    },
+    { 
+      id: '14', 
       name: 'Docker', 
       icon: SiDocker, 
-      color: 'rgb(23, 117, 205)', 
-      darkColor: 'rgb(35, 151, 240)',
+      color: 'rgb(13, 134, 215)', 
+      darkColor: 'rgb(47, 166, 246)',
       message: t('technologies.Docker.initial'),
       category: 'tools'
     },
     { 
-      id: '14', 
+      id: '15', 
       name: 'Git', 
       icon: SiGit, 
-      color: 'rgb(220, 70, 50)', 
-      darkColor: 'rgb(255, 122, 89)',
+      color: 'rgb(240, 80, 50)', 
+      darkColor: 'rgb(255, 110, 80)',
       message: t('technologies.Git.initial'),
       category: 'tools'
     },
     { 
-      id: '15', 
+      id: '17', 
       name: 'Vite', 
       icon: SiVite, 
-      color: 'rgb(63, 184, 204)', 
-      darkColor: 'rgb(102, 219, 240)',
+      color: 'rgb(184, 26, 214)', 
+      darkColor: 'rgb(220, 61, 251)',
       message: t('technologies.Vite.initial'),
       category: 'tools'
     },
     { 
-      id: '17', 
+      id: '18', 
       name: 'Laragon', 
       icon: SiLaragon, 
-      color: 'rgb(23, 117, 205)', 
-      darkColor: 'rgb(35, 151, 240)',
+      color: 'rgb(0, 135, 90)', 
+      darkColor: 'rgb(38, 173, 128)',
       message: t('technologies.Laragon.initial'),
       category: 'tools'
     },
   ], [t]);
 
-  // Instrucciones para móviles
+  // Agrupar tecnologías por categoría
+  const techs = useMemo(() => {
+    const grouped = {
+      all: techList,
+      frontend: techList.filter(tech => tech.category === 'frontend'),
+      languages: techList.filter(tech => tech.category === 'languages'),
+      backend: techList.filter(tech => tech.category === 'backend'),
+      tools: techList.filter(tech => tech.category === 'tools'),
+      database: techList.filter(tech => tech.category === 'database')
+    };
+    
+    return grouped[activeCategory as keyof typeof grouped] || grouped.all;
+  }, [techList, activeCategory]);
+
+  // Categorías para las pestañas
+  const categories = [
+    { id: 'all', label: t('technologies.categories.all') },
+    { id: 'frontend', label: t('technologies.categories.frontend') },
+    { id: 'languages', label: t('technologies.categories.languages') },
+    { id: 'backend', label: t('technologies.categories.backend') },
+    { id: 'tools', label: t('technologies.categories.tools') },
+    { id: 'database', label: t('technologies.categories.database') }
+  ];
+
+  // Instrucciones móviles
   const MobileInstructions = () => (
     <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="mb-8 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-sm text-center border border-blue-200 dark:border-blue-800"
+      className="text-center mb-8 p-4 rounded-lg bg-indigo-100/50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
     >
-      <p className="mb-2 font-medium">✨ ¡Interactúa con tus tecnologías!</p>
-      <ul className="text-xs text-gray-600 dark:text-gray-300 flex flex-col gap-1">
-        <li>• Toca una tecnología para conocer más sobre ella</li>
-      </ul>
+      <p className="text-sm text-gray-700 dark:text-gray-300">
+        <span className="inline-block bg-indigo-500 text-white px-2 py-1 rounded-md mb-2">
+          <GiSpellBook className="inline-block mr-1" /> {t('technologies.mobileInstructions.tip')}
+        </span>
+        <br />
+        {t('technologies.mobileInstructions.text')}
+      </p>
     </motion.div>
   );
 
-  // Para optimizar renderizado
-  const techGridContent = useMemo(() => (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 relative">
-      {techList.map((tech: Technology, index: number) => (
-        <TechCard
-          key={tech.id}
-          tech={tech}
-          handleClick={handleClick}
-          handleTouchEnd={handleTouchEnd}
-          index={index}
-        />
-      ))}
-    </div>
-  ), [techList]);
-
   return (
-    <section className="py-20 relative overflow-hidden">
-      {/* Diálogo RPG */}
-      {activeTech && (
-        <RPGDialog
-          isOpen={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          technology={activeTech.name}
-          icon={activeTech.icon}
-          iconColor={activeTech.darkColor}
-        />
-      )}
-
-      <div className="absolute inset-0 opacity-5">
-        <motion.div
-          className="absolute top-10 left-10 w-64 h-64 bg-gradient-to-r from-indigo-300 to-purple-300 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-10 right-10 w-64 h-64 bg-gradient-to-r from-purple-300 to-pink-300 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            repeatType: "reverse",
-            delay: 4,
-          }}
-        />
+    <section 
+      id="technologies" 
+      ref={sectionRef}
+      className="py-24 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
+    >
+      {/* Background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-1/3 h-1/3 bg-indigo-500/5 dark:bg-indigo-500/10 blur-[100px] rounded-full top-0 right-0" />
+        <div className="absolute w-1/4 h-1/4 bg-purple-500/5 dark:bg-purple-500/10 blur-[100px] rounded-full bottom-1/2 left-0" />
       </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
-            {t('technologies.title')}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {t('technologies.description')}
-          </p>
-        </motion.div>
-
-        {isMobile && <MobileInstructions />}
-
-        <div 
-          className="relative p-8 rounded-2xl bg-gradient-to-br from-white to-indigo-50 dark:from-gray-900 dark:to-indigo-950/40 border-4 border-indigo-600/20 dark:border-indigo-400/20 shadow-xl overflow-hidden"
-          style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.2), inset 0 0 30px rgba(99, 102, 241, 0.1)' }}
-        >
-          {/* RPG style corner decorations */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-l-4 border-t-4 border-indigo-600/40 dark:border-indigo-400/40 -translate-x-1 -translate-y-1"></div>
-          <div className="absolute top-0 right-0 w-8 h-8 border-r-4 border-t-4 border-indigo-600/40 dark:border-indigo-400/40 translate-x-1 -translate-y-1"></div>
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-l-4 border-b-4 border-indigo-600/40 dark:border-indigo-400/40 -translate-x-1 translate-y-1"></div>
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-r-4 border-b-4 border-indigo-600/40 dark:border-indigo-400/40 translate-x-1 translate-y-1"></div>
-          
-          {/* Tecnologías grid - Memoizado para mejor rendimiento */}
-          {techGridContent}
+      
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Título estilo RPG pergamino */}
+        <SectionTitleScroll title={t('technologies.title')} />
+        
+        {/* Filtros de categoría estilo RPG */}
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
+          <motion.div 
+            className="p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 shadow-lg border border-indigo-100 dark:border-indigo-900/40 flex flex-wrap justify-center gap-2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {categories.map((category, i) => (
+              <CategoryButton
+                key={category.id}
+                label={category.label}
+                active={activeCategory === category.id}
+                onClick={() => setActiveCategory(category.id)}
+              />
+            ))}
+          </motion.div>
         </div>
+        
+        {/* Instrucciones móviles si es necesario */}
+        {isMobile && <MobileInstructions />}
+        
+        {/* Grid de tecnologías */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {techs.map((tech, index) => (
+            <TechCard
+              key={tech.id}
+              tech={tech}
+              handleClick={handleClick}
+              handleTouchEnd={handleTouchEnd}
+              index={index}
+            />
+          ))}
+        </div>
+
+        {/* Diálogo RPG */}
+        {dialogOpen && activeTech && (
+          <RPGDialog
+            isOpen={dialogOpen}
+            onClose={() => setDialogOpen(false)}
+            technology={activeTech.name}
+            icon={activeTech.icon}
+            iconColor={activeTech.darkColor}
+          />
+        )}
       </div>
     </section>
   )
 }
 
-export default memo(Technologies) 
+export default Technologies 

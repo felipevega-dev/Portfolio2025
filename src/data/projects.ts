@@ -6,6 +6,7 @@ export interface Project {
   demoUrl?: string;
   codeUrl?: string;
   tags: string[];
+  featured?: boolean;
 }
 
 const projects: Project[] = [
@@ -16,7 +17,8 @@ const projects: Project[] = [
     imageUrl: "/images/projects/portfolio.png", 
     demoUrl: "https://portfolio-felipevega.vercel.app/",
     codeUrl: "https://github.com/felipevega-dev/Portfolio",
-    tags: ["React", "Next.js", "Tailwind", "TypeScript", "Framer Motion"]
+    tags: ["React", "Next.js", "Tailwind", "TypeScript", "Framer Motion"],
+    featured: true
   },
   {
     id: "featuring",
@@ -24,7 +26,8 @@ const projects: Project[] = [
     description: "Aplicación móvil para conectar músicos y facilitar colaboraciones artísticas. Incluye publicaciones, videos cortos, sistema de match, perfiles y valoraciones.",
     imageUrl: "/images/projects/featuring.png",
     codeUrl: "https://github.com/felipevega-dev/Featuring",
-    tags: ["React", "React Native", "Expo", "TypeScript", "Supabase", "PostgreSQL", "NativeWind"]
+    tags: ["React", "React Native", "Expo", "TypeScript", "Supabase", "PostgreSQL", "NativeWind"],
+    featured: true
   },
   {
     id: "ikintsugi-theme",

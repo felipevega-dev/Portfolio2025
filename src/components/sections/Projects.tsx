@@ -1,9 +1,11 @@
-import { motion } from 'framer-motion'
+import { motion, useAnimation } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import allProjects from '../../data/projects'
-import { FaGithub, FaExternalLinkAlt, FaArrowRight } from 'react-icons/fa'
+import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaCode, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar } from 'react-icons/fa'
+import SectionHeading from '../shared/SectionHeading'
+import { Button } from '../ui/Button'
 
 interface ProjectCardProps {
   project: {
@@ -14,6 +16,7 @@ interface ProjectCardProps {
     tags: string[];
     demoUrl?: string;
     codeUrl?: string;
+    featured?: boolean;
   }
   index: number
   featured?: boolean
@@ -21,7 +24,7 @@ interface ProjectCardProps {
 
 // Badge component for featured projects
 const FeaturedBadge = () => (
-  <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+  <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
     Destacado
   </div>
 )
@@ -29,30 +32,65 @@ const FeaturedBadge = () => (
 const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => {
   const { t } = useTranslation()
   const [isHovered, setIsHovered] = useState(false)
+  const controls = useAnimation()
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  // Efecto de mouse parallax
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    
+    const card = cardRef.current
+    const rect = card.getBoundingClientRect()
+    
+    // Cálculo del centro de la tarjeta
+    const cardCenterX = rect.left + rect.width / 2
+    const cardCenterY = rect.top + rect.height / 2
+    
+    // Cálculo de la distancia del mouse al centro
+    const mouseX = e.clientX - cardCenterX
+    const mouseY = e.clientY - cardCenterY
+    
+    // Normalizar valores para la rotación (reducir el efecto)
+    const rotateY = mouseX * 0.02
+    const rotateX = -mouseY * 0.02
+    
+    controls.start({
+      rotateY: rotateY,
+      rotateX: rotateX,
+      transition: { type: "spring", stiffness: 300, damping: 30 }
+    })
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovered(false)
+    controls.start({
+      rotateY: 0,
+      rotateX: 0,
+      transition: { type: "spring", stiffness: 300, damping: 30 }
+    })
+  }
 
   return (
     <motion.div
-      className={`relative group ${featured ? 'md:col-span-2 row-span-2' : ''}`}
+      className={`relative project-card overflow-visible ${featured || project.featured ? 'md:col-span-2' : ''}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ delay: index * 0.15 }}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
+      ref={cardRef}
     >
       {/* Card with perspective effect */}
       <motion.div 
-        className={`h-full overflow-hidden rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 ${
-          featured ? 'shadow-xl' : 'shadow-lg'
+        className={`h-full overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/95 ${
+          featured || project.featured ? 'shadow-xl' : 'shadow-lg'
         }`}
-        whileHover={{ y: -5 }}
-        animate={{
-          rotateY: isHovered ? 5 : 0,
-          rotateX: isHovered ? -5 : 0,
-        }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        animate={controls}
+        style={{ transformStyle: "preserve-3d" }}
       >
-        {featured && <FeaturedBadge />}
+        {(featured || project.featured) && <FeaturedBadge />}
         
         {/* Image container with overlay */}
         <div className="relative overflow-hidden">
@@ -62,9 +100,13 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
               alt={project.title}
               className="w-full h-full object-cover"
               animate={{ 
-                scale: isHovered ? 1.1 : 1,
+                scale: isHovered ? 1.05 : 1,
               }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5 }}
+              style={{ 
+                transformStyle: "preserve-3d",
+                transform: "translateZ(20px)"  // Efecto 3D sutil
+              }}
             />
           </div>
           
@@ -78,25 +120,30 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
           
           {/* Tech tags floating at the bottom */}
           <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 z-10">
-            {project.tags.slice(0, featured ? 6 : 3).map((tech) => (
+            {project.tags.slice(0, featured || project.featured ? 6 : 3).map((tech, i) => (
               <motion.span 
                 key={tech} 
                 className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-md text-xs text-white font-medium"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: isHovered ? 1 : 0.7, y: isHovered ? 0 : 10 }}
-                transition={{ duration: 0.3 }}
+                animate={{ 
+                  opacity: isHovered ? 1 : 0.7, 
+                  y: isHovered ? 0 : 10,
+                  scale: isHovered ? 1.05 : 1
+                }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+                style={{ transformStyle: "preserve-3d", transform: "translateZ(40px)" }}
               >
                 {tech}
               </motion.span>
             ))}
-            {project.tags.length > (featured ? 6 : 3) && (
+            {project.tags.length > (featured || project.featured ? 6 : 3) && (
               <motion.span 
                 className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-md text-xs text-white font-medium"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: isHovered ? 1 : 0.7, y: isHovered ? 0 : 10 }}
                 transition={{ duration: 0.3 }}
               >
-                +{project.tags.length - (featured ? 6 : 3)}
+                +{project.tags.length - (featured || project.featured ? 6 : 3)}
               </motion.span>
             )}
           </div>
@@ -104,23 +151,43 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
         
         {/* Content section */}
         <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+          <motion.h3 
+            className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors"
+            style={{ 
+              transformStyle: "preserve-3d",
+              transform: "translateZ(10px)" 
+            }}
+          >
             {project.title}
-          </h3>
+          </motion.h3>
           
-          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+          <motion.p 
+            className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3"
+            style={{ 
+              transformStyle: "preserve-3d",
+              transform: "translateZ(5px)" 
+            }}
+          >
             {project.description}
-          </p>
+          </motion.p>
           
           {/* Action links */}
-          <div className="flex items-center justify-between mt-4">
-            <Link
-              to={`/projects/${project.id}`}
-              className="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-medium text-sm hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+          <div className="flex items-center justify-between mt-6">
+            <motion.div
+              whileHover={{ x: 5 }}
+              style={{ 
+                transformStyle: "preserve-3d",
+                transform: "translateZ(20px)" 
+              }}
             >
-              {t('projects.viewDetails')}
-              <FaArrowRight className="ml-2 text-xs" />
-            </Link>
+              <Link
+                to={`/projects/${project.id}`}
+                className="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-medium text-sm hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+              >
+                {t('projects.viewDetails')}
+                <FaArrowRight className="ml-2 text-xs" />
+              </Link>
+            </motion.div>
             
             <div className="flex space-x-3">
               {project.codeUrl && (
@@ -129,8 +196,12 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
-                  whileHover={{ y: -2 }}
-                  title="Ver código"
+                  whileHover={{ y: -2, scale: 1.1 }}
+                  title={t('projects.viewCode')}
+                  style={{ 
+                    transformStyle: "preserve-3d",
+                    transform: "translateZ(20px)" 
+                  }}
                 >
                   <FaGithub className="w-4 h-4" />
                 </motion.a>
@@ -142,8 +213,12 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
-                  whileHover={{ y: -2 }}
-                  title="Ver demo"
+                  whileHover={{ y: -2, scale: 1.1 }}
+                  title={t('projects.viewDemo')}
+                  style={{ 
+                    transformStyle: "preserve-3d",
+                    transform: "translateZ(20px)" 
+                  }}
                 >
                   <FaExternalLinkAlt className="w-4 h-4" />
                 </motion.a>
@@ -156,75 +231,211 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
   )
 }
 
+// Componente de filtro de categoría mejorado
+const FilterButton = ({ 
+  label, 
+  icon, 
+  active, 
+  onClick 
+}: { 
+  label: string, 
+  icon: React.ReactNode, 
+  active: boolean, 
+  onClick: () => void 
+}) => (
+  <motion.button
+    className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+      active 
+        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md' 
+        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+    }`}
+    whileHover={{ y: -2, scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={onClick}
+  >
+    <span className="flex items-center justify-center w-5 h-5">{icon}</span>
+    <span>{label}</span>
+  </motion.button>
+)
+
 const Projects = () => {
   const { t } = useTranslation()
+  const [currentTab, setCurrentTab] = useState('all')
+  const [visibleProjects, setVisibleProjects] = useState(6)
   
-  // Animate section elements on view
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
-      }
-    }
+  // Filtrar proyectos según la categoría
+  const filteredProjects = currentTab === 'all' 
+    ? allProjects 
+    : allProjects.filter(project => 
+        project.tags.some(tag => 
+          tag.toLowerCase().includes(currentTab.toLowerCase())
+        )
+      )
+  
+  // Obtener proyectos destacados
+  const featuredProjects = filteredProjects.filter(project => project.featured)
+  
+  // Obtener el resto de proyectos (no destacados)
+  const regularProjects = filteredProjects.filter(project => !project.featured)
+  
+  // Categorías para las pestañas con iconos
+  const categories = [
+    { id: 'all', label: 'All', icon: <FaLaptopCode className="w-4 h-4" /> },
+    { id: 'react', label: 'React', icon: <FaReact className="w-4 h-4" /> },
+    { id: 'javascript', label: 'JavaScript', icon: <FaJsSquare className="w-4 h-4" /> }, 
+    { id: 'wordpress', label: 'WordPress', icon: <FaWordpress className="w-4 h-4" /> },
+    { id: 'mobile', label: 'Mobile', icon: <FaMobileAlt className="w-4 h-4" /> },
+    { id: 'backend', label: 'Backend', icon: <FaDatabase className="w-4 h-4" /> }
+  ]
+
+  const handleLoadMore = () => {
+    setVisibleProjects(prev => Math.min(prev + 3, regularProjects.length))
+  }
+
+  const handleShowLess = () => {
+    setVisibleProjects(6)
   }
 
   return (
-    <section id="projects" className="py-20 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div className="absolute top-1/4 -right-24 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl"></div>
-      </div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
-            {t('projects.title')}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {t('projects.description')}
-          </p>
-        </motion.div>
+    <section id="projects" className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-neutral-900/30 dark:to-gray-900/50">
+      <div className="container mx-auto px-4">
+        <SectionHeading
+          title="Proyectos"
+          subtitle="Conoce mis trabajos más recientes"
+        />
 
+        {/* Filtros con efecto visual mejorado */}
+        <div className="flex flex-wrap justify-center gap-3 mt-8 mb-12 max-w-3xl mx-auto">
+          <motion.div 
+            className="bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg flex flex-wrap justify-center gap-2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            {categories.map((category, index) => (
+              <FilterButton
+                key={category.id}
+                label={category.label}
+                icon={category.icon}
+                active={currentTab === category.id}
+                onClick={() => setCurrentTab(category.id)}
+              />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Proyectos destacados (si hay) */}
+        {featuredProjects.length > 0 && (
+          <>
+            <motion.div 
+              className="mb-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span className="mr-2 p-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-md">
+                  <FaStar className="w-4 h-4 text-white" />
+                </span>
+                Proyectos Destacados
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {featuredProjects.map((project, index) => (
+                  <ProjectCard 
+                    key={project.id} 
+                    project={project} 
+                    index={index} 
+                    featured={true} 
+                  />
+                ))}
+              </div>
+            </motion.div>
+            
+            {/* Separador más elegante */}
+            <div className="relative flex items-center justify-center my-16">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
+              <div className="absolute bg-white dark:bg-gray-900 px-6 text-gray-500 dark:text-gray-400 text-sm font-medium">
+                Más Proyectos
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Proyectos regulares con animación escalonada */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6"
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
         >
-          {allProjects.map((project, index) => (
+          {regularProjects.slice(0, visibleProjects).map((project, index) => (
             <ProjectCard 
               key={project.id} 
               project={project} 
               index={index} 
-              featured={index === 0} // Make the first project featured
             />
           ))}
         </motion.div>
         
-        {/* View all projects button */}
-        <motion.div 
-          className="mt-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <Link to="/projects" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-full hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl">
-            {t('projects.viewAll')}
-            <FaArrowRight className="ml-2" />
-          </Link>
-        </motion.div>
+        {/* Mensajes cuando no hay proyectos */}
+        {regularProjects.length === 0 && (
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+              No hay proyectos que coincidan con el filtro actual.
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={() => setCurrentTab('all')}
+            >
+              Ver todos los proyectos
+            </Button>
+          </motion.div>
+        )}
+        
+        {/* Load More / Show Less Button con animación */}
+        {regularProjects.length > 6 && (
+          <motion.div 
+            className="flex justify-center mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            {visibleProjects < regularProjects.length ? (
+              <Button 
+                onClick={handleLoadMore} 
+                size="lg" 
+                className="px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+              >
+                Ver Más Proyectos
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleShowLess} 
+                variant="outline" 
+                size="lg" 
+                className="px-8"
+              >
+                Mostrar Menos
+              </Button>
+            )}
+          </motion.div>
+        )}
       </div>
     </section>
   )
