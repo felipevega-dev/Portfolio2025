@@ -1,42 +1,42 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { useTheme, useLanguage } from '../../context'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { t, i18n } = useTranslation()
+  const [scrolled, setScrolled] = useState(false)
+  const { t } = useTranslation()
+  const { isDarkMode, toggleDarkMode } = useTheme()
+  const { currentLanguage, changeLanguage } = useLanguage()
+
+  // Detectar scroll para cambiar la apariencia del header
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY
+      if (offset > 50) {
+        setScrolled(true)
+      } else {
+        setScrolled(false)
+      }
+    }
+
+    // Añadir evento de scroll
+    window.addEventListener('scroll', handleScroll)
+    
+    // Limpieza del evento al desmontar
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   const menuItems = [
     { label: t('nav.welcome'), href: '#hero' },
     { label: t('nav.skills'), href: '#skills' },
+    { label: t('technologies.title'), href: '#technologies' },
     { label: t('nav.projects'), href: '#projects' },
     { label: t('nav.contact'), href: '#contact' }
   ]
-
-  // Sistema de modo oscuro automático
-  useEffect(() => {
-    // Verifica si el usuario tiene preferencia guardada
-    const savedTheme = localStorage.getItem('theme')
-    
-    if (savedTheme) {
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
-    } else {
-      // Si no hay preferencia, usa la del sistema
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      document.documentElement.classList.toggle('dark', prefersDark)
-    }
-
-    // Escucha cambios en las preferencias del sistema
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem('theme')) {
-        document.documentElement.classList.toggle('dark', e.matches)
-      }
-    }
-
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
 
   const smoothScrollTo = (elementId: string) => {
     const element = document.getElementById(elementId)
@@ -44,9 +44,13 @@ const Header = () => {
 
     const header = document.querySelector('header')
     const headerHeight = header?.offsetHeight || 0
+    
+    // Añadir un pequeño offset para no quedar exactamente al borde del elemento
+    const scrollOffset = 20
     const elementPosition = element.getBoundingClientRect().top + window.scrollY
-    const offsetPosition = elementPosition - headerHeight
+    const offsetPosition = elementPosition - headerHeight - scrollOffset
 
+    // Usar animación más suave
     window.scrollTo({
       top: offsetPosition,
       behavior: 'smooth'
@@ -59,8 +63,14 @@ const Header = () => {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
-      <nav className="container mx-auto px-6 py-4">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled 
+          ? 'bg-white/95 dark:bg-gray-900/95 shadow-md backdrop-blur-sm py-2' 
+          : 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm py-4'
+      }`}
+    >
+      <nav className="container mx-auto px-6">
         <div className="flex items-center justify-between">
           <motion.button
             onClick={() => smoothScrollTo('hero')}
@@ -71,15 +81,16 @@ const Header = () => {
           </motion.button>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {menuItems.map((item) => (
               <motion.button
                 key={item.href}
                 onClick={() => smoothScrollTo(item.href.slice(1))}
-                className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors"
+                className="text-gray-600 hover:text-indigo-600 dark:text-gray-300 dark:hover:text-indigo-400 transition-colors relative overflow-hidden group"
                 whileHover={{ y: -2 }}
               >
                 {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 transition-all duration-300 group-hover:w-full"></span>
               </motion.button>
             ))}
 
@@ -89,9 +100,9 @@ const Header = () => {
                 className="flex items-center space-x-1 p-1 rounded-full bg-gray-100 dark:bg-gray-800"
               >
                 <motion.button
-                  onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en')}
+                  onClick={() => changeLanguage(currentLanguage === 'en' ? 'es' : 'en')}
                   className={`px-2 py-1 rounded-full transition-all ${
-                    i18n.language === 'es' 
+                    currentLanguage === 'es' 
                       ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm' 
                       : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'
                   }`}
@@ -101,9 +112,9 @@ const Header = () => {
                   ES
                 </motion.button>
                 <motion.button
-                  onClick={() => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es')}
+                  onClick={() => changeLanguage(currentLanguage === 'es' ? 'en' : 'es')}
                   className={`px-2 py-1 rounded-full transition-all ${
-                    i18n.language === 'en'
+                    currentLanguage === 'en'
                       ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
                       : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'
                   }`}
@@ -116,10 +127,7 @@ const Header = () => {
 
               {/* Dark Mode Toggle */}
               <motion.button
-                onClick={() => {
-                  const isDark = document.documentElement.classList.toggle('dark')
-                  localStorage.setItem('theme', isDark ? 'dark' : 'light')
-                }}
+                onClick={toggleDarkMode}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -152,10 +160,7 @@ const Header = () => {
           <div className="md:hidden flex items-center space-x-4">
             {/* Dark Mode Toggle Mobile */}
             <motion.button
-              onClick={() => {
-                const isDark = document.documentElement.classList.toggle('dark')
-                localStorage.setItem('theme', isDark ? 'dark' : 'light')
-              }}
+              onClick={toggleDarkMode}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -187,9 +192,9 @@ const Header = () => {
               className="flex items-center space-x-1 p-1 rounded-full bg-gray-100 dark:bg-gray-800"
             >
               <motion.button
-                onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en')}
+                onClick={() => changeLanguage(currentLanguage === 'en' ? 'es' : 'en')}
                 className={`px-2 py-1 rounded-full transition-all ${
-                  i18n.language === 'es' 
+                  currentLanguage === 'es' 
                     ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm' 
                     : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'
                 }`}
@@ -199,9 +204,9 @@ const Header = () => {
                 ES
               </motion.button>
               <motion.button
-                onClick={() => i18n.changeLanguage(i18n.language === 'es' ? 'en' : 'es')}
+                onClick={() => changeLanguage(currentLanguage === 'es' ? 'en' : 'es')}
                 className={`px-2 py-1 rounded-full transition-all ${
-                  i18n.language === 'en'
+                  currentLanguage === 'en'
                     ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
                     : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'
                 }`}

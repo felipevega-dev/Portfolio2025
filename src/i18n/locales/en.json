@@ -22,7 +22,12 @@
     "title": "Featured Projects",
     "description": "A selection of my most recent and meaningful work. Each project represents a unique challenge and an opportunity to learn and grow.",
     "viewDemo": "View Demo",
-    "viewCode": "View Code"
+    "viewCode": "View Code",
+    "viewDetails": "View details",
+    "viewAll": "View all projects",
+    "technologies": "Technologies",
+    "features": "Features",
+    "backToProjects": "Back to projects"
   },
   "skills": {
     "title": "Skills & Services",
@@ -56,6 +61,7 @@
     "description": "I'm always interested in hearing about new projects and opportunities. Feel free to reach out!",
     "connect": "Connect with me",
     "form": {
+      "title": "Send me a message",
       "name": "Name",
       "email": "Email",
       "message": "Message",
@@ -84,5 +90,29 @@
       "usedIn": "Projects where I've been used:"
     },
     "backToOptions": "Back to options"
+  },
+  "github": {
+    "title": "GitHub Activity",
+    "lastUpdate": "Last update",
+    "noDescription": "No description available"
+  },
+  "common": {
+    "retry": "Retry",
+    "loading": "Loading...",
+    "readMore": "Read more"
+  },
+  "footer": {
+    "rights": "© 2025 Felipe Vega. All rights reserved.",
+    "builtWith": "Built with React, TypeScript and Tailwind CSS",
+    "social": "Find me on",
+    "stats": {
+      "title": "Stats",
+      "level": "Level",
+      "xp": "Experience",
+      "skills": "Skills unlocked"
+    }
+  },
+  "techStack": {
+    "title": "My Tech Stack"
   }
 } 

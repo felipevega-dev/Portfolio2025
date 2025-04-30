@@ -1,13 +1,70 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    
+    <!-- Meta tags básicos -->
+    <title>Felipe Vega | Desarrollador de Software</title>
+    <meta name="description" content="Desarrollador de Software especializado en tecnologías web modernas y aplicaciones móviles. Experto en React, TypeScript y diseño UI/UX." />
+    <meta name="author" content="Felipe Vega" />
+    <meta name="keywords" content="desarrollador, software, React, TypeScript, Next.js, mobile, web, frontend, backend, fullstack" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://felipevega.dev/" />
+    <meta property="og:title" content="Felipe Vega | Desarrollador de Software" />
+    <meta property="og:description" content="Desarrollador de Software especializado en tecnologías web modernas y aplicaciones móviles." />
+    <meta property="og:image" content="https://felipevega.dev/og-image.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://felipevega.dev/" />
+    <meta property="twitter:title" content="Felipe Vega | Desarrollador de Software" />
+    <meta property="twitter:description" content="Desarrollador de Software especializado en tecnologías web modernas y aplicaciones móviles." />
+    <meta property="twitter:image" content="https://felipevega.dev/og-image.png" />
+    
+    <!-- Enlaces canónicos -->
+    <link rel="canonical" href="https://felipevega.dev/" />
+    
+    <!-- Manifiesto PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#3b82f6" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Script para detectar preferencia de tema oscuro -->
+    <script>
+      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    </script>
+    
+    <!-- Service Worker para PWA -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('Service Worker registrado con éxito:', registration.scope);
+            })
+            .catch(error => {
+              console.log('Error al registrar el Service Worker:', error);
+            });
+        })
+      }
+    </script>
   </body>
 </html>

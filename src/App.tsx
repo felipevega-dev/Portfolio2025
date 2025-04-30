@@ -8,18 +8,22 @@ import Skills from './components/sections/Skills'
 import Technologies from './components/sections/Technologies'
 import Contact from './components/sections/Contact'
 import Footer from './components/layout/Footer'
+import GitHubActivity from './components/GitHubActivity'
+import SEOHead from './components/SEOHead'
 import './i18n/config'
 
 // Layout component to wrap the main content
 const Layout = () => {
   return (
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+      <SEOHead />
       <Header />
       <main>
         <Hero />
         <Skills />
         <Technologies />
         <Projects />
+        <GitHubActivity username="felipevega-dev" />
         <Contact />
       </main>
       <Footer />

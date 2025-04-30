@@ -2,6 +2,8 @@ import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import projects from '../data/projects'
+import SEOHead from './SEOHead'
+import LazyImage from './LazyImage'
 
 // Define extended project data for detailed pages
 interface ProjectDetail {
@@ -119,6 +121,12 @@ const ProjectDetail = () => {
 
   return (
     <div className="min-h-screen py-20">
+      <SEOHead 
+        title={`${project.title} | Felipe Vega`}
+        description={project.fullDescription}
+        image={project.image}
+        article={true}
+      />
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -238,10 +246,12 @@ const ProjectDetail = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <img
+                <LazyImage
                   src={project.image}
                   alt={project.title}
                   className="w-full h-auto"
+                  effect="blur"
+                  wrapperClassName="w-full h-auto"
                 />
               </motion.div>
 
@@ -258,10 +268,12 @@ const ProjectDetail = () => {
                       className="rounded-lg overflow-hidden shadow-lg"
                       whileHover={{ scale: 1.05 }}
                     >
-                      <img
+                      <LazyImage
                         src={screenshot}
                         alt={`${project.title} screenshot ${index + 1}`}
                         className="w-full h-auto"
+                        effect="blur" 
+                        wrapperClassName="w-full h-auto"
                       />
                     </motion.div>
                   ))}

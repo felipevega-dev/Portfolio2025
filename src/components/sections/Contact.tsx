@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { FaGithub, FaLinkedin, FaTwitter, FaMapMarkerAlt, FaLaptopCode } from 'react-icons/fa'
 import { MdEmail, MdSend } from 'react-icons/md'
-import emailjs from '@emailjs/browser'
 import { useTranslation } from 'react-i18next'
 
 const Contact = () => {
@@ -20,17 +19,22 @@ const Contact = () => {
     setIsSubmitting(true)
     setSubmitStatus('idle')
 
+    // Validación básica
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setSubmitStatus('error')
+      setIsSubmitting(false)
+      return
+    }
+
     try {
-      await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-        },
-        'YOUR_PUBLIC_KEY'
-      )
+      // Llamar a tu API en lugar de EmailJS directamente
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      
+      if (!response.ok) throw new Error('Network response was not ok')
       setSubmitStatus('success')
       setFormData({ name: '', email: '', message: '' })
     } catch (error) {
@@ -149,15 +153,15 @@ const Contact = () => {
                 </p>
               </div>
               
-              {/* Map image or graphic could go here */}
-              <div className="h-40 bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center">
-                <div className="w-full h-full bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/40 dark:to-purple-900/40 flex items-center justify-center">
-                  <img
-                    src="https://via.placeholder.com/400x200?text=Santiago,+Chile"
-                    alt="Map"
-                    className="w-full h-full object-cover opacity-60"
-                  />
-                </div>
+              {/* Santiago, Chile map */}
+              <div className="h-40 bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center overflow-hidden">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d106551.15722433096!2d-70.6930362182308!3d-33.47278700311063!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5410425af2f%3A0x8475d53c400f0931!2sSantiago%2C%20Regi%C3%B3n%20Metropolitana%2C%20Chile!5e0!3m2!1ses!2ses!4v1624132241539!5m2!1ses!2ses" 
+                  className="w-full h-full border-0" 
+                  loading="lazy"
+                  title="Santiago de Chile map"
+                  style={{ filter: isDarkMode ? 'invert(0.9) hue-rotate(180deg)' : 'none' }}
+                ></iframe>
               </div>
             </div>
           </motion.div>
@@ -286,5 +290,8 @@ const Contact = () => {
     </section>
   )
 }
+
+// Variable para controlar el tema oscuro
+const isDarkMode = document.documentElement.classList.contains('dark')
 
 export default Contact 

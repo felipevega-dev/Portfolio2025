@@ -22,7 +22,12 @@
     "title": "Proyectos Destacados",
     "description": "Una selección de mis trabajos más recientes y significativos. Cada proyecto representa un desafío único y una oportunidad para aprender y crecer.",
     "viewDemo": "Ver Demo",
-    "viewCode": "Ver Código"
+    "viewCode": "Ver Código",
+    "viewDetails": "Ver detalles",
+    "viewAll": "Ver todos los proyectos",
+    "technologies": "Tecnologías",
+    "features": "Características",
+    "backToProjects": "Volver a proyectos"
   },
   "skills": {
     "title": "Habilidades y Servicios",
@@ -56,6 +61,7 @@
     "description": "Siempre estoy interesado en escuchar sobre nuevos proyectos y oportunidades. ¡No dudes en contactarme!",
     "connect": "Conéctate conmigo",
     "form": {
+      "title": "Envíame un mensaje",
       "name": "Nombre",
       "email": "Correo electrónico",
       "message": "Mensaje",
@@ -84,5 +90,29 @@
       "usedIn": "Proyectos en los que me utilizó:"
     },
     "backToOptions": "Volver a opciones"
+  },
+  "github": {
+    "title": "Actividad en GitHub",
+    "lastUpdate": "Última actualización",
+    "noDescription": "Sin descripción disponible"
+  },
+  "common": {
+    "retry": "Reintentar",
+    "loading": "Cargando...",
+    "readMore": "Leer más"
+  },
+  "footer": {
+    "rights": "© 2025 Felipe Vega. Todos los derechos reservados.",
+    "builtWith": "Construido con React, TypeScript y Tailwind CSS",
+    "social": "Encuéntrame en",
+    "stats": {
+      "title": "Estadísticas",
+      "level": "Nivel",
+      "xp": "Experiencia",
+      "skills": "Habilidades desbloqueadas"
+    }
+  },
+  "techStack": {
+    "title": "Mi Stack Tecnológico"
   }
 } 

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import LazyImage from './LazyImage'
 
 interface Technology {
   name: string
@@ -34,13 +35,20 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
         <div className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl relative">
           {/* Image Container */}
           <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
-            <motion.img
-              src={image}
-              alt={title}
-              className="w-full h-full object-cover"
+            <motion.div
               animate={{ scale: isHovered ? 1.1 : 1 }}
               transition={{ duration: 0.3 }}
-            />
+              className="w-full h-full"
+            >
+              <LazyImage
+                src={image}
+                alt={title}
+                className="w-full h-full object-cover"
+                effect="blur"
+                wrapperClassName="w-full h-full"
+              />
+            </motion.div>
+            
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             
