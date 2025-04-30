@@ -253,7 +253,7 @@ const FilterButton = ({
 
   return (
     <motion.button
-      className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+      className={`relative flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
         active 
           ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md' 
           : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
@@ -262,6 +262,12 @@ const FilterButton = ({
       whileTap={{ scale: 0.95 }}
       onClick={handleClick}
     >
+      {/* RPG Corners */}
+      <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
+      <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
+      <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
+      <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
+      
       <span className="flex items-center justify-center w-5 h-5">{icon}</span>
       <span>{label}</span>
     </motion.button>
@@ -320,11 +326,17 @@ const Projects = () => {
         {/* Filtros con efecto visual mejorado */}
         <div className="flex flex-wrap justify-center gap-3 mt-8 mb-12 max-w-3xl mx-auto">
           <motion.div 
-            className="bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg flex flex-wrap justify-center gap-2"
+            className="bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg flex flex-wrap justify-center gap-2 relative border border-indigo-100 dark:border-indigo-900/50"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
+            {/* RPG Corners */}
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5 rounded-tl-full"></div>
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5 rounded-tr-full"></div>
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
+            
             {categories.map((category, index) => (
               <FilterButton
                 key={category.id}
@@ -348,7 +360,12 @@ const Projects = () => {
               transition={{ delay: 0.2 }}
             >
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span className="mr-2 p-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-md">
+                <span className="mr-2 p-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-md relative">
+                  {/* Mini RPG Corners */}
+                  <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
+                  <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
+                  <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
+                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
                   <FaStar className="w-4 h-4 text-white" />
                 </span>
                 Proyectos Destacados
@@ -365,10 +382,15 @@ const Projects = () => {
               </div>
             </motion.div>
             
-            {/* Separador más elegante */}
+            {/* Separador más elegante con estilo RPG */}
             <div className="relative flex items-center justify-center my-16">
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
-              <div className="absolute bg-white dark:bg-gray-900 px-6 text-gray-500 dark:text-gray-400 text-sm font-medium">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-indigo-300 dark:via-indigo-700 to-transparent"></div>
+              <div className="absolute bg-white dark:bg-gray-900 px-6 text-gray-500 dark:text-gray-400 text-sm font-medium border-[0.5px] border-indigo-200 dark:border-indigo-800 rounded-full">
+                {/* Mini RPG Corners para el texto del separador */}
+                <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-indigo-400/50 dark:border-indigo-400/50 -translate-x-0.5 -translate-y-0.5 rounded-tl-full"></div>
+                <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-indigo-400/50 dark:border-indigo-400/50 translate-x-0.5 -translate-y-0.5 rounded-tr-full"></div>
+                <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-indigo-400/50 dark:border-indigo-400/50 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
+                <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-indigo-400/50 dark:border-indigo-400/50 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
                 Más Proyectos
               </div>
             </div>
@@ -403,11 +425,17 @@ const Projects = () => {
         {/* Mensajes cuando no hay proyectos */}
         {regularProjects.length === 0 && featuredProjects.length === 0 && (
           <motion.div 
-            className="text-center py-12"
+            className="text-center py-12 px-8 bg-white dark:bg-gray-800/80 rounded-lg border-2 border-indigo-200 dark:border-indigo-800 relative"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
+            {/* RPG Corners para el mensaje */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5"></div>
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5"></div>
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5"></div>
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5"></div>
+            
             <p className="text-gray-500 dark:text-gray-400 mb-6">
               No hay proyectos que coincidan con el filtro actual.
             </p>
@@ -420,7 +448,7 @@ const Projects = () => {
           </motion.div>
         )}
         
-        {/* Load More / Show Less Button con animación */}
+        {/* Load More / Show Less Button con animación y estilo RPG */}
         {regularProjects.length > 6 && (
           <motion.div 
             className="flex justify-center mt-16"
@@ -433,8 +461,13 @@ const Projects = () => {
               <Button 
                 onClick={handleLoadMore} 
                 size="lg" 
-                className="px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                className="px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 relative"
               >
+                {/* RPG Button Corners */}
+                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/30"></div>
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/30"></div>
+                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/30"></div>
+                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/30"></div>
                 Ver Más Proyectos
               </Button>
             ) : (
@@ -442,8 +475,13 @@ const Projects = () => {
                 onClick={handleShowLess} 
                 variant="outline" 
                 size="lg" 
-                className="px-8"
+                className="px-8 relative"
               >
+                {/* RPG Button Corners */}
+                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-indigo-400/50"></div>
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-indigo-400/50"></div>
+                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-indigo-400/50"></div>
+                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-indigo-400/50"></div>
                 Mostrar Menos
               </Button>
             )}
