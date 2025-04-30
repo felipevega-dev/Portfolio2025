@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Suspense } from 'react'
 import useSoundEffect from './hooks/useSoundEffect'
 import Header from './components/layout/Header'
 import ProjectDetail from './components/ProjectDetail'

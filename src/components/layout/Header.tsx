@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useTheme, useLanguage } from '../../context'
-import { Link } from 'react-router-dom'
 import { useSoundContext } from '../../context/SoundContext'
 
 const Header = () => {
