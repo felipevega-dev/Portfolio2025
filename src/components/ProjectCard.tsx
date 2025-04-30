@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import LazyImage from './LazyImage'
 import { useSoundContext } from '../context/SoundContext'
+import { Link } from 'react-router-dom'
 
 interface Technology {
   name: string
@@ -37,6 +38,16 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
 
   const handleLinkClick = () => {
     play()
+  }
+  
+  // Función para el enlace de detalles
+  const handleDetailsClick = (e: React.MouseEvent) => {
+    play()
+    // Usamos un pequeño timeout para que el sonido se reproduzca antes de la navegación
+    setTimeout(() => {
+      window.location.href = `/projects/${title.toLowerCase().replace(/ /g, '-')}`
+    }, 100)
+    e.preventDefault()
   }
 
   return (
@@ -159,6 +170,23 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
                 </span>
               ))}
             </div>
+            
+            {/* Ver más enlace con sonido */}
+            <motion.div
+              className="mt-4 text-center"
+              whileHover={{ y: -2 }}
+            >
+              <a 
+                href={`/projects/${title.toLowerCase().replace(/ /g, '-')}`}
+                className="inline-flex items-center text-indigo-600 dark:text-indigo-400 text-sm font-medium hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+                onClick={handleDetailsClick}
+              >
+                <span className="mr-1">Ver detalles</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useState, useRef } from 'react'
 import allProjects from '../../data/projects'
-import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar } from 'react-icons/fa'
+import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar, FaInfoCircle } from 'react-icons/fa'
 import SectionHeading from '../shared/SectionHeading'
 import { Button } from '../ui/Button'
 import { useSoundContext } from '../../context/SoundContext'
@@ -35,6 +35,7 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
   const [isHovered, setIsHovered] = useState(false)
   const controls = useAnimation()
   const cardRef = useRef<HTMLDivElement>(null)
+  const { play } = useSoundContext()
 
   // Efecto de mouse parallax
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,9 +72,19 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
     })
   }
 
+  // Función para reproducir sonido al hacer clic en "Ver detalles"
+  const handleDetailsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    play();
+    // Usar setTimeout para dar tiempo a que se escuche el sonido antes de navegar
+    setTimeout(() => {
+      window.location.href = `/projects/${project.id}`;
+    }, 100);
+  }
+
   return (
     <motion.div
-      className={`relative project-card overflow-visible ${featured || project.featured ? 'md:col-span-2' : ''}`}
+      className={`relative project-card overflow-visible ${featured || project.featured ? 'md:col-span-1 lg:col-span-1 xl:col-span-1' : ''}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -184,6 +195,7 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
               <Link
                 to={`/projects/${project.id}`}
                 className="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-medium text-sm hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+                onClick={handleDetailsClick}
               >
                 {t('projects.viewDetails')}
                 <FaArrowRight className="ml-2 text-xs" />
@@ -359,26 +371,50 @@ const Projects = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span className="mr-2 p-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-md relative">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+                  <span className="mr-2 p-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-md relative">
+                    {/* Mini RPG Corners */}
+                    <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
+                    <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
+                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
+                    <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
+                    <FaStar className="w-4 h-4 text-white" />
+                  </span>
+                  Proyectos Destacados
+                </h3>
+                <motion.div 
+                  className="text-sm text-indigo-600 dark:text-indigo-400 flex items-center border border-indigo-200 dark:border-indigo-800 py-1 px-3 rounded-full bg-indigo-50 dark:bg-indigo-900/20 relative"
+                  whileHover={{ x: 5 }}
+                >
                   {/* Mini RPG Corners */}
-                  <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
-                  <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
-                  <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
-                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
-                  <FaStar className="w-4 h-4 text-white" />
-                </span>
-                Proyectos Destacados
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredProjects.map((project, index) => (
-                  <ProjectCard 
-                    key={project.id} 
-                    project={project} 
-                    index={index} 
-                    featured={true} 
-                  />
-                ))}
+                  <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-indigo-400/50 -translate-x-0.5 -translate-y-0.5 rounded-tl-full"></div>
+                  <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-indigo-400/50 translate-x-0.5 -translate-y-0.5 rounded-tr-full"></div>
+                  <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-indigo-400/50 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
+                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-indigo-400/50 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
+                  <span className="mr-1">{t('projects.featuredExplanation')}</span>
+                  <FaInfoCircle size={12} />
+                </motion.div>
+              </div>
+
+              {/* Contenedor con estilo RPG para proyectos destacados */}
+              <div className="bg-white/50 dark:bg-gray-900/30 rounded-xl p-6 shadow-lg border-2 border-indigo-100 dark:border-indigo-900/50 relative">
+                {/* RPG Corners */}
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5"></div>
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5"></div>
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5"></div>
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5"></div>
+              
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {featuredProjects.map((project, index) => (
+                    <ProjectCard 
+                      key={project.id} 
+                      project={project} 
+                      index={index} 
+                      featured={true} 
+                    />
+                  ))}
+                </div>
               </div>
             </motion.div>
             
@@ -397,29 +433,42 @@ const Projects = () => {
           </>
         )}
 
-        {/* Proyectos regulares con animación escalonada */}
+        {/* Proyectos regulares con animación escalonada y envueltos en un contenedor RPG */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6"
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1
-              }
-            }
-          }}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          className="bg-white/50 dark:bg-gray-900/30 rounded-xl p-6 shadow-lg border-2 border-indigo-100 dark:border-indigo-900/50 relative"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
         >
-          {regularProjects.slice(0, visibleProjects).map((project, index) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
-              index={index} 
-            />
-          ))}
+          {/* RPG Corners */}
+          <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 -translate-y-0.5"></div>
+          <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 -translate-y-0.5"></div>
+          <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5"></div>
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5"></div>
+          
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6"
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            {regularProjects.slice(0, visibleProjects).map((project, index) => (
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                index={index} 
+              />
+            ))}
+          </motion.div>
         </motion.div>
         
         {/* Mensajes cuando no hay proyectos */}
