@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import StarField from '../effects/StarField'
 
 interface FloatingElementProps {
@@ -38,6 +38,18 @@ const smoothScrollTo = (elementId: string) => {
 
 const Hero = () => {
   const { t } = useTranslation()
+  const [windowHeight, setWindowHeight] = useState(0)
+
+  // Track window height for responsive sizing
+  useEffect(() => {
+    const updateHeight = () => {
+      setWindowHeight(window.innerHeight)
+    }
+    
+    updateHeight()
+    window.addEventListener('resize', updateHeight)
+    return () => window.removeEventListener('resize', updateHeight)
+  }, [])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -55,8 +67,15 @@ const Hero = () => {
     visible: { opacity: 1, y: 0 }
   }
 
+  // Calculate minimum height based on window height
+  const minHeight = Math.max(windowHeight, 800)
+
   return (
-    <section id="hero" className="relative min-h-screen flex items-center bg-white dark:bg-gray-900 overflow-hidden pt-24 lg:pt-0">
+    <section 
+      id="hero" 
+      className="relative flex items-center bg-white dark:bg-gray-900 overflow-hidden pt-24 lg:pt-0"
+      style={{ minHeight: `${minHeight}px` }}
+    >
       <StarField />
 
       {/* Background Number */}
@@ -84,7 +103,7 @@ const Hero = () => {
       </div>
 
       <motion.div 
-        className="container mx-auto px-6 relative z-10"
+        className="container mx-auto px-6 relative z-10 py-16 md:py-24 lg:py-32"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -93,7 +112,7 @@ const Hero = () => {
           {/* Photo Section - Right side in desktop */}
           <motion.div
             variants={itemVariants}
-            className="relative w-full max-w-[300px] lg:max-w-[400px] aspect-square mx-auto lg:ml-auto order-first lg:order-last"
+            className="relative w-full max-w-[300px] lg:max-w-[450px] aspect-square mx-auto lg:ml-auto order-first lg:order-last"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 blur-2xl opacity-30 dark:opacity-40" />
             <motion.div 
@@ -110,19 +129,19 @@ const Hero = () => {
 
             {/* Tech Tags - Hidden in mobile */}
             <motion.div
-              className="hidden lg:block absolute -left-4 top-8 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              className="hidden lg:block absolute -left-8 top-12 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
               whileHover={{ scale: 1.1, x: 10 }}
             >
               <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400">developer</span>
             </motion.div>
             <motion.div
-              className="hidden lg:block absolute -right-4 top-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              className="hidden lg:block absolute -right-8 top-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
               whileHover={{ scale: 1.1, x: -10 }}
             >
               <span className="font-mono text-sm text-purple-600 dark:text-purple-400">designer</span>
             </motion.div>
             <motion.div
-              className="hidden lg:block absolute -left-4 bottom-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
+              className="hidden lg:block absolute -left-8 bottom-1/3 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-lg"
               whileHover={{ scale: 1.1, x: 10 }}
             >
               <span className="font-mono text-sm text-pink-600 dark:text-pink-400">creative</span>
@@ -139,7 +158,7 @@ const Hero = () => {
 
             <motion.h1 
               variants={itemVariants}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight"
+              className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 leading-tight"
             >
               Hola, Soy{' '}
               <div className="mt-2">
@@ -154,14 +173,14 @@ const Hero = () => {
 
             <motion.h2 
               variants={itemVariants}
-              className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 font-medium mb-6"
+              className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-600 dark:text-gray-300 font-medium mb-8"
             >
               {t('hero.role')}
             </motion.h2>
 
             <motion.p 
               variants={itemVariants}
-              className="text-base lg:text-lg text-gray-600 dark:text-gray-400 mb-12 leading-relaxed"
+              className="text-base lg:text-lg xl:text-xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed max-w-2xl"
             >
               {t('hero.description')}
             </motion.p>

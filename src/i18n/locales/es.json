@@ -53,7 +53,19 @@
   },
   "technologies": {
     "title": "Tecnologías",
-    "description": "Estas son las tecnologías que utilizo en mi día a día como desarrollador. Puedes preguntarles a ellas para que te expliquen lo que hacen."
+    "description": "Estas son las tecnologías que utilizo en mi día a día como desarrollador. Puedes preguntarles a ellas para que te expliquen lo que hacen.",
+    "categories": {
+      "all": "Todas",
+      "frontend": "Frontend",
+      "languages": "Lenguajes",
+      "backend": "Backend",
+      "tools": "Herramientas",
+      "database": "Bases de Datos"
+    },
+    "mobileInstructions": {
+      "tip": "¡Consejo!",
+      "text": "Toca en cualquier tecnología para interactuar con ella."
+    }
   },
   "contact": {
     "title": "Contáctame",
@@ -110,7 +122,8 @@
       "level": "Nivel",
       "xp": "Experiencia",
       "skills": "Habilidades desbloqueadas"
-    }
+    },
+    "quickLinks": "Enlaces Rápidos"
   },
   "techStack": {
     "title": "Mi Stack Tecnológico"

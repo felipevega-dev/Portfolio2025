@@ -4,6 +4,7 @@ import { IoClose } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { getProjectsByTechnology } from '../data/projects';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { useSoundContext } from '../context/SoundContext';
 
 interface RPGDialogProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   const textRef = useRef<HTMLParagraphElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
-  const selectorSoundRef = useRef<HTMLAudioElement | null>(null);
+  const { play } = useSoundContext();
   const activeTimersRef = useRef<number[]>([]);
   const relatedProjects = getProjectsByTechnology(technology);
   
@@ -65,12 +66,9 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     activeTimersRef.current = [];
   };
   
-  // Reproducir sonido de selección
+  // Reproducir sonido de selección usando el contexto global
   const playSelectSound = () => {
-    if (selectorSoundRef.current) {
-      selectorSoundRef.current.currentTime = 0;
-      selectorSoundRef.current.play().catch(e => console.log('Error playing selector sound', e));
-    }
+    play();
   };
   
   // Crear el elemento de audio cuando el componente se monta
@@ -80,10 +78,6 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     audioRef.current.playbackRate = 1.2;
     // Comenzar desde el segundo 2, solo reproducir hasta el segundo 5 y luego repetir
     audioRef.current.currentTime = 2;
-    
-    // Crear el sonido de selección
-    selectorSoundRef.current = new Audio('/sounds/selector1.mp3');
-    selectorSoundRef.current.volume = 0.3;
     
     // Limpiar cuando se desmonta
     return () => {
@@ -95,10 +89,6 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
-      }
-      if (selectorSoundRef.current) {
-        selectorSoundRef.current.pause();
-        selectorSoundRef.current = null;
       }
     };
   }, []);

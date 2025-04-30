@@ -1,11 +1,12 @@
 import { motion, useAnimation } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import allProjects from '../../data/projects'
-import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaCode, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar } from 'react-icons/fa'
+import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar } from 'react-icons/fa'
 import SectionHeading from '../shared/SectionHeading'
 import { Button } from '../ui/Button'
+import { useSoundContext } from '../../context/SoundContext'
 
 interface ProjectCardProps {
   project: {
@@ -242,26 +243,36 @@ const FilterButton = ({
   icon: React.ReactNode, 
   active: boolean, 
   onClick: () => void 
-}) => (
-  <motion.button
-    className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
-      active 
-        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md' 
-        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-    }`}
-    whileHover={{ y: -2, scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={onClick}
-  >
-    <span className="flex items-center justify-center w-5 h-5">{icon}</span>
-    <span>{label}</span>
-  </motion.button>
-)
+}) => {
+  const { play } = useSoundContext()
+  
+  const handleClick = () => {
+    play() // Play sound on click
+    onClick()
+  }
+
+  return (
+    <motion.button
+      className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+        active 
+          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md' 
+          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+      }`}
+      whileHover={{ y: -2, scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={handleClick}
+    >
+      <span className="flex items-center justify-center w-5 h-5">{icon}</span>
+      <span>{label}</span>
+    </motion.button>
+  )
+}
 
 const Projects = () => {
   const { t } = useTranslation()
   const [currentTab, setCurrentTab] = useState('all')
   const [visibleProjects, setVisibleProjects] = useState(6)
+  const { play } = useSoundContext()
   
   // Filtrar proyectos según la categoría
   const filteredProjects = currentTab === 'all' 
@@ -272,8 +283,8 @@ const Projects = () => {
         )
       )
   
-  // Obtener proyectos destacados
-  const featuredProjects = filteredProjects.filter(project => project.featured)
+  // Obtener proyectos destacados y limitarlos a máximo 3
+  const featuredProjects = filteredProjects.filter(project => project.featured).slice(0, 3)
   
   // Obtener el resto de proyectos (no destacados)
   const regularProjects = filteredProjects.filter(project => !project.featured)
@@ -289,10 +300,12 @@ const Projects = () => {
   ]
 
   const handleLoadMore = () => {
+    play() // Play sound
     setVisibleProjects(prev => Math.min(prev + 3, regularProjects.length))
   }
 
   const handleShowLess = () => {
+    play() // Play sound
     setVisibleProjects(6)
   }
 
@@ -340,7 +353,7 @@ const Projects = () => {
                 </span>
                 Proyectos Destacados
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {featuredProjects.map((project, index) => (
                   <ProjectCard 
                     key={project.id} 
@@ -388,7 +401,7 @@ const Projects = () => {
         </motion.div>
         
         {/* Mensajes cuando no hay proyectos */}
-        {regularProjects.length === 0 && (
+        {regularProjects.length === 0 && featuredProjects.length === 0 && (
           <motion.div 
             className="text-center py-12"
             initial={{ opacity: 0 }}

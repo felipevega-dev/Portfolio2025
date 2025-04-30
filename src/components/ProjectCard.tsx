@@ -21,7 +21,7 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
 
   return (
     <motion.article
-      className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden"
+      className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden h-full flex flex-col"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -32,9 +32,9 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
       {/* Gradient Border */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 p-[2px]">
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 blur-xl opacity-50 -z-10" />
-        <div className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl relative">
+        <div className="h-full w-full bg-white dark:bg-gray-800 rounded-2xl relative flex flex-col">
           {/* Image Container */}
-          <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
+          <div className="relative aspect-video overflow-hidden rounded-t-2xl">
             <motion.div
               animate={{ scale: isHovered ? 1.1 : 1 }}
               transition={{ duration: 0.3 }}
@@ -63,7 +63,7 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
                 href={demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative px-6 py-2 text-white overflow-hidden rounded-lg group/button"
+                className="relative px-4 py-2 text-sm text-white overflow-hidden rounded-lg group/button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -74,7 +74,7 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative px-6 py-2 text-white overflow-hidden rounded-lg group/button"
+                className="relative px-4 py-2 text-sm text-white overflow-hidden rounded-lg group/button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -86,25 +86,25 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
 
           {/* Content */}
           <motion.div 
-            className="p-6"
+            className="p-5 flex-grow flex flex-col"
             animate={{
-              y: isHovered ? -10 : 0,
+              y: isHovered ? -5 : 0,
             }}
             transition={{ duration: 0.3 }}
           >
-            <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
               {title}
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 flex-grow">
               {description}
             </p>
             
             {/* Technologies */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 mt-auto">
               {technologies.map((tech) => (
                 <span
                   key={tech.name}
-                  className="px-3 py-1 text-sm rounded-full transition-transform hover:scale-105"
+                  className="px-2 py-0.5 text-xs rounded-full transition-transform hover:scale-105"
                   style={{ 
                     backgroundColor: `${tech.color}20`,
                     color: tech.color 

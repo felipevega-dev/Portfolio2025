@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useTheme, useLanguage } from '../../context'
 import { Link } from 'react-router-dom'
+import { useSoundContext } from '../../context/SoundContext'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -10,6 +11,7 @@ const Header = () => {
   const { t } = useTranslation()
   const { isDarkMode, toggleDarkMode } = useTheme()
   const { currentLanguage, changeLanguage } = useLanguage()
+  const { play } = useSoundContext()
 
   // Detectar scroll para cambiar la apariencia del header
   useEffect(() => {
@@ -59,8 +61,19 @@ const Header = () => {
   }
 
   const handleMobileMenuClick = (elementId: string) => {
+    play()
     setIsOpen(false)
     setTimeout(() => smoothScrollTo(elementId), 300)
+  }
+
+  const toggleMenu = () => {
+    play()
+    setIsOpen(prev => !prev)
+  }
+
+  const closeMenu = () => {
+    play()
+    setIsOpen(false)
   }
 
   return (
@@ -221,7 +234,7 @@ const Header = () => {
             {/* Menu Button */}
             <button
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={toggleMenu}
               aria-label="Toggle menu"
             >
               <span className="sr-only">Menu</span>
