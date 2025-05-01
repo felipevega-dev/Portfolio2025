@@ -330,10 +330,8 @@ const Projects = () => {
   const categories = [
     { id: 'all', label: 'All', icon: <FaLaptopCode className="w-4 h-4" /> },
     { id: 'react', label: 'React', icon: <FaReact className="w-4 h-4" /> },
-    { id: 'javascript', label: 'JavaScript', icon: <FaJsSquare className="w-4 h-4" /> }, 
     { id: 'wordpress', label: 'WordPress', icon: <FaWordpress className="w-4 h-4" /> },
     { id: 'mobile', label: 'Mobile', icon: <FaMobileAlt className="w-4 h-4" /> },
-    { id: 'backend', label: 'Backend', icon: <FaDatabase className="w-4 h-4" /> }
   ]
 
   // Controladores de navegación carrusel

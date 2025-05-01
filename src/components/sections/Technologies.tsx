@@ -6,7 +6,7 @@ import {
   SiTailwindcss, SiReact, SiNodedotjs, SiNextdotjs, 
   SiPython, SiPostgresql, SiFirebase, SiDocker,
   SiGit, SiVite, SiSupabase, SiLaragon, SiPhp, SiWordpress,
-  SiMongodb, SiExpress
+  SiMongodb, SiExpo
 } from 'react-icons/si'
 import RPGDialog from '../RPGDialog'
 import { GiSpellBook, GiScrollUnfurled, GiMagicSwirl } from 'react-icons/gi'
@@ -346,11 +346,11 @@ const Technologies = () => {
     },
     { 
       id: '19', 
-      name: 'Express.js', 
-      icon: SiExpress, 
+      name: 'Expo', 
+      icon: SiExpo, 
       color: 'rgb(85, 85, 85)', 
       darkColor: 'rgb(220, 220, 220)',
-      message: t('technologies.Express.initial'),
+      message: t('technologies.Expo.initial'),
       category: 'backend'
     },
     { 
