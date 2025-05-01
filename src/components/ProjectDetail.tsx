@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import projects from '../data/projects'
 import SEOHead from './SEOHead'
-import LazyImage from './LazyImage'
 import { useSoundContext } from '../context/SoundContext'
 import { FaChevronLeft, FaChevronRight, FaTimes, FaExpand } from 'react-icons/fa'
 

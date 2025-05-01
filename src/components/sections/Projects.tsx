@@ -373,7 +373,6 @@ const Projects = () => {
       <div className="container mx-auto px-4">
         <SectionHeading
           title="Proyectos"
-          subtitle="Conoce mis trabajos más recientes"
         />
 
         {/* Barra de búsqueda con estilo RPG */}
@@ -400,7 +399,7 @@ const Projects = () => {
         </div>
 
         {/* Filtros con efecto visual mejorado */}
-        <div className="flex flex-wrap justify-center gap-3 mt-8 mb-12 max-w-3xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-3 mt-8 mb-12 max-w-4xl mx-auto">
           <motion.div 
             className="bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg flex flex-wrap justify-center gap-2 relative border border-indigo-100 dark:border-indigo-900/50"
             initial={{ opacity: 0, y: 20 }}
