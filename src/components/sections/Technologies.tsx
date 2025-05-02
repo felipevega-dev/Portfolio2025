@@ -113,11 +113,13 @@ const TechCard = memo(({
       >
         <Icon 
           className={`w-12 h-12 transition-all duration-300 group-hover:scale-110 ${
-            tech.name === 'Next.js' || tech.name === 'PHP' ? 'dark:text-white' : ''
+            tech.name === 'Next.js' || tech.name === 'PHP' ? 'dark:text-white dark:fill-current' : ''
           }`}
           style={{ 
             color: tech.color,
-            filter: 'var(--tw-dark) ? brightness(1.2) contrast(1.1) : contrast(0.95) brightness(0.95)'
+            filter: tech.name === 'Next.js' || tech.name === 'PHP' 
+              ? 'var(--tw-dark) ? none : contrast(0.95) brightness(0.95)'
+              : 'var(--tw-dark) ? brightness(1.2) contrast(1.1) : contrast(0.95) brightness(0.95)'
           }}
         />
       </motion.div>
@@ -286,8 +288,8 @@ const Technologies = () => {
       id: '9', 
       name: 'Next.js', 
       icon: SiNextdotjs, 
-      color: 'rgb(50, 50, 50)', 
-      darkColor: 'rgb(255, 255, 255)',
+      color: 'black', 
+      darkColor: '#FFFFFF',
       message: t('technologies.Next.js.initial'),
       category: 'frontend'
     },
@@ -344,8 +346,8 @@ const Technologies = () => {
       id: '19', 
       name: 'Expo', 
       icon: SiExpo, 
-      color: 'rgb(85, 85, 85)', 
-      darkColor: 'rgb(220, 220, 220)',
+      color: 'black', 
+      darkColor: 'black',
       message: t('technologies.Expo.initial'),
       category: 'backend'
     },
@@ -362,7 +364,7 @@ const Technologies = () => {
       id: '12', 
       name: 'Firebase', 
       icon: SiFirebase, 
-      color: 'rgb(255, 202, 40)', 
+      color: '#DD2C00', 
       darkColor: 'rgb(255, 213, 79)',
       message: t('technologies.Firebase.initial'),
       category: 'backend'
@@ -371,7 +373,7 @@ const Technologies = () => {
       id: '16', 
       name: 'Supabase', 
       icon: SiSupabase, 
-      color: 'rgb(23, 117, 205)', 
+      color: '#3ECF8E', 
       darkColor: 'rgb(35, 151, 240)',
       message: t('technologies.Supabase.initial'),
       category: 'backend'
@@ -418,7 +420,7 @@ const Technologies = () => {
       id: '17', 
       name: 'Vite', 
       icon: SiVite, 
-      color: 'rgb(184, 26, 214)', 
+      color: '#FFCA22', 
       darkColor: 'rgb(220, 61, 251)',
       message: t('technologies.Vite.initial'),
       category: 'tools'
@@ -427,7 +429,7 @@ const Technologies = () => {
       id: '18', 
       name: 'Laragon', 
       icon: SiLaragon, 
-      color: 'rgb(0, 135, 90)', 
+      color: '#01B1E9', 
       darkColor: 'rgb(38, 173, 128)',
       message: t('technologies.Laragon.initial'),
       category: 'tools'

@@ -9,10 +9,10 @@
       "Catálogo avanzado con filtros dinámicos y buscador inteligente",
       "Carrito de compras persistente con actualizaciones en tiempo real",
       "Diseño adaptable a todos los dispositivos y pantallas (responsive)",
-      "Sistema completo de usuarios con perfiles personalizados, gestión de direcciones y seguimiento de pedidos",
-      "Panel administrativo con estadísticas, gestión de inventario y control de pedidos",
+      "Registro de usuarios con perfiles, gestión de direcciones y seguimiento de pedidos",
+      "Panel administrativo con gestión de inventario y control de pedidos",
       "Backend personalizado desarrollado con Node.js y MongoDB para máxima flexibilidad",
-      "Sistema de reseñas y valoraciones de productos para fomentar la confianza del cliente"
+      "Sistema de reseñas y valoraciones de productos"
     ]
   },
   "ikintsugi-theme": {

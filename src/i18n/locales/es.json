@@ -141,7 +141,9 @@
       "notAvailable": "Aún no hay proyectos públicos que utilicen esta tecnología, pero esto cambiará pronto.",
       "usedIn": "Proyectos en los que me utilizó:",
       "viewAll": "Ver todos los {{count}} proyectos",
-      "projectsUsing": "Proyectos que utilizan {{technology}}"
+      "projectsUsing": "Proyectos que utilizan {{technology}}",
+      "viewRelated": "Ver proyectos relacionados",
+      "relatedProjects": "Proyectos relacionados"
     },
     "backToOptions": "Volver a opciones"
   },

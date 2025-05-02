@@ -207,12 +207,12 @@ const Contact = () => {
   ]
 
   return (
-    <section id="contact" className="py-20 mb-0 relative overflow-hidden">
+    <section id="contact" className="py-20 mb-0 relative overflow-hidden" style={{ zIndex: 1 }}>
      
       
       {/* Blurred circles */}
-      <div className="absolute top-1/4 -left-28 w-96 h-96 bg-indigo-300/20 rounded-full filter blur-3xl dark:bg-indigo-700/20"></div>
-      <div className="absolute bottom-1/4 -right-28 w-64 h-64 bg-purple-300/20 rounded-full filter blur-3xl dark:bg-purple-700/20"></div>
+      <div className="absolute top-1/4 -left-28 w-96 h-96 bg-indigo-300/20 rounded-full filter blur-3xl dark:bg-indigo-700/20 z-0"></div>
+      <div className="absolute bottom-1/4 -right-28 w-64 h-64 bg-purple-300/20 rounded-full filter blur-3xl dark:bg-purple-700/20 z-0"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
         <motion.div
