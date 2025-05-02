@@ -1,54 +1,58 @@
-# React + TypeScript + Vite
+# 🌐 Felipe Vega – Portfolio 2025
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+¡Hola! Soy **Felipe Vega**, desarrollador full-stack apasionado por construir experiencias digitales envolventes, accesibles y bien diseñadas. Este repositorio contiene el código fuente de mi portafolio personal, donde muestro mis proyectos, habilidades técnicas y formas de contacto.
 
-Currently, two official plugins are available:
+🎯 **Visítalo en línea**:  
+👉 [https://felipevega.dev](https://felipevega.dev) _(o el dominio real que uses)_
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologías destacadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Este portafolio fue construido con:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **React** + **TypeScript**  
+- **Framer Motion** para animaciones fluidas  
+- **TailwindCSS** para estilos modernos y responsivos  
+- **i18n (react-i18next)** para soporte multilenguaje  
+- **Context API** y modularización por secciones (`Hero`, `Projects`, `Skills`, `Contact`, etc.)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Incluye efectos visuales personalizados como estrellas animadas, scroll suave, filtros RPG y tarjetas flotantes interactivas.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 📂 Estructura principal
+
+- `src/components/Hero.tsx` → Sección introductoria con animaciones y enlaces a CV y contacto  
+- `src/components/Projects.tsx` → Carrusel de proyectos destacados y filtrado por categoría  
+- `src/components/Skills.tsx` + `Technologies.tsx` → Habilidades técnicas visuales agrupadas  
+- `src/components/Contact.tsx` → Formulario validado con anti-spam y seguimiento  
+- `src/context/SoundContext.tsx` → Sistema de sonido interactivo para acciones clave
+
+---
+
+## 🌟 ¿Por qué visitar mi portafolio?
+
+- Diseño **responsive y dinámico**  
+- Interacciones cuidadas para cada sección  
+- Experiencia basada en diseño, desarrollo y rendimiento  
+- Muestra real de mis capacidades técnicas en proyectos reales
+
+---
+
+## 📬 ¿Hablamos?
+
+Puedes contactarme desde el mismo portfolio, o en:
+
+- [GitHub](https://github.com/felipevega-dev)
+- [LinkedIn](https://linkedin.com/in/felipevega-dev)
+
+---
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y puedes reutilizar partes bajo la [MIT License](LICENSE).
+
+---
+
+_Gracias por visitar. ¡Que tengas un gran día! 🚀_

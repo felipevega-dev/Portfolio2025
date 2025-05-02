@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { FaGithub, FaLinkedin, FaTwitter, FaMapMarkerAlt, FaLaptopCode } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaMapMarkerAlt, FaLaptopCode } from 'react-icons/fa'
 import { MdEmail, MdSend } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
 import { api } from '../../api' // Importamos la API
@@ -11,7 +11,7 @@ const SUBMISSION_TIMEOUT = 60 * 60 * 1000; // 1 hora en milisegundos
 const COOLDOWN_PERIOD = 60 * 1000; // 1 minuto en milisegundos
 
 const Contact = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -125,7 +125,11 @@ const Contact = () => {
 
     try {
       // Usar la API directamente en lugar de una ruta API
-      await api.contact.sendMessage(formData);
+      // Añadir el idioma actual al envío
+      await api.contact.sendMessage({
+        ...formData,
+        language: i18n.language // Enviamos el idioma actual
+      });
       setSubmitStatus('success');
       setFormData({ 
         name: '', 
@@ -200,12 +204,6 @@ const Contact = () => {
       icon: FaLinkedin,
       color: 'hover:bg-blue-600 hover:text-white'
     },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/felipevega_dev',
-      icon: FaTwitter,
-      color: 'hover:bg-sky-500 hover:text-white'
-    }
   ]
 
   return (

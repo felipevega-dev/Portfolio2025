@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { FaGithub, FaLinkedin, FaTwitter, FaHeart, FaReact, FaCode, FaEnvelope, FaMapMarkerAlt, FaPhone, FaScroll, FaDungeon, FaGem } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaHeart, FaReact, FaEnvelope, FaMapMarkerAlt, FaPhone, FaScroll, FaDungeon, FaGem } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { GiSpellBook, GiSwordman, GiWizardStaff } from 'react-icons/gi'
@@ -30,7 +30,6 @@ const Footer = () => {
   const socialLinks = [
     { icon: FaGithub, url: 'https://github.com/felipevega-dev', name: 'GitHub' },
     { icon: FaLinkedin, url: 'https://linkedin.com/in/felipevega-dev', name: 'LinkedIn' },
-    { icon: FaTwitter, url: 'https://twitter.com/felipevega_dev', name: 'Twitter' }
   ]
 
   // Enlaces rápidos para el footer con estilo RPG
