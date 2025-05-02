@@ -53,7 +53,7 @@ const NotFoundPage = () => (
 )
 
 function App() {
-  const [isFirstLoad, setIsFirstLoad] = useState(true)
+  const [_isFirstLoad, setIsFirstLoad] = useState(true)
   const { play, SoundTrigger } = useSoundEffect()
 
   // Disable loader after initial load

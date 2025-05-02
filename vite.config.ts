@@ -41,7 +41,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: ({ url }) => {
-              return url.pathname.startsWith("/api");
+              return url.toString().includes('/api');
             },
             handler: "CacheFirst",
             options: {

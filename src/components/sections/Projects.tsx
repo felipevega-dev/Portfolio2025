@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useState, useRef} from 'react'
 import allProjects, { searchProjects } from '../../data/projects'
-import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar, FaInfoCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaMobileAlt, FaStar, FaInfoCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import SectionHeading from '../shared/SectionHeading'
 import { Button } from '../ui/Button'
 import { useSoundContext } from '../../context/SoundContext'
@@ -289,7 +289,7 @@ const FilterButton = ({
 const Projects = () => {
   const { t } = useTranslation()
   const [currentTab, setCurrentTab] = useState('all')
-  const [visibleProjects, setVisibleProjects] = useState(6)
+  const [_visibleProjects, _setVisibleProjects] = useState(6)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
   const projectsPerPage = 3
@@ -395,7 +395,7 @@ const Projects = () => {
             <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-indigo-400 dark:border-indigo-500 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
             <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-indigo-400 dark:border-indigo-500 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
             
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <FilterButton
                 key={category.id}
                 label={category.label}

@@ -10,7 +10,6 @@ import {
 } from 'react-icons/si'
 import RPGDialog from '../RPGDialog'
 import { GiSpellBook, GiScrollUnfurled, GiMagicSwirl } from 'react-icons/gi'
-import { useSoundContext } from '../../context/SoundContext'
 
 // Componente para el "pergamino" de título
 const SectionTitleScroll = ({ title }: { title: string }) => (
@@ -71,7 +70,6 @@ const TechCard = memo(({
   index: number
 }) => {
   const Icon = tech.icon
-  const { play } = useSoundContext()
   
   // Animación flotante aleatoria para los iconos
   const floatingAnimation = {
@@ -86,7 +84,6 @@ const TechCard = memo(({
   }
 
   const onCardClick = () => {
-    play() // Play sound when card is clicked
     handleClick(tech)
   }
   
@@ -147,13 +144,6 @@ const CategoryButton = ({
   active: boolean, 
   onClick: () => void 
 }) => {
-  const { play } = useSoundContext()
-
-  const handleClick = () => {
-    play() // Play sound when category button is clicked
-    onClick()
-  }
-
   return (
     <motion.button
       className={`relative px-4 py-2 font-medium transition-all duration-300 ${
@@ -163,7 +153,7 @@ const CategoryButton = ({
       } focus:outline-none`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      onClick={handleClick}
+      onClick={onClick}
     >
       {/* Fondo activo */}
       {active && (
@@ -194,7 +184,6 @@ const Technologies = () => {
   const [activeTech, setActiveTech] = useState<Technology | null>(null)
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const sectionRef = useRef<HTMLElement>(null)
-  const { play } = useSoundContext()
   
   // Detectar si es dispositivo móvil
   useEffect(() => {
@@ -238,7 +227,6 @@ const Technologies = () => {
   }, []);
 
   const handleClick = (tech: Technology) => {
-    // Play sound when the tech is clicked (in addition to the TechCard play)
     setActiveTech(tech);
     setDialogOpen(true);
   }
@@ -504,7 +492,7 @@ const Technologies = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {categories.map((category, i) => (
+            {categories.map((category) => (
               <CategoryButton
                 key={category.id}
                 label={category.label}
@@ -520,13 +508,13 @@ const Technologies = () => {
         
         {/* Grid de tecnologías */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {techs.map((tech, index) => (
+          {techs.map((tech) => (
             <TechCard
               key={tech.id}
               tech={tech}
               handleClick={handleClick}
               handleTouchEnd={handleTouchEnd}
-              index={index}
+              index={0}
             />
           ))}
         </div>

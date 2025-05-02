@@ -38,11 +38,11 @@ const Contact = () => {
     }
     
     if (storedTime) {
-      const time = parseInt(storedTime, 10);
-      setLastSubmissionTime(time);
+      const timeValue = parseInt(storedTime, 10);
+      setLastSubmissionTime(timeValue);
       
       // Verificar si debemos resetear el contador (ha pasado más de SUBMISSION_TIMEOUT)
-      if (Date.now() - time > SUBMISSION_TIMEOUT) {
+      if (Date.now() - timeValue > SUBMISSION_TIMEOUT) {
         resetSubmissionLimits();
       }
     }
@@ -124,7 +124,6 @@ const Contact = () => {
     setValidationErrors({});
 
     try {
-      // Usar la API directamente en lugar de una ruta API
       // Añadir el idioma actual al envío
       await api.contact.sendMessage({
         ...formData,
@@ -203,7 +202,7 @@ const Contact = () => {
       url: 'https://linkedin.com/in/felipevega-dev',
       icon: FaLinkedin,
       color: 'hover:bg-blue-600 hover:text-white'
-    },
+    }
   ]
 
   return (
@@ -292,7 +291,7 @@ const Contact = () => {
                   className="w-full h-full border-0" 
                   loading="lazy"
                   title="Santiago de Chile map"
-                  style={{ filter: isDarkMode ? 'invert(0.9) hue-rotate(180deg)' : 'none' }}
+                  style={{ filter: document.documentElement.classList.contains('dark') ? 'invert(0.9) hue-rotate(180deg)' : 'none' }}
                 ></iframe>
               </div>
             </div>
@@ -532,8 +531,5 @@ const Contact = () => {
     </section>
   )
 }
-
-// Variable para controlar el tema oscuro
-const isDarkMode = document.documentElement.classList.contains('dark')
 
 export default Contact 

@@ -8,7 +8,7 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { t } = useTranslation()
-  const { isDarkMode, toggleDarkMode } = useTheme()
+  const { toggleDarkMode } = useTheme()
   const { currentLanguage, changeLanguage } = useLanguage()
   const { play } = useSoundContext()
 
@@ -68,11 +68,6 @@ const Header = () => {
   const toggleMenu = () => {
     play()
     setIsOpen(prev => !prev)
-  }
-
-  const closeMenu = () => {
-    play()
-    setIsOpen(false)
   }
 
   return (
