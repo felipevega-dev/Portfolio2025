@@ -207,7 +207,7 @@ const Contact = () => {
   ]
 
   return (
-    <section id="contact" className="py-20 mb-0 relative overflow-hidden" style={{ zIndex: 1 }}>
+    <section id="contact" className="py-12 mb-0 relative overflow-hidden" style={{ zIndex: 1 }}>
      
       
       {/* Blurred circles */}

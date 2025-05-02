@@ -482,7 +482,7 @@ const Technologies = () => {
     <section 
       id="technologies" 
       ref={sectionRef}
-      className="lg:py-12 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
+      className="py-12 lg:py-12 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
     >
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
