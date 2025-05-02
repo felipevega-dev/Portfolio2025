@@ -1,0 +1,110 @@
+{
+  "harrys-ecommerce": {
+    "title": "Harry's Boutique: Ecommerce",
+    "description": "Complete e-commerce platform for Harry's Boutique, specializing in pet fashion.",
+    "fullDescription": "Comprehensive development of an elegant and functional online store for Harry's Boutique, specializing in pet clothing and accessories. The platform offers a smooth shopping experience with customized interfaces, subtle animations, advanced product filtering system, and complete connectivity with a custom-built backend.",
+    "features": [
+      "Integrated payment gateway with MercadoPago for secure transactions",
+      "Performance optimization for fast page loading and smooth navigation",
+      "Advanced catalog with dynamic filters and smart search functionality",
+      "Persistent shopping cart with real-time updates",
+      "Responsive design adaptable to all devices and screen sizes",
+      "Complete user system with customized profiles, address management, and order tracking",
+      "Administrative dashboard with statistics, inventory management, and order control",
+      "Custom backend developed with Node.js and MongoDB for maximum flexibility",
+      "Infrastructure deployed on Vercel to ensure high availability",
+      "Product review and rating system to build customer trust"
+    ]
+  },
+  "ikintsugi-theme": {
+    "title": "Ikintsugi Theme",
+    "description": "Custom WordPress theme developed with Sage, implementing a client-provided design. Includes animations, responsive design, and high performance.",
+    "fullDescription": "Custom WordPress theme developed from scratch for the Ikintsugi institution. Implemented with Sage, a starter theme that uses Laravel Blade and modern frontend tooling. The design was based on specifications provided by the client's designer, and was implemented with a focus on performance, accessibility, and user experience.",
+    "features": [
+      "Exact implementation of client-provided Figma design",
+      "Fully responsive design for all screen sizes",
+      "Performance optimization with high PageSpeed score",
+      "Subtle animations to enhance user experience",
+      "Custom Gutenberg blocks configuration",
+      "Use of TailwindCSS for consistent and maintainable styles",
+      "Modern workflow with Vite for rapid development",
+      "Organized and reusable Blade templates",
+      "SEO optimization following best practices"
+    ]
+  },
+  "plugin-reservas": {
+    "title": "Reservation Plugin for WooCommerce",
+    "description": "Plugin that allows users to reserve products and administrators to keep a count of reservations by size and products.",
+    "fullDescription": "WordPress plugin developed to extend WooCommerce, allowing customers to reserve products through a form, confirm reservation, be notified by email, and the administrator to manage all this data.",
+    "features": [
+      "Effective subtotal counting",
+      "Multiple product system through form",
+      "Administration panel with statistics and filters",
+      "Automatic email notifications when reservation is made",
+      "Support for products with variations (sizes, colors, etc.)",
+      "Detailed statistics by products and variations",
+      "Data export to Excel",
+      "User and reservation management"
+    ]
+  },
+  "plugin-waitlist": {
+    "title": "Waitlist Plugin for WooCommerce",
+    "description": "Plugin that allows users to subscribe to out-of-stock products in WooCommerce, with automatic notifications and a complete administration panel to manage subscriptions.",
+    "fullDescription": "WordPress plugin developed to extend WooCommerce, allowing customers to subscribe to out-of-stock products. The system manages automatic notifications when the product becomes available again and provides a complete administration panel to analyze subscriptions and product trends.",
+    "features": [
+      "Integration with WooCommerce inventory",
+      "Subscription system for out-of-stock products",
+      "Administration panel with statistics and filters",
+      "Automatic email notifications when stock is replenished",
+      "Customizable email templates",
+      "Support for products with variations (sizes, colors, etc.)",
+      "Detailed statistics by product and variation",
+      "Data export to Excel",
+      "User and subscription management",
+      "Flexible system configuration"
+    ]
+  },
+  "app-pedidos": {
+    "title": "Orders Application",
+    "description": "Web and mobile application made with Expo React Native and Firebase backend for order and product management.",
+    "fullDescription": "Cross-platform application developed with React Native and Expo that allows complete management of orders and products. Integrated with Firebase for real-time data storage, it offers a smooth experience on both mobile devices and web browsers.",
+    "features": [
+      "Fully functional application on both mobile and desktop",
+      "Backend integration using Firebase",
+      "Complete CRUD for products",
+      "Management of orders, statuses, categories, quantities",
+      "Export orders to PDF or CSV",
+      "Addition of orders with multiple products and quantities"
+    ]
+  },
+  "portfolio-2024": {
+    "title": "Portfolio 2024",
+    "description": "My personal portfolio developed with Next.js and Tailwind CSS",
+    "fullDescription": "Personal portfolio built with React, Next.js, and Tailwind CSS. This site showcases my projects, skills, and experience as a software developer. It implements a modern design with fluid animations using Framer Motion and a complete internationalization system.",
+    "features": [
+      "Fully responsive design optimized for mobile and desktop",
+      "Fluid animations with Framer Motion",
+      "Light/dark mode adapted to system preferences",
+      "Internationalization with support for English and Spanish",
+      "RPG-type interactive dialogs for technologies",
+      "SEO and performance optimization"
+    ]
+  },
+  "featuring": {
+    "title": "Featuring - App for Musicians",
+    "description": "Mobile application to connect musicians and facilitate artistic collaborations. Includes posts, short videos, match system, profiles, and ratings.",
+    "fullDescription": "Featuring is a mobile application developed with React Native and Expo, specifically designed for musicians looking to collaborate. The platform allows artists to connect, share musical content, collaborate, and receive ratings from the community. It includes a complete administration panel to manage the platform's content.",
+    "features": [
+      "Profile system for artists with ratings and statistics",
+      "Post feed for sharing music and short videos",
+      "Match system based on musical preferences and filters",
+      "Collaborations between artists with mutual rating system",
+      "Integrated audio and video player",
+      "Push notifications for new interactions",
+      "Complete administration panel to manage content",
+      "Integration with currency APIs for international payments",
+      "Premium level with additional features",
+      "Content reporting and moderation system"
+    ]
+  }
+} 

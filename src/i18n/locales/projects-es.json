@@ -1,0 +1,110 @@
+{
+  "harrys-ecommerce": {
+    "title": "Harry's Boutique: Ecommerce",
+    "description": "Plataforma completa de comercio electrónico para Harry's Boutique, especializada en moda para mascotas.",
+    "fullDescription": "Desarrollo integral de una tienda en línea elegante y funcional para Harry's Boutique, especializada en ropa y accesorios para mascotas. La plataforma ofrece una experiencia de compra fluida con interfaces personalizadas, animaciones sutiles, sistema avanzado de filtrado de productos y conectividad completa con un backend dedicado desarrollado a medida.",
+    "features": [
+      "Pasarela de pagos integrada con MercadoPago para transacciones seguras",
+      "Optimización de rendimiento para carga rápida de páginas y navegación fluida",
+      "Catálogo avanzado con filtros dinámicos y buscador inteligente",
+      "Carrito de compras persistente con actualizaciones en tiempo real",
+      "Diseño adaptable a todos los dispositivos y pantallas (responsive)",
+      "Sistema completo de usuarios con perfiles personalizados, gestión de direcciones y seguimiento de pedidos",
+      "Panel administrativo con estadísticas, gestión de inventario y control de pedidos",
+      "Backend personalizado desarrollado con Node.js y MongoDB para máxima flexibilidad",
+      "Infraestructura desplegada en Vercel para garantizar alta disponibilidad",
+      "Sistema de reseñas y valoraciones de productos para fomentar la confianza del cliente"
+    ]
+  },
+  "ikintsugi-theme": {
+    "title": "Ikintsugi Theme",
+    "description": "Tema personalizado para WordPress desarrollado con Sage, implementando un diseño proporcionado por el cliente. Incluye animaciones, diseño responsive y alto rendimiento.",
+    "fullDescription": "Tema personalizado para WordPress desarrollado desde cero para la institución Ikintsugi. Implementado con Sage, un starter theme que utiliza Laravel Blade y herramientas modernas de frontend. El diseño se basó en especificaciones proporcionadas por la diseñadora del cliente, y se implementó con un enfoque en rendimiento, accesibilidad y experiencia de usuario.",
+    "features": [
+      "Implementación exacta del diseño Figma proporcionado por el cliente",
+      "Diseño completamente responsive para todas las pantallas",
+      "Optimización de rendimiento con puntuación alta en PageSpeed",
+      "Animaciones sutiles para mejorar la experiencia de usuario",
+      "Configuración de bloques de Gutenberg personalizados",
+      "Uso de TailwindCSS para estilos consistentes y mantenibles",
+      "Workflow moderno con Vite para desarrollo rápido",
+      "Templates Blade organizados y reutilizables",
+      "Optimización SEO siguiendo mejores prácticas"
+    ]
+  },
+  "plugin-reservas": {
+    "title": "Plugin de Reservas para WooCommerce",
+    "description": "Plugin que permite a los usuarios reservar productos y a los administradores llevar un conteo de reservas por talla y productos.",
+    "fullDescription": "Plugin de WordPress desarrollado para extender WooCommerce, permitiendo a los clientes reservar productos mediante un formulario, confirmar reserva, ser notificados al correo, y al administrador gestionar toda esta data.",
+    "features": [
+      "Conteo efectivo de subtotales",
+      "Sistema de múltiples productos mediante formulario",
+      "Panel de administración con estadísticas y filtros",
+      "Notificaciones automáticas por email cuando su reserva es efectuada",
+      "Soporte para productos con variaciones (tallas, colores, etc.)",
+      "Estadísticas detalladas por productos y variaciones",
+      "Exportación de datos a Excel",
+      "Gestión de usuarios y sus reservas"
+    ]
+  },
+  "plugin-waitlist": {
+    "title": "Plugin de Lista de espera para WooCommerce",
+    "description": "Plugin que permite a los usuarios suscribirse a productos sin stock en WooCommerce, con notificaciones automáticas y un panel de administración completo para gestionar suscripciones.",
+    "fullDescription": "Plugin de WordPress desarrollado para extender WooCommerce, permitiendo a los clientes suscribirse a productos sin stock. El sistema gestiona las notificaciones automáticas cuando el producto vuelve a estar disponible y proporciona un completo panel de administración para analizar las suscripciones y tendencias de productos.",
+    "features": [
+      "Integración con el inventario de WooCommerce",
+      "Sistema de suscripción a productos sin stock",
+      "Panel de administración con estadísticas y filtros",
+      "Notificaciones automáticas por email cuando se repone el stock",
+      "Plantillas de email personalizables",
+      "Soporte para productos con variaciones (tallas, colores, etc.)",
+      "Estadísticas detalladas por producto y variación",
+      "Exportación de datos a Excel",
+      "Gestión de usuarios y sus suscripciones",
+      "Configuración flexible del sistema"
+    ]
+  },
+  "app-pedidos": {
+    "title": "Aplicación Pedidos",
+    "description": "Aplicación web y móvil hecha con Expo React Native y backend en Firebase para gestión de pedidos y productos.",
+    "fullDescription": "Aplicación multiplataforma desarrollada con React Native y Expo que permite la gestión completa de pedidos y productos. Integrada con Firebase para el almacenamiento de datos en tiempo real, ofrece una experiencia fluida tanto en dispositivos móviles como en navegadores web.",
+    "features": [
+      "Aplicación completamente funcional tanto en móvil como escritorio",
+      "Integración con backend utilizando Firebase",
+      "CRUD completo de productos",
+      "Gestión de pedidos, estados, categorías, cantidades",
+      "Exportación de pedidos por PDF o CSV",
+      "Agregación de pedidos con múltiples productos y cantidades"
+    ]
+  },
+  "portfolio-2024": {
+    "title": "Portfolio 2024",
+    "description": "Mi portfolio personal desarrollado con Next.js y Tailwind CSS",
+    "fullDescription": "Portfolio personal construido con React, Next.js y Tailwind CSS. Este sitio muestra mis proyectos, habilidades y experiencia como desarrollador de software. Implementa un diseño moderno con animaciones fluidas usando Framer Motion y un sistema de internacionalización completo.",
+    "features": [
+      "Diseño completamente responsive optimizado para móviles y desktop",
+      "Animaciones fluidas con Framer Motion",
+      "Modo claro/oscuro adaptado a las preferencias del sistema",
+      "Internacionalización con soporte para inglés y español",
+      "Diálogos interactivos tipo RPG para las tecnologías",
+      "Optimización SEO y de rendimiento"
+    ]
+  },
+  "featuring": {
+    "title": "Featuring - App para músicos",
+    "description": "Aplicación móvil para conectar músicos y facilitar colaboraciones artísticas. Incluye publicaciones, videos cortos, sistema de match, perfiles y valoraciones.",
+    "fullDescription": "Featuring es una aplicación móvil desarrollada con React Native y Expo, diseñada específicamente para músicos que buscan colaborar. La plataforma permite a los artistas conectarse, compartir contenido musical, realizar colaboraciones y recibir valoraciones de la comunidad. Incluye un completo panel de administración para gestionar el contenido de la plataforma.",
+    "features": [
+      "Sistema de perfiles para artistas con valoraciones y estadísticas",
+      "Feed de publicaciones para compartir música y videos cortos",
+      "Sistema de match basado en preferencias musicales y filtros",
+      "Colaboraciones entre artistas con sistema de valoración mutua",
+      "Reproductor de audio y video integrado",
+      "Notificaciones push para nuevas interacciones",
+      "Panel de administración completo para gestionar contenido",
+      "Integración con APIs de divisas para pagos internacionales",
+      "Nivel premium con características adicionales",
+      "Sistema de reportes y moderación de contenido"
+    ]
+  }
+} 

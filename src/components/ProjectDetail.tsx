@@ -336,33 +336,6 @@ const ImageModal = ({
         />
       </motion.div>
       
-      {/* Thumbnails */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-2 p-4 bg-black/40 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
-        <div className="flex space-x-2 overflow-x-auto p-2 hide-scrollbar">
-          {images.map((image, idx) => (
-            <button
-              key={idx}
-              className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${
-                currentIndex === idx
-                  ? 'border-indigo-500'
-                  : 'border-transparent'
-              }`}
-              onClick={() => {
-                play();
-                setScale(1);
-                setPosition({ x: 0, y: 0 });
-                setCurrentIndex(idx);
-              }}
-            >
-              <img
-                src={image}
-                alt={`Thumbnail ${idx + 1}`}
-                className="w-full h-full object-cover"
-              />
-            </button>
-          ))}
-        </div>
-      </div>
     </motion.div>
   );
 };
@@ -441,7 +414,7 @@ const ImageCarousel = ({ images, projectTitle }: { images: string[], projectTitl
       </div>
       
       {/* Indicadores de imagen */}
-      <div className="flex justify-center gap-2 py-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+      <div className="flex justify-center gap-2 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
         {images.map((_, index) => (
           <button
             key={index}
@@ -459,12 +432,12 @@ const ImageCarousel = ({ images, projectTitle }: { images: string[], projectTitl
         ))}
       </div>
       
-      {/* Miniaturas */}
-      <div className="grid grid-cols-4 gap-2 p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+      {/* Miniaturas - diseño horizontal compacto */}
+      <div className="flex overflow-x-auto hide-scrollbar space-x-2 p-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
         {images.map((image, index) => (
           <button
             key={index}
-            className={`rounded-md overflow-hidden border-2 transition-colors ${
+            className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${
               currentIndex === index
                 ? 'border-indigo-600 dark:border-indigo-400'
                 : 'border-transparent'
@@ -477,7 +450,7 @@ const ImageCarousel = ({ images, projectTitle }: { images: string[], projectTitl
             <img
               src={image}
               alt={`${projectTitle} thumbnail ${index + 1}`}
-              className="w-full h-full object-cover aspect-video"
+              className="w-full h-full object-cover"
             />
           </button>
         ))}
@@ -504,6 +477,7 @@ const ProjectDetail = () => {
   const { play } = useSoundContext()
   const { toggleDarkMode, isDarkMode } = useTheme()
   const { currentLanguage, changeLanguage } = useLanguage()
+  const [showVideo, setShowVideo] = useState(false)
   
   // Ocultar header al montar este componente
   useHideHeader();
@@ -535,7 +509,7 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen py-4">
       <SEOHead 
-        title={`${project.title} | Felipe Vega`}
+        title={`${t(`projectDetails.${project.id}.title`, { defaultValue: project.title })} | Felipe Vega`}
         description={project.fullDescription || project.description}
         image={project.imageUrl}
         article={true}
@@ -555,7 +529,7 @@ const ProjectDetail = () => {
           </motion.button>
           
           <div className="text-xl font-bold truncate mx-4 text-center hidden sm:block">
-            {project.title}
+            {t(`projectDetails.${project.id}.title`, { defaultValue: project.title })}
           </div>
           
           <div className="flex items-center space-x-2">
@@ -604,7 +578,7 @@ const ProjectDetail = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            {project.title}
+            {t(`projectDetails.${project.id}.title`, { defaultValue: project.title })}
           </motion.h1>
 
           {/* Reorganized layout to use full screen width */}
@@ -644,7 +618,7 @@ const ProjectDetail = () => {
                       {t('projects.features')}
                     </h2>
                     <ul className="space-y-3">
-                      {project.features.map((feature, index) => (
+                      {(t(`projectDetails.${project.id}.features`, { returnObjects: true }) as string[] || project.features).map((feature, index) => (
                         <li key={index} className="flex items-start">
                           <div className="w-6 h-6 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center mr-2 flex-shrink-0 relative">
                             <div className="absolute top-0 left-0 w-1 h-1 border-t-[0.5px] border-l-[0.5px] border-green-500/50 -translate-x-0.5 -translate-y-0.5 rounded-tl-full"></div>
@@ -663,30 +637,107 @@ const ProjectDetail = () => {
                 )}
               </div>
               
-              {/* Right side: Media (larger size) */}
+              {/* Right side: Media (larger size) - Combined Video and Gallery */}
               <div className="lg:col-span-3">
-                {/* Video section */}
-                {project.videoUrl && (
-                  <div className="mb-6">
-                    <h2 className="text-2xl font-bold mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-indigo-600 dark:bg-indigo-500 rounded-md flex items-center justify-center mr-2 relative">
-                        {/* Mini RPG corners */}
-                        <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
-                        <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
-                        <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
-                        <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </span>
-                      Demostración
-                    </h2>
+                {/* Combined media section with toggle */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center space-x-4">
+                      {/* Gallery toggle button */}
+                      <button 
+                        className={`text-2xl font-bold flex items-center relative ${!showVideo ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'}`}
+                        onClick={() => {
+                          play();
+                          setShowVideo(false);
+                        }}
+                      >
+                        <span className={`w-6 h-6 ${!showVideo ? 'bg-indigo-600 dark:bg-indigo-500' : 'bg-gray-400 dark:bg-gray-600'} rounded-md flex items-center justify-center mr-2 relative transition-colors`}>
+                          {/* Mini RPG corners */}
+                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
+                          <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
+                          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
+                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
+                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </span>
+                        {t('projects.gallery')}
+                      </button>
+                      
+                      {/* Video toggle button - only show if video exists */}
+                      {project.videoUrl && (
+                        <button 
+                          className={`text-2xl font-bold flex items-center relative ${showVideo ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400'}`}
+                          onClick={() => {
+                            play();
+                            setShowVideo(true);
+                          }}
+                        >
+                          <span className={`w-6 h-6 ${showVideo ? 'bg-indigo-600 dark:bg-indigo-500' : 'bg-gray-400 dark:bg-gray-600'} rounded-md flex items-center justify-center mr-2 relative transition-colors`}>
+                            {/* Mini RPG corners */}
+                            <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
+                            <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
+                            <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
+                            <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </span>
+                          {t('projects.demo')}
+                        </button>
+                      )}
+                    </div>
+                    
+                    {/* Action buttons */}
+                    <div className="flex flex-wrap gap-3">
+                      {project.demoUrl && (
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors relative"
+                          onClick={handleLinkClick}
+                        >
+                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
+                          <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
+                          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
+                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
+                          {t('projects.viewLive')}
+                          <svg className="w-3.5 h-3.5 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      )}
+                      
+                      {project.codeUrl && (
+                        <a
+                          href={project.codeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-4 py-2 border-2 border-gray-300 text-sm rounded-lg hover:border-indigo-600 transition-colors relative"
+                          onClick={handleLinkClick}
+                        >
+                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t-[0.5px] border-l-[0.5px] border-indigo-400/20"></div>
+                          <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t-[0.5px] border-r-[0.5px] border-indigo-400/20"></div>
+                          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b-[0.5px] border-l-[0.5px] border-indigo-400/20"></div>
+                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b-[0.5px] border-r-[0.5px] border-indigo-400/20"></div>
+                          {t('projects.viewCode')}
+                          <svg className="w-3.5 h-3.5 ml-1.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.237 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Conditional rendering based on toggle */}
+                  {showVideo && project.videoUrl ? (
                     <motion.div
                       className="rounded-lg overflow-hidden shadow-lg border-2 border-indigo-200 dark:border-indigo-800 relative"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
+                      transition={{ duration: 0.3 }}
                     >
                       {/* RPG Corners */}
                       <RPGCorner position="top-left" />
@@ -698,112 +749,25 @@ const ProjectDetail = () => {
                         <iframe 
                           src={project.videoUrl} 
                           className="w-full h-full"
-                          title={`${project.title} demo video`}
+                          title={`${t(`projectDetails.${project.id}.title`, { defaultValue: project.title })} demo video`}
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                         ></iframe>
                       </div>
                     </motion.div>
-                  </div>
-                )}
-                
-                {/* Gallery section - larger images */}
-                {project.screenshots && project.screenshots.length > 0 && (
-                  <div>
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-2xl font-bold flex items-center">
-                        <span className="w-6 h-6 bg-indigo-600 dark:bg-indigo-500 rounded-md flex items-center justify-center mr-2 relative">
-                          {/* Mini RPG corners */}
-                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
-                          <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
-                          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
-                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
-                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                        </span>
-                        Galería
-                      </h2>
-                      
-                      {/* Action buttons */}
-                      <div className="flex flex-wrap gap-3">
-                        {project.demoUrl && (
-                          <a
-                            href={project.demoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors relative"
-                            onClick={handleLinkClick}
-                          >
-                            <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
-                            <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
-                            <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
-                            <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
-                            {t('projects.viewDemo')}
-                            <svg className="w-3.5 h-3.5 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        )}
-                        
-                        {project.codeUrl && (
-                          <a
-                            href={project.codeUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center px-4 py-2 border-2 border-gray-300 text-sm rounded-lg hover:border-indigo-600 transition-colors relative"
-                            onClick={handleLinkClick}
-                          >
-                            <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t-[0.5px] border-l-[0.5px] border-indigo-400/20"></div>
-                            <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t-[0.5px] border-r-[0.5px] border-indigo-400/20"></div>
-                            <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b-[0.5px] border-l-[0.5px] border-indigo-400/20"></div>
-                            <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b-[0.5px] border-r-[0.5px] border-indigo-400/20"></div>
-                            {t('projects.viewCode')}
-                            <svg className="w-3.5 h-3.5 ml-1.5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <ImageCarousel 
-                      images={project.screenshots} 
-                      projectTitle={project.title} 
-                    />
-                  </div>
-                )}
-
-                {/* Documentation section if available */}
-                {project.documentation && (
-                  <motion.div 
-                    className="mt-6 bg-white dark:bg-gray-800/90 p-6 rounded-lg shadow-md relative border-2 border-indigo-200 dark:border-indigo-800"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <RPGCorner position="top-left" />
-                    <RPGCorner position="top-right" />
-                    <RPGCorner position="bottom-left" />
-                    <RPGCorner position="bottom-right" />
-                    
-                    <h2 className="text-2xl font-bold mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-indigo-600 dark:bg-indigo-500 rounded-md flex items-center justify-center mr-2 relative">
-                        <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/30"></div>
-                        <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-white/30"></div>
-                        <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-white/30"></div>
-                        <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                      </span>
-                      Documentación
-                    </h2>
-                    <div className="prose prose-indigo dark:prose-invert max-w-none">
-                      <div dangerouslySetInnerHTML={{ __html: project.documentation }} />
-                    </div>
-                  </motion.div>
-                )}
+                  ) : project.screenshots && project.screenshots.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ImageCarousel 
+                        images={project.screenshots} 
+                        projectTitle={t(`projectDetails.${project.id}.title`, { defaultValue: project.title })} 
+                      />
+                    </motion.div>
+                  )}
+                </div>
               </div>
             </div>
             
@@ -831,11 +795,11 @@ const ProjectDetail = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </span>
-                  Acerca del proyecto
+                  {t('projects.about')}
                 </h2>
                 
                 <p className="text-gray-600 dark:text-gray-400">
-                  {project.fullDescription || project.description}
+                  {t(`projectDetails.${project.id}.fullDescription`, { defaultValue: project.fullDescription || project.description })}
                 </p>
               </motion.div>
 
@@ -911,4 +875,4 @@ styles.textContent = `
 `;
 document.head.appendChild(styles);
 
-export default ProjectDetail 
+export default ProjectDetail

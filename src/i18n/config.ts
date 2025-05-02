@@ -5,6 +5,8 @@ import enTranslations from './locales/en.json'
 import esTranslations from './locales/es.json'
 import techDialogsEs from './locales/tech-dialogs-es.json'
 import techDialogsEn from './locales/tech-dialogs-en.json'
+import projectsEs from './locales/projects-es.json'
+import projectsEn from './locales/projects-en.json'
 
 // Combinar los diálogos con las traducciones principales
 const resources = {
@@ -14,6 +16,9 @@ const resources = {
       technologies: {
         ...enTranslations.technologies,
         ...techDialogsEn.technologies
+      },
+      projectDetails: {
+        ...projectsEn
       }
     },
   },
@@ -23,6 +28,9 @@ const resources = {
       technologies: {
         ...esTranslations.technologies,
         ...techDialogsEs.technologies
+      },
+      projectDetails: {
+        ...projectsEs
       }
     },
   },

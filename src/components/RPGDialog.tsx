@@ -315,8 +315,8 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                   />
                 </div>
                 <div className="p-2 flex-1">
-                  <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">{project.title}</h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-1">{project.description}</p>
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">{t(`projectDetails.${project.id}.title`, { defaultValue: project.title })}</h4>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-1">{t(`projectDetails.${project.id}.description`, { defaultValue: project.description })}</p>
                   
                   <div className="flex justify-end gap-2 mt-1">
                     {project.codeUrl && (

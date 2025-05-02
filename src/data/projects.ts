@@ -54,7 +54,8 @@ const projects: Project[] = [
     imageUrl: "/images/projects/harrysboutique.png",
     demoUrl: "https://frontend-ecommerce-tan-psi.vercel.app/",
     codeUrl: "https://github.com/felipevega-dev/HBEcommerceFullStack",
-    tags: ["Vite", "JavaScript", "TailwindCSS", "React", "MercadoPago", "NodeJS", "MongoDB"],
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    tags: ["Vite", "JavaScript", "Tailwind", "React", "MercadoPago", "NodeJS", "MongoDB"],
     fullDescription: "Sistema frontend de comercio electronico funcional, con estilos personalizados y elegantes, animaciones suaves, filtros y conexión a un backend dedicado.",
     features: [
       "Ecommerce con integración con MercadoPago",
@@ -152,7 +153,7 @@ const projects: Project[] = [
     imageUrl: "/images/projects/pedidos.png", 
     demoUrl: "https://serene-arithmetic-f99314.netlify.app/",
     codeUrl: "https://github.com/felipevega-dev/PedidosReactNative",
-    tags: ["ReactNative", "Expo", "TailwindCSS", "TypeScript", "Firebase"],
+    tags: ["ReactNative", "Expo", "Tailwind", "TypeScript", "Firebase"],
     fullDescription: "",
     features: [
       "Aplicación completamente funcional tanto en movil como escritorio.",

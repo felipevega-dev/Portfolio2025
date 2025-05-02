@@ -170,7 +170,7 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
               transform: "translateZ(10px)" 
             }}
           >
-            {project.title}
+            {t(`projectDetails.${project.id}.title`, { defaultValue: project.title })}
           </motion.h3>
           
           <motion.p 
@@ -180,7 +180,7 @@ const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => 
               transform: "translateZ(5px)" 
             }}
           >
-            {project.description}
+            {t(`projectDetails.${project.id}.description`, { defaultValue: project.description })}
           </motion.p>
           
           {/* Action links */}
