@@ -78,10 +78,6 @@ const Hero = () => {
     >
       <StarField />
 
-      {/* Background Number */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[20vw] font-bold text-gray-100 dark:text-gray-800/50 select-none">
-        01
-      </div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

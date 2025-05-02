@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import LazyImage from './LazyImage'
 import { useSoundContext } from '../context/SoundContext'
-import { Link } from 'react-router-dom'
 
 interface Technology {
   name: string

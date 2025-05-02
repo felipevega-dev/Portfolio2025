@@ -76,24 +76,53 @@
     }
   },
   "contact": {
-    "title": "Let's Connect",
+    "title": "Contact",
+    "description": "Have a project in mind? Need help with your website? Let's talk!",
     "getInTouch": "Get in touch",
-    "description": "I'm always interested in hearing about new projects and opportunities. Feel free to reach out!",
-    "connect": "Connect with me",
+    "location": {
+      "title": "Location",
+      "based": "Santiago, Chile",
+      "remote": "Available for remote work"
+    },
     "form": {
       "title": "Send me a message",
       "name": "Name",
       "email": "Email",
+      "phone": "Phone (optional)",
       "message": "Message",
-      "send": "Send Message",
+      "messagePlaceholder": "Tell me about your project...",
+      "send": "Send message",
       "sending": "Sending...",
-      "success": "Message sent successfully!",
-      "error": "Failed to send message. Please try again."
-    },
-    "location": {
-      "title": "Location",
-      "based": "Based in Santiago, Chile",
-      "remote": "Open to remote opportunities"
+      "pleaseTryAgainSoon": "Please try again in a moment",
+      "limitReached": "Message limit reached",
+      "success": "Message sent successfully. Thank you!",
+      "error": "An error occurred while sending the message. Please try again.",
+      "validation": {
+        "emailInvalid": "Please enter a valid email address",
+        "phoneInvalid": "Please enter a valid phone number (8-15 digits)",
+        "messageShort": "Message must be at least 10 characters long",
+        "tooManySubmissions": "You've sent too many messages. Please try again later.",
+        "tooFrequent": "Please wait a moment before sending another message."
+      },
+      "projectType": {
+        "label": "Project type",
+        "select": "Select a project type",
+        "website": "Website",
+        "webapp": "Web application",
+        "ecommerce": "Online store",
+        "mobile": "Mobile app",
+        "other": "Other"
+      },
+      "projectScope": {
+        "label": "Project size",
+        "select": "Select project scale",
+        "small": "Small (simple, few pages)",
+        "medium": "Medium (standard functionality)",
+        "large": "Large (advanced features)",
+        "enterprise": "Enterprise (high complexity)"
+      },
+      "allowFollowUp": "I agree to be contacted for follow-up",
+      "allowFollowUpHint": "We may contact you to clarify details about your project"
     }
   },
   "dialog": {

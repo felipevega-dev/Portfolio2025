@@ -1,56 +1,191 @@
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaGithub, FaLinkedin, FaTwitter, FaMapMarkerAlt, FaLaptopCode } from 'react-icons/fa'
 import { MdEmail, MdSend } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
+import { api } from '../../api' // Importamos la API
+
+// Límites para prevenir spam
+const SUBMISSION_LIMIT = 3; // Máximo número de envíos permitidos
+const SUBMISSION_TIMEOUT = 60 * 60 * 1000; // 1 hora en milisegundos
+const COOLDOWN_PERIOD = 60 * 1000; // 1 minuto en milisegundos
 
 const Contact = () => {
   const { t } = useTranslation()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    phone: '',
+    projectType: '',
+    projectScope: '',
+    message: '',
+    allowFollowUp: true
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+  const [submissionCount, setSubmissionCount] = useState(0)
+  const [lastSubmissionTime, setLastSubmissionTime] = useState(0)
+  const [cooldownActive, setCooldownActive] = useState(false)
+
+  // Cargar el contador de envíos al iniciar
+  useEffect(() => {
+    const storedCount = localStorage.getItem('submissionCount');
+    const storedTime = localStorage.getItem('lastSubmissionTime');
+    
+    if (storedCount) {
+      setSubmissionCount(parseInt(storedCount, 10));
+    }
+    
+    if (storedTime) {
+      const time = parseInt(storedTime, 10);
+      setLastSubmissionTime(time);
+      
+      // Verificar si debemos resetear el contador (ha pasado más de SUBMISSION_TIMEOUT)
+      if (Date.now() - time > SUBMISSION_TIMEOUT) {
+        resetSubmissionLimits();
+      }
+    }
+  }, []);
+
+  // Resetear los límites de envío
+  const resetSubmissionLimits = () => {
+    setSubmissionCount(0);
+    setLastSubmissionTime(0);
+    localStorage.removeItem('submissionCount');
+    localStorage.removeItem('lastSubmissionTime');
+  };
+
+  // Actualizar los límites de envío
+  const updateSubmissionLimits = () => {
+    const newCount = submissionCount + 1;
+    const now = Date.now();
+    
+    setSubmissionCount(newCount);
+    setLastSubmissionTime(now);
+    
+    localStorage.setItem('submissionCount', newCount.toString());
+    localStorage.setItem('lastSubmissionTime', now.toString());
+    
+    // Activar periodo de enfriamiento entre envíos
+    setCooldownActive(true);
+    setTimeout(() => {
+      setCooldownActive(false);
+    }, COOLDOWN_PERIOD);
+  };
+
+  const validateForm = () => {
+    const errors: {[key: string]: string} = {};
+    
+    // Validar email
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      errors.email = t('contact.form.validation.emailInvalid');
+    }
+    
+    // Validar teléfono (opcional, pero si se proporciona debe ser válido)
+    if (formData.phone && !formData.phone.match(/^\+?[0-9]{8,15}$/)) {
+      errors.phone = t('contact.form.validation.phoneInvalid');
+    }
+    
+    // Validar que el mensaje no esté vacío y tenga longitud suficiente
+    if (formData.message.trim().length < 10) {
+      errors.message = t('contact.form.validation.messageShort');
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitStatus('idle')
-
-    // Validación básica
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setSubmitStatus('error')
-      setIsSubmitting(false)
-      return
+    e.preventDefault();
+    
+    // Verificar los límites de envío
+    if (submissionCount >= SUBMISSION_LIMIT) {
+      setValidationErrors({
+        form: t('contact.form.validation.tooManySubmissions')
+      });
+      return;
     }
+    
+    if (cooldownActive) {
+      setValidationErrors({
+        form: t('contact.form.validation.tooFrequent')
+      });
+      return;
+    }
+    
+    // Validar el formulario
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setValidationErrors({});
 
     try {
-      // Llamar a tu API en lugar de EmailJS directamente
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
+      // Usar la API directamente en lugar de una ruta API
+      await api.contact.sendMessage(formData);
+      setSubmitStatus('success');
+      setFormData({ 
+        name: '', 
+        email: '', 
+        phone: '',
+        projectType: '',
+        projectScope: '',
+        message: '',
+        allowFollowUp: true
+      });
       
-      if (!response.ok) throw new Error('Network response was not ok')
-      setSubmitStatus('success')
-      setFormData({ name: '', email: '', message: '' })
+      // Actualizar los límites de envío después de un envío exitoso
+      updateSubmissionLimits();
     } catch (error) {
-      console.error('Error sending email:', error)
-      setSubmitStatus('error')
+      console.error('Error sending email:', error);
+      setSubmitStatus('error');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const value = 
+      e.target.type === 'checkbox' 
+        ? (e.target as HTMLInputElement).checked 
+        : e.target.value
+        
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
-    }))
+      [e.target.name]: value
+    }));
+    
+    // Limpiar error cuando el usuario corrige el campo
+    if (validationErrors[e.target.name]) {
+      setValidationErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[e.target.name];
+        return newErrors;
+      });
+    }
   }
+
+  const projectTypes = [
+    { value: '', label: t('contact.form.projectType.select') },
+    { value: 'website', label: t('contact.form.projectType.website') },
+    { value: 'webapp', label: t('contact.form.projectType.webapp') },
+    { value: 'ecommerce', label: t('contact.form.projectType.ecommerce') },
+    { value: 'mobile', label: t('contact.form.projectType.mobile') },
+    { value: 'other', label: t('contact.form.projectType.other') }
+  ]
+
+  const projectScopes = [
+    { value: '', label: t('contact.form.projectScope.select') },
+    { value: 'small', label: t('contact.form.projectScope.small') },
+    { value: 'medium', label: t('contact.form.projectScope.medium') },
+    { value: 'large', label: t('contact.form.projectScope.large') },
+    { value: 'enterprise', label: t('contact.form.projectScope.enterprise') }
+  ]
 
   const socialLinks = [
     {
@@ -178,6 +313,12 @@ const Contact = () => {
                 {t('contact.form.title')}
               </h3>
               
+              {validationErrors.form && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-sm font-medium">{validationErrors.form}</p>
+                </div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
@@ -194,6 +335,9 @@ const Contact = () => {
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
                       placeholder="John Doe"
                     />
+                    {validationErrors.name && (
+                      <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+                    )}
                   </div>
                   
                   <div>
@@ -207,10 +351,79 @@ const Contact = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        validationErrors.email 
+                          ? 'border-red-500 focus:ring-red-500'
+                          : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400'
+                      } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors`}
                       placeholder="john@example.com"
                     />
+                    {validationErrors.email && (
+                      <p className="mt-1 text-sm text-red-600">{validationErrors.email}</p>
+                    )}
                   </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t('contact.form.phone')}
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 rounded-lg border ${
+                        validationErrors.phone 
+                          ? 'border-red-500 focus:ring-red-500'
+                          : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400'
+                      } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors`}
+                      placeholder="+56 9 1234 5678"
+                    />
+                    {validationErrors.phone && (
+                      <p className="mt-1 text-sm text-red-600">{validationErrors.phone}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t('contact.form.projectType.label')}
+                    </label>
+                    <select
+                      id="projectType"
+                      name="projectType"
+                      value={formData.projectType}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
+                    >
+                      {projectTypes.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="projectScope" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    {t('contact.form.projectScope.label')}
+                  </label>
+                  <select
+                    id="projectScope"
+                    name="projectScope"
+                    value={formData.projectScope}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
+                  >
+                    {projectScopes.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 
                 <div>
@@ -224,17 +437,45 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors resize-none"
-                    placeholder="Cuéntame sobre tu proyecto..."
+                    className={`w-full px-4 py-3 rounded-lg border ${
+                      validationErrors.message 
+                        ? 'border-red-500 focus:ring-red-500'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 dark:focus:ring-indigo-400'
+                    } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:border-transparent transition-colors resize-none`}
+                    placeholder={t('contact.form.messagePlaceholder')}
                   />
+                  {validationErrors.message && (
+                    <p className="mt-1 text-sm text-red-600">{validationErrors.message}</p>
+                  )}
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="allowFollowUp"
+                      name="allowFollowUp"
+                      type="checkbox"
+                      checked={formData.allowFollowUp}
+                      onChange={handleChange}
+                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="allowFollowUp" className="font-medium text-gray-700 dark:text-gray-300">
+                      {t('contact.form.allowFollowUp')}
+                    </label>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+                      {t('contact.form.allowFollowUpHint')}
+                    </p>
+                  </div>
                 </div>
                 
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.02, boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)" }}
                   whileTap={{ scale: 0.98 }}
-                  disabled={isSubmitting}
-                  className={`w-full py-3 px-6 text-white font-medium rounded-lg flex items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+                  disabled={isSubmitting || cooldownActive || submissionCount >= SUBMISSION_LIMIT}
+                  className={`w-full py-3 px-6 text-white font-medium rounded-lg flex items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all ${(isSubmitting || cooldownActive || submissionCount >= SUBMISSION_LIMIT) ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
                   {isSubmitting ? (
                     <>
@@ -244,6 +485,10 @@ const Contact = () => {
                       </svg>
                       {t('contact.form.sending')}
                     </>
+                  ) : cooldownActive ? (
+                    t('contact.form.pleaseTryAgainSoon')
+                  ) : submissionCount >= SUBMISSION_LIMIT ? (
+                    t('contact.form.limitReached')
                   ) : (
                     <>
                       <MdSend className="mr-2 text-lg" />

@@ -1,7 +1,7 @@
 import { motion, useAnimation } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef} from 'react'
 import allProjects, { searchProjects } from '../../data/projects'
 import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaJsSquare, FaMobileAlt, FaDatabase, FaStar, FaInfoCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import SectionHeading from '../shared/SectionHeading'
@@ -349,21 +349,6 @@ const Projects = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
     setCurrentPage(0) // Resetear a primera página al buscar
-  }
-
-  const handleLoadMore = () => {
-    play() // Play sound
-    setVisibleProjects(prev => Math.min(prev + 3, regularProjects.length))
-  }
-
-  const handleShowLess = () => {
-    play() // Play sound
-    setVisibleProjects(6)
-  }
-  
-  // Handler for navigating to all projects page
-  const handleViewAllProjects = () => {
-    play() // Play sound when clicking
   }
 
   return (

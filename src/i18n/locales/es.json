@@ -76,24 +76,53 @@
     }
   },
   "contact": {
-    "title": "Contáctame",
-    "getInTouch": "Hablemos",
-    "description": "Siempre estoy interesado en escuchar sobre nuevos proyectos y oportunidades. ¡No dudes en contactarme!",
-    "connect": "Conéctate conmigo",
+    "title": "Contacto",
+    "description": "¿Tienes un proyecto en mente? ¿Necesitas ayuda con tu sitio web? ¡Hablemos!",
+    "getInTouch": "Ponte en contacto",
+    "location": {
+      "title": "Ubicación",
+      "based": "Santiago, Chile",
+      "remote": "Disponible para trabajo remoto"
+    },
     "form": {
       "title": "Envíame un mensaje",
       "name": "Nombre",
       "email": "Correo electrónico",
+      "phone": "Teléfono (opcional)",
       "message": "Mensaje",
+      "messagePlaceholder": "Cuéntame sobre tu proyecto...",
       "send": "Enviar mensaje",
       "sending": "Enviando...",
-      "success": "¡Mensaje enviado con éxito!",
-      "error": "Error al enviar el mensaje. Por favor, intenta de nuevo."
-    },
-    "location": {
-      "title": "Ubicación",
-      "based": "Basado en Santiago, Chile",
-      "remote": "Disponible para trabajo remoto"
+      "pleaseTryAgainSoon": "Inténtalo de nuevo en un momento",
+      "limitReached": "Límite de mensajes alcanzado",
+      "success": "Mensaje enviado correctamente. ¡Gracias!",
+      "error": "Ocurrió un error al enviar el mensaje. Por favor, intenta nuevamente.",
+      "validation": {
+        "emailInvalid": "Por favor, ingresa un correo electrónico válido",
+        "phoneInvalid": "Por favor, ingresa un número de teléfono válido (8-15 dígitos)",
+        "messageShort": "El mensaje debe tener al menos 10 caracteres",
+        "tooManySubmissions": "Has enviado demasiados mensajes. Por favor, inténtalo más tarde.",
+        "tooFrequent": "Por favor, espera un momento antes de enviar otro mensaje."
+      },
+      "projectType": {
+        "label": "Tipo de proyecto",
+        "select": "Selecciona un tipo de proyecto",
+        "website": "Sitio web",
+        "webapp": "Aplicación web",
+        "ecommerce": "Tienda online",
+        "mobile": "App móvil",
+        "other": "Otro"
+      },
+      "projectScope": {
+        "label": "Tamaño del proyecto",
+        "select": "Selecciona la escala del proyecto",
+        "small": "Pequeño (simple, pocas páginas)",
+        "medium": "Mediano (funcionalidades estándar)",
+        "large": "Grande (funcionalidades avanzadas)",
+        "enterprise": "Corporativo (alto nivel de complejidad)"
+      },
+      "allowFollowUp": "Acepto ser contactado para seguimiento",
+      "allowFollowUpHint": "Podremos contactarte para aclarar detalles sobre tu proyecto"
     }
   },
   "dialog": {
