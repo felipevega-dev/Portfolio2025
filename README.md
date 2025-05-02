@@ -3,7 +3,7 @@
 ¡Hola! Soy **Felipe Vega**, desarrollador full-stack apasionado por construir experiencias digitales envolventes, accesibles y bien diseñadas. Este repositorio contiene el código fuente de mi portafolio personal, donde muestro mis proyectos, habilidades técnicas y formas de contacto.
 
 🎯 **Visítalo en línea**:  
-👉 [https://felipevega.dev](https://felipevega.dev) _(o el dominio real que uses)_
+👉 [https://felipevega.dev](https://felipevega.dev)
 
 ---
 
