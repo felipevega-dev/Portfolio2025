@@ -143,7 +143,10 @@
   "github": {
     "title": "GitHub Activity",
     "lastUpdate": "Last update",
-    "noDescription": "No description available"
+    "noDescription": "No description available",
+    "contributionsTitle": "{{count}} contributions in {{year}}",
+    "recentCommits": "Recent commits",
+    "viewCommit": "View commit"
   },
   "common": {
     "retry": "Retry",

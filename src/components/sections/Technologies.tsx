@@ -10,6 +10,7 @@ import {
 } from 'react-icons/si'
 import RPGDialog from '../RPGDialog'
 import { GiSpellBook, GiScrollUnfurled, GiMagicSwirl } from 'react-icons/gi'
+import { useSoundContext } from '../../context/SoundContext'
 
 // Componente para el "pergamino" de título
 const SectionTitleScroll = ({ title }: { title: string }) => (
@@ -144,6 +145,13 @@ const CategoryButton = ({
   active: boolean, 
   onClick: () => void 
 }) => {
+  const { play } = useSoundContext();
+  
+  const handleClick = () => {
+    play();
+    onClick();
+  };
+  
   return (
     <motion.button
       className={`relative px-4 py-2 font-medium transition-all duration-300 ${
@@ -153,7 +161,7 @@ const CategoryButton = ({
       } focus:outline-none`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      onClick={onClick}
+      onClick={handleClick}
     >
       {/* Fondo activo */}
       {active && (

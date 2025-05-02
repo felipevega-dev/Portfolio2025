@@ -13,7 +13,6 @@ import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
 import Technologies from './components/sections/Technologies'
 import Contact from './components/sections/Contact'
-import GitHubActivity from './components/GitHubActivity'
 import { createContext } from 'react'
 
 // Crear contexto de sonido
@@ -33,7 +32,6 @@ const HomePage = () => {
       <Skills />
       <Projects />  
       <Technologies />
-      <GitHubActivity username="felipevega-dev" />
       <Contact />
     </>
   )

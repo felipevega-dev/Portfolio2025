@@ -45,7 +45,7 @@ const Footer = () => {
   const contactInfo = [
     { icon: FaEnvelope, text: 'felipevega.dev@gmail.com', href: 'mailto:felipevega.dev@gmail.com' },
     { icon: FaMapMarkerAlt, text: 'Santiago, Chile' },
-    { icon: FaPhone, text: '+56 9 9302 3506', href: 'tel:+56993023506' }
+    { icon: FaPhone, text: '+56 9 9302 3506', href: 'https://wa.me/56993023506' }
   ]
 
   return (

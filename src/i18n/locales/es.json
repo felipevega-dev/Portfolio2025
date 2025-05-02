@@ -141,9 +141,12 @@
     "backToOptions": "Volver a opciones"
   },
   "github": {
-    "title": "Actividad en GitHub",
+    "title": "Actividad de GitHub",
     "lastUpdate": "Última actualización",
-    "noDescription": "Sin descripción disponible"
+    "noDescription": "No hay descripción disponible",
+    "contributionsTitle": "{{count}} contribuciones en {{year}}",
+    "recentCommits": "Commits recientes",
+    "viewCommit": "Ver commit"
   },
   "common": {
     "retry": "Reintentar",
