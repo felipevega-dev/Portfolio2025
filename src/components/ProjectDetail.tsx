@@ -40,48 +40,236 @@ const RPGCorner = ({ position }: { position: 'top-left' | 'top-right' | 'bottom-
 // Componente de imagen ampliable con modal
 const ImageModal = ({ 
   isOpen, 
-  onClose, 
-  src, 
-  alt 
+  onClose,  
+  alt,
+  images,
+  currentIndex,
+  setCurrentIndex
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
   src: string; 
   alt: string;
+  images: string[];
+  currentIndex: number;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
 }) => {
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
+  const { play } = useSoundContext();
+
   // Si el modal no está abierto, no renderizar nada
   if (!isOpen) return null;
 
+  const handleZoomIn = () => {
+    setScale(prev => Math.min(prev + 0.5, 4));
+  };
+
+  const handleZoomOut = () => {
+    setScale(prev => {
+      const newScale = Math.max(prev - 0.5, 1);
+      if (newScale === 1) {
+        // Reset position when zooming out to normal
+        setPosition({ x: 0, y: 0 });
+      }
+      return newScale;
+    });
+  };
+
+  const handleReset = () => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (scale > 1) {
+      setIsDragging(true);
+      setStartPosition({
+        x: e.clientX - position.x,
+        y: e.clientY - position.y
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && scale > 1) {
+      setPosition({
+        x: e.clientX - startPosition.x,
+        y: e.clientY - startPosition.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (scale > 1) {
+      setIsDragging(true);
+      setStartPosition({
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y
+      });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDragging && scale > 1) {
+      setPosition({
+        x: e.touches[0].clientX - startPosition.x,
+        y: e.touches[0].clientY - startPosition.y
+      });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  const prevImage = () => {
+    play();
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+    setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
+  };
+
+  const nextImage = () => {
+    play();
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+    setCurrentIndex(prev => (prev + 1) % images.length);
+  };
+
   return (
     <motion.div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/90"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
     >
-      <motion.button
-        className="absolute top-6 right-6 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors z-10"
-        onClick={onClose}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <FaTimes className="w-6 h-6" />
-      </motion.button>
+      {/* Control bar */}
+      <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center space-x-3">
+          <button 
+            className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+            onClick={handleZoomIn}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <button 
+            className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+            onClick={handleZoomOut}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <button 
+            className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+            onClick={handleReset}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+        <div className="text-white text-sm">
+          {currentIndex + 1} / {images.length}
+        </div>
+        <motion.button
+          className="p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-colors"
+          onClick={onClose}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <FaTimes className="w-5 h-5" />
+        </motion.button>
+      </div>
       
+      {/* Navigation buttons */}
+      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10" onClick={e => e.stopPropagation()}>
+        <motion.button
+          className="p-3 rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 transition-colors"
+          onClick={prevImage}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <FaChevronLeft className="w-5 h-5" />
+        </motion.button>
+      </div>
+      
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10" onClick={e => e.stopPropagation()}>
+        <motion.button
+          className="p-3 rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 transition-colors"
+          onClick={nextImage}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <FaChevronRight className="w-5 h-5" />
+        </motion.button>
+      </div>
+      
+      {/* Image container */}
       <motion.div
-        className="relative max-w-full max-h-full"
+        className="relative flex-1 w-full h-full flex items-center justify-center overflow-hidden"
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.8 }}
         onClick={(e) => e.stopPropagation()}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{ cursor: scale > 1 ? 'grab' : 'default' }}
       >
         <img 
-          src={src} 
-          alt={alt} 
-          className="max-w-full max-h-[90vh] rounded-lg object-contain"
+          src={images[currentIndex]} 
+          alt={`${alt} - imagen ${currentIndex + 1}`} 
+          className="max-w-full max-h-full object-contain select-none"
+          style={{ 
+            transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
+            transition: isDragging ? 'none' : 'transform 0.2s',
+          }}
+          draggable="false"
         />
       </motion.div>
+      
+      {/* Thumbnails */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-2 p-4 bg-black/40 backdrop-blur-sm" onClick={e => e.stopPropagation()}>
+        <div className="flex space-x-2 overflow-x-auto p-2 hide-scrollbar">
+          {images.map((image, idx) => (
+            <button
+              key={idx}
+              className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${
+                currentIndex === idx
+                  ? 'border-indigo-500'
+                  : 'border-transparent'
+              }`}
+              onClick={() => {
+                play();
+                setScale(1);
+                setPosition({ x: 0, y: 0 });
+                setCurrentIndex(idx);
+              }}
+            >
+              <img
+                src={image}
+                alt={`Thumbnail ${idx + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
     </motion.div>
   );
 };
@@ -121,7 +309,7 @@ const ImageCarousel = ({ images, projectTitle }: { images: string[], projectTitl
           key={currentIndex}
           src={images[currentIndex]}
           alt={`${projectTitle} - imagen ${currentIndex + 1}`}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-gray-100 dark:bg-gray-800/40"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -207,7 +395,10 @@ const ImageCarousel = ({ images, projectTitle }: { images: string[], projectTitl
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         src={images[currentIndex]}
-        alt={`${projectTitle} - imagen ${currentIndex + 1}`}
+        alt={projectTitle}
+        images={images}
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex}
       />
     </div>
   );
@@ -542,5 +733,18 @@ const ProjectDetail = () => {
     </div>
   );
 };
+
+// Agregar al final del archivo, justo antes de `export default`
+const styles = document.createElement('style');
+styles.textContent = `
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`;
+document.head.appendChild(styles);
 
 export default ProjectDetail 

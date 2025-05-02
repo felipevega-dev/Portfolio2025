@@ -74,7 +74,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   // Crear el elemento de audio cuando el componente se monta
   useEffect(() => {
     audioRef.current = new Audio('/sounds/typing.MP3');
-    audioRef.current.volume = 0.15;
+    audioRef.current.volume = 0.10;
     audioRef.current.playbackRate = 1.2;
     // Comenzar desde el segundo 2, solo reproducir hasta el segundo 5 y luego repetir
     audioRef.current.currentTime = 2;

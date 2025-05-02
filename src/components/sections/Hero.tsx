@@ -99,7 +99,7 @@ const Hero = () => {
       </div>
 
       <motion.div 
-        className="container mx-auto px-6 relative z-10 py-16 md:py-24 lg:py-32"
+        className="container mx-auto px-6 relative z-10 md:py-24 lg:py-32"
         variants={containerVariants}
         initial="hidden"
         animate="visible"

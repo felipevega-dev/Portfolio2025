@@ -11,7 +11,7 @@ const SoundEffect = ({ soundUrl, play }: SoundEffectProps) => {
   useEffect(() => {
     // Create audio element
     audioRef.current = new Audio(soundUrl);
-    audioRef.current.volume = 0.3; // Set volume to 30%
+    audioRef.current.volume = 0.05; // Set volume to 20%
     
     // Clean up
     return () => {
