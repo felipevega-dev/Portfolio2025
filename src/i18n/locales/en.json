@@ -8,20 +8,20 @@
     "contact": "Contact"
   },
   "hero": {
-    "greeting": "Hi, I'm",
+    "greeting": "Hello, I'm",
     "role": "Software Developer",
-    "description": "Specialized in web and mobile application development. I combine creativity and technical expertise to create elegant and functional digital solutions, using the latest technologies and industry best practices.",
+    "description": "Specialized in web and mobile application development. I combine creativity and technical expertise to create elegant and functional digital solutions, using the latest technologies and best practices.",
     "downloadCV": "Download CV",
     "contact": "Contact Me"
   },
   "stats": {
-    "experience": "Years of Experience",
+    "experience": "Years of experience",
     "projects": "Completed Projects",
     "technologies": "Mastered Technologies"
   },
   "projects": {
     "title": "Featured Projects",
-    "description": "A selection of my most recent and meaningful work. Each project represents a unique challenge and an opportunity to learn and grow.",
+    "description": "A selection of my most recent and significant work. Each project represents a unique challenge and an opportunity to learn and grow.",
     "viewDemo": "View Demo",
     "viewLive": "View Live",
     "viewCode": "View Code",
@@ -33,17 +33,16 @@
     "demo": "Demo",
     "about": "About the project",
     "backToProjects": "Back to projects",
-    "featuredExplanation": "These are my featured projects",
     "allProjects": "All Projects",
-    "searchPlaceholder": "Search for projects by name, description or technology...",
+    "searchPlaceholder": "Search projects by name, description or technology...",
     "projectsFound": "project(s) found",
-    "noProjectsFound": "No projects match your search criteria.",
+    "noProjectsFound": "No projects found matching your search.",
     "resetFilters": "Reset filters",
     "noDescription": "No description available for this project."
   },
   "skills": {
     "title": "Skills & Services",
-    "description": "I offer comprehensive development solutions, from frontend to backend, using the most modern and efficient technologies in the market.",
+    "description": "I offer complete development solutions, from frontend to backend, using the most modern and efficient technologies on the market.",
     "cards": {
       "frontend": {
         "title": "Frontend Development",
@@ -65,7 +64,7 @@
   },
   "technologies": {
     "title": "Technologies",
-    "description": "These are the technologies I use in my day-to-day work as a developer. You can drag them to reorganize as you like.",
+    "description": "These are the technologies I use in my day-to-day work as a developer. You can ask them to explain what they do.",
     "categories": {
       "all": "All",
       "frontend": "Frontend",
@@ -81,7 +80,7 @@
   },
   "contact": {
     "title": "Contact",
-    "description": "Have a project in mind? Need help with your website? Let's talk!",
+    "description": "Do you have a project in mind? Need help with your website? Let's talk!",
     "getInTouch": "Get in touch",
     "location": {
       "title": "Location",
@@ -97,7 +96,7 @@
       "messagePlaceholder": "Tell me about your project...",
       "send": "Send message",
       "sending": "Sending...",
-      "pleaseTryAgainSoon": "Please try again in a moment",
+      "pleaseTryAgainSoon": "Please try again soon",
       "limitReached": "Message limit reached",
       "success": "Message sent successfully. Thank you!",
       "error": "An error occurred while sending the message. Please try again.",
@@ -119,13 +118,13 @@
       },
       "projectScope": {
         "label": "Project size",
-        "select": "Select project scale",
+        "select": "Select the project scale",
         "small": "Small (simple, few pages)",
-        "medium": "Medium (standard functionality)",
+        "medium": "Medium (standard features)",
         "large": "Large (advanced features)",
-        "enterprise": "Enterprise (high complexity)"
+        "enterprise": "Enterprise (high level of complexity)"
       },
-      "allowFollowUp": "I agree to be contacted for follow-up",
+      "allowFollowUp": "I accept being contacted for follow-up",
       "allowFollowUpHint": "We may contact you to clarify details about your project"
     }
   },
@@ -138,9 +137,11 @@
       "relatedProjects": "View related projects ({{count}})"
     },
     "projects": {
-      "available": "I've been used in {{count}} project(s). Take a look!",
+      "available": "I've been used in {{count}} project(s). Check them out!",
       "notAvailable": "There are no public projects using this technology yet, but this will change soon.",
-      "usedIn": "Projects where I've been used:"
+      "usedIn": "Projects I was used in:",
+      "viewAll": "View all {{count}} projects",
+      "projectsUsing": "Projects using {{technology}}"
     },
     "backToOptions": "Back to options"
   },

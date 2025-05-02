@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useState, useRef} from 'react'
 import allProjects, { searchProjects } from '../../data/projects'
-import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaMobileAlt, FaStar, FaInfoCircle, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { FaGithub, FaExternalLinkAlt, FaArrowRight, FaLaptopCode, FaReact, FaWordpress, FaMobileAlt, FaStar, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import SectionHeading from '../shared/SectionHeading'
 import { Button } from '../ui/Button'
 import { useSoundContext } from '../../context/SoundContext'
@@ -294,6 +294,8 @@ const Projects = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const projectsPerPage = 3
   const { play } = useSoundContext()
+
+  t
   
   // Filtrar proyectos según la categoría y búsqueda
   const filteredProjects = currentTab === 'all' 
@@ -429,18 +431,7 @@ const Projects = () => {
                   </span>
                   Proyectos Destacados
                 </h3>
-                <motion.div 
-                  className="text-sm text-indigo-600 dark:text-indigo-400 flex items-center border border-indigo-200 dark:border-indigo-800 py-1 px-3 rounded-full bg-indigo-50 dark:bg-indigo-900/20 relative"
-                  whileHover={{ x: 5 }}
-                >
-                  {/* Mini RPG Corners */}
-                  <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-indigo-400/50 -translate-x-0.5 -translate-y-0.5 rounded-tl-full"></div>
-                  <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-indigo-400/50 translate-x-0.5 -translate-y-0.5 rounded-tr-full"></div>
-                  <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-indigo-400/50 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
-                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-indigo-400/50 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
-                  <span className="mr-1">{t('projects.featuredExplanation')}</span>
-                  <FaInfoCircle size={12} />
-                </motion.div>
+                
               </div>
 
               {/* Contenedor con estilo RPG para proyectos destacados */}

@@ -12,7 +12,6 @@
       "Complete user system with customized profiles, address management, and order tracking",
       "Administrative dashboard with statistics, inventory management, and order control",
       "Custom backend developed with Node.js and MongoDB for maximum flexibility",
-      "Infrastructure deployed on Vercel to ensure high availability",
       "Product review and rating system to build customer trust"
     ]
   },

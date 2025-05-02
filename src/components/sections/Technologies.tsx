@@ -480,7 +480,7 @@ const Technologies = () => {
     <section 
       id="technologies" 
       ref={sectionRef}
-      className="py-24 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
+      className="lg:py-12 bg-gray-50 dark:bg-gray-900/50 relative overflow-hidden"
     >
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -515,7 +515,7 @@ const Technologies = () => {
         {isMobile && <MobileInstructions />}
         
         {/* Grid de tecnologías */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6">
           {techs.map((tech) => (
             <TechCard
               key={tech.id}

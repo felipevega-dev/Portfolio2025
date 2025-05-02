@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { getProjectsByTechnology } from '../data/projects';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaListAlt } from 'react-icons/fa';
 import { useSoundContext } from '../context/SoundContext';
 
 interface RPGDialogProps {
@@ -27,12 +27,45 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [dialogStage, setDialogStage] = useState<DialogStage>('initial');
+  const [showProjectsPopup, setShowProjectsPopup] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
   const { play } = useSoundContext();
   const activeTimersRef = useRef<number[]>([]);
   const relatedProjects = getProjectsByTechnology(technology);
+  
+  // Check if on mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check on mount and when window resizes
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+  
+  // Handle body scroll blocking
+  useEffect(() => {
+    if (isOpen) {
+      // Disable scrolling
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Re-enable scrolling
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      // Cleanup on unmount
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
   
   // Obtener el texto actual basado en la etapa del diálogo
   const getCurrentText = () => {
@@ -44,8 +77,9 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
       case 'whyCaptured': {
         let text = t(`${path}.whyCaptured`);
         
-        // Solo agregamos el texto de proyectos si hay proyectos relacionados
-        if (relatedProjects.length > 0) {
+        // Solo agregamos el texto de proyectos si hay proyectos relacionados y estamos en móvil
+        // En desktop mostramos los proyectos a la derecha, así que no necesitamos este texto
+        if (relatedProjects.length > 0 && isMobile) {
           text += '\n\n' + t('dialog.projects.usedIn');
         }
         
@@ -98,6 +132,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     if (isOpen) {
       setDialogStage('initial');
       setIsTyping(true);
+      setShowProjectsPopup(false);
     }
   }, [isOpen]);
   
@@ -280,6 +315,12 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     }
   };
   
+  // Toggle para mostrar/ocultar el popup de proyectos
+  const toggleProjectsPopup = () => {
+    playSelectSound();
+    setShowProjectsPopup(prev => !prev);
+  };
+  
   // Renderizar proyectos relacionados
   const renderRelatedProjects = () => {
     if (relatedProjects.length === 0) {
@@ -389,6 +430,21 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     ));
   };
   
+  // Botón para mostrar proyectos en móvil (solo visible en whyCaptured y si hay proyectos)
+  const renderProjectsButton = () => {
+    if (!relatedProjects.length || dialogStage !== 'whyCaptured') return null;
+    
+    return (
+      <button
+        onClick={toggleProjectsPopup}
+        className="mt-4 text-center w-full px-3 py-2 bg-purple-100 dark:bg-purple-900/50 hover:bg-purple-200 dark:hover:bg-purple-800 rounded-md text-purple-700 dark:text-purple-300 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+      >
+        <FaListAlt size={14} />
+        {t('dialog.projects.viewRelated')}
+      </button>
+    );
+  };
+  
   return (
     <AnimatePresence>
       {isOpen && (
@@ -400,85 +456,131 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
           onClick={handleBackdropClick}
         >
           <motion.div
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-[90%] max-w-md mx-auto overflow-hidden"
+            className={`bg-white dark:bg-gray-800 rounded-lg shadow-2xl ${isMobile ? 'w-[90%] max-w-md' : 'w-[90%] max-w-5xl flex'} mx-auto overflow-hidden`}
             initial={{ scale: 0.9, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 20, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           >
-            {/* Header con nombre y botón de cerrar */}
-            <div className="bg-indigo-600 dark:bg-indigo-800 text-white p-4 flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <motion.div
-                  className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 p-1"
-                  animate={{
-                    scale: isTyping ? [1, 1.05, 1] : 1,
-                  }}
-                  transition={{
-                    repeat: isTyping ? Infinity : 0,
-                    duration: 0.5,
-                    ease: "easeInOut"
-                  }}
+            {/* Contenido principal del diálogo */}
+            <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
+              {/* Header con nombre y botón de cerrar */}
+              <div className="bg-indigo-600 dark:bg-indigo-800 text-white p-4 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 p-1"
+                    animate={{
+                      scale: isTyping ? [1, 1.05, 1] : 1,
+                    }}
+                    transition={{
+                      repeat: isTyping ? Infinity : 0,
+                      duration: 0.5,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Icon 
+                      className="w-6 h-6"
+                      style={{ color: iconColor }}
+                    />
+                  </motion.div>
+                  <h3 className="font-medium text-lg">{technology}</h3>
+                </div>
+                <button 
+                  onClick={onClose}
+                  className="rounded-full p-1 hover:bg-white/20 transition-colors"
+                  aria-label="Cerrar"
                 >
-                  <Icon 
-                    className="w-6 h-6"
-                    style={{ color: iconColor }}
-                  />
-                </motion.div>
-                <h3 className="font-medium text-lg">{technology}</h3>
+                  <IoClose size={24} />
+                </button>
               </div>
-              <button 
-                onClick={onClose}
-                className="rounded-full p-1 hover:bg-white/20 transition-colors"
-                aria-label="Cerrar"
-              >
-                <IoClose size={24} />
-              </button>
+              
+              {/* Contenido del diálogo */}
+              <div className="p-6">
+                <div 
+                  className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 relative cursor-pointer"
+                  onClick={completeText}
+                >
+                  <p 
+                    ref={textRef}
+                    className={`text-sm text-gray-800 dark:text-gray-200 min-h-[80px] ${isTyping ? 'typing' : ''}`}
+                  >
+                    {formatDisplayedText()}
+                  </p>
+                  
+                  {/* Botón para ver proyectos relacionados en móvil */}
+                  {isMobile && !isTyping && renderProjectsButton()}
+                  
+                  {/* Opciones o indicador para continuar */}
+                  {!isTyping && dialogStage === 'options' ? (
+                    renderOptions()
+                  ) : !isTyping && dialogStage !== 'whyCaptured' && (
+                    <motion.div
+                      className="absolute bottom-2 right-2"
+                      animate={{ y: [0, 3, 0] }}
+                      transition={{ repeat: Infinity, duration: 1 }}
+                    >
+                      <div className="w-0 h-0 border-l-[8px] border-l-transparent border-t-[12px] border-t-indigo-500 border-r-[8px] border-r-transparent" />
+                    </motion.div>
+                  )}
+                  
+                  {/* Botón de volver al inicio (visible después de cada diálogo excepto en options) */}
+                  {!isTyping && dialogStage !== 'options' && dialogStage !== 'initial' && dialogStage !== 'didntAsk' && (
+                    <button 
+                      onClick={() => handleOptionClick('options')}
+                      className="mt-4 text-center w-full px-3 py-2 bg-indigo-100 dark:bg-indigo-900/50 hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
+                    >
+                      {t('dialog.backToOptions')}
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
             
-            {/* Contenido del diálogo - ahora a ancho completo */}
-            <div className="p-6">
-              <div 
-                className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 relative cursor-pointer"
-                onClick={completeText}
-              >
-                <p 
-                  ref={textRef}
-                  className={`text-sm text-gray-800 dark:text-gray-200 min-h-[80px] ${isTyping ? 'typing' : ''}`}
-                >
-                  {formatDisplayedText()}
-                </p>
-                
-                {/* Proyectos relacionados (solo se muestran en whyCaptured y después de terminar de escribir) */}
-                {!isTyping && dialogStage === 'whyCaptured' && relatedProjects.length > 0 && (
-                  renderRelatedProjects()
-                )}
-                
-                {/* Botón de volver al inicio (visible después de cada diálogo excepto en options) */}
-                {!isTyping && dialogStage !== 'options' && dialogStage !== 'initial' && dialogStage !== 'didntAsk' && (
-                  <button 
-                    onClick={() => handleOptionClick('options')}
-                    className="mt-4 text-center w-full px-3 py-2 bg-indigo-100 dark:bg-indigo-900/50 hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-md text-indigo-700 dark:text-indigo-300 transition-colors text-sm font-medium"
-                  >
-                    {t('dialog.backToOptions')}
-                  </button>
-                )}
-                
-                {/* Opciones o indicador para continuar */}
-                {!isTyping && dialogStage === 'options' ? (
-                  renderOptions()
-                ) : !isTyping && dialogStage !== 'whyCaptured' && (
-                  <motion.div
-                    className="absolute bottom-2 right-2"
-                    animate={{ y: [0, 3, 0] }}
-                    transition={{ repeat: Infinity, duration: 1 }}
-                  >
-                    <div className="w-0 h-0 border-l-[8px] border-l-transparent border-t-[12px] border-t-indigo-500 border-r-[8px] border-r-transparent" />
-                  </motion.div>
-                )}
+            {/* Panel lateral de proyectos (solo en desktop) */}
+            {!isMobile && dialogStage === 'whyCaptured' && relatedProjects.length > 0 && (
+              <div className="w-96 border-l border-gray-200 dark:border-gray-700 p-6 overflow-y-auto max-h-[80vh]">
+                {renderRelatedProjects()}
               </div>
-            </div>
+            )}
           </motion.div>
+          
+          {/* Popup de proyectos para móvil */}
+          <AnimatePresence>
+            {showProjectsPopup && isMobile && (
+              <motion.div
+                className="fixed inset-0 z-60 flex items-center justify-center bg-black/60 p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <motion.div
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md mx-auto overflow-hidden max-h-[80vh]"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                >
+                  <div className="bg-indigo-600 dark:bg-indigo-800 text-white p-4 flex justify-between items-center">
+                    <h3 className="font-medium">
+                      {t('dialog.projects.relatedProjects')}
+                    </h3>
+                    <button 
+                      onClick={toggleProjectsPopup}
+                      className="rounded-full p-1 hover:bg-white/20 transition-colors"
+                      aria-label="Cerrar"
+                    >
+                      <IoClose size={20} />
+                    </button>
+                  </div>
+                  
+                  <div className="p-4 overflow-y-auto">
+                    {renderRelatedProjects()}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>

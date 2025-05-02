@@ -33,7 +33,6 @@
     "demo": "Demostración",
     "about": "Acerca del proyecto",
     "backToProjects": "Volver a proyectos",
-    "featuredExplanation": "Estos son mis proyectos destacados",
     "allProjects": "Todos los Proyectos",
     "searchPlaceholder": "Buscar proyectos por nombre, descripción o tecnología...",
     "projectsFound": "proyecto(s) encontrado(s)",
@@ -140,7 +139,9 @@
     "projects": {
       "available": "He participado en {{count}} proyecto(s) usando esta tecnología. ¡Échales un vistazo!",
       "notAvailable": "Aún no hay proyectos públicos que utilicen esta tecnología, pero esto cambiará pronto.",
-      "usedIn": "Proyectos en los que me utilizó:"
+      "usedIn": "Proyectos en los que me utilizó:",
+      "viewAll": "Ver todos los {{count}} proyectos",
+      "projectsUsing": "Proyectos que utilizan {{technology}}"
     },
     "backToOptions": "Volver a opciones"
   },
