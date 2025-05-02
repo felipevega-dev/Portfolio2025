@@ -325,7 +325,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
   const renderRelatedProjects = () => {
     if (relatedProjects.length === 0) {
       return (
-        <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg text-center text-sm">
+        <div className="mt-3 p-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-center text-sm">
           <p className="text-gray-600 dark:text-gray-300">
             {t('dialog.projects.notAvailable')}
           </p>
@@ -334,11 +334,11 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
     }
 
     return (
-      <div className="mt-4">
-        <p className="mb-3 text-indigo-600 dark:text-indigo-400 font-medium">
+      <div className="mt-2">
+        <p className="mb-2 text-indigo-600 dark:text-indigo-400 font-medium text-sm">
           {t('dialog.projects.available', { count: relatedProjects.length })}
         </p>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           {relatedProjects.map(project => (
             <motion.a 
               key={project.id}
@@ -348,7 +348,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
               whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center">
-                <div className="w-16 h-16 overflow-hidden flex-shrink-0">
+                <div className="w-14 h-14 overflow-hidden flex-shrink-0">
                   <img 
                     src={project.imageUrl} 
                     alt={project.title}
@@ -356,7 +356,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                   />
                 </div>
                 <div className="p-2 flex-1">
-                  <h4 className="font-medium text-gray-800 dark:text-gray-200 text-sm">{t(`projectDetails.${project.id}.title`, { defaultValue: project.title })}</h4>
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200 text-xs">{t(`projectDetails.${project.id}.title`, { defaultValue: project.title })}</h4>
                   <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-1">{t(`projectDetails.${project.id}.description`, { defaultValue: project.description })}</p>
                   
                   <div className="flex justify-end gap-2 mt-1">
@@ -369,7 +369,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                         title={t('projects.viewCode')}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <FaGithub size={14} />
+                        <FaGithub size={12} />
                       </a>
                     )}
                     {project.demoUrl && (
@@ -381,7 +381,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
                         title={t('projects.viewDemo')}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <FaExternalLinkAlt size={12} />
+                        <FaExternalLinkAlt size={10} />
                       </a>
                     )}
                   </div>
@@ -456,14 +456,24 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
           onClick={handleBackdropClick}
         >
           <motion.div
-            className={`bg-white dark:bg-gray-800 rounded-lg shadow-2xl ${isMobile ? 'w-[90%] max-w-md' : 'w-[90%] max-w-5xl flex'} mx-auto overflow-hidden`}
+            className={`bg-white dark:bg-gray-800 rounded-lg shadow-2xl ${
+              isMobile 
+                ? 'w-[90%] max-w-md' 
+                : dialogStage === 'whyCaptured' && relatedProjects.length > 0
+                  ? 'w-[90%] max-w-3xl flex' 
+                  : 'w-[90%] max-w-xl'
+            } mx-auto overflow-hidden`}
             initial={{ scale: 0.9, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 20, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           >
             {/* Contenido principal del diálogo */}
-            <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
+            <div className={`${
+              isMobile || !(dialogStage === 'whyCaptured' && relatedProjects.length > 0) 
+                ? 'w-full' 
+                : 'flex-1 max-w-xl'
+            }`}>
               {/* Header con nombre y botón de cerrar */}
               <div className="bg-indigo-600 dark:bg-indigo-800 text-white p-4 flex justify-between items-center">
                 <div className="flex items-center gap-3">
@@ -538,7 +548,7 @@ const RPGDialog: React.FC<RPGDialogProps> = ({
             
             {/* Panel lateral de proyectos (solo en desktop) */}
             {!isMobile && dialogStage === 'whyCaptured' && relatedProjects.length > 0 && (
-              <div className="w-96 border-l border-gray-200 dark:border-gray-700 p-6 overflow-y-auto max-h-[80vh]">
+              <div className="w-80 border-l border-gray-200 dark:border-gray-700 p-4 overflow-y-auto max-h-[80vh]">
                 {renderRelatedProjects()}
               </div>
             )}
