@@ -28,6 +28,7 @@ const Contact = () => {
   const [lastSubmissionTime, setLastSubmissionTime] = useState(0)
   const [cooldownActive, setCooldownActive] = useState(false)
 
+  lastSubmissionTime
   // Cargar el contador de envíos al iniciar
   useEffect(() => {
     const storedCount = localStorage.getItem('submissionCount');
