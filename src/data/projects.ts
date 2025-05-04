@@ -54,7 +54,6 @@ const projects: Project[] = [
     imageUrl: "/images/projects/harrysboutique.png",
     demoUrl: "https://frontend-ecommerce-tan-psi.vercel.app/",
     codeUrl: "https://github.com/felipevega-dev/HBEcommerceFullStack",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     tags: ["Vite", "JavaScript", "Tailwind", "React", "MercadoPago", "NodeJS", "MongoDB"],
     fullDescription: "Sistema frontend de comercio electronico funcional, con estilos personalizados y elegantes, animaciones suaves, filtros y conexión a un backend dedicado.",
     features: [
@@ -201,32 +200,32 @@ const projects: Project[] = [
       "/images/projects/portfolio2024/movil.png",
     ]
   },
-  {
-    id: "featuring",
-    title: "Featuring - App para músicos",
-    description: "Aplicación móvil para conectar músicos y facilitar colaboraciones artísticas. Incluye publicaciones, videos cortos, sistema de match, perfiles y valoraciones.",
-    imageUrl: "/images/projects/featuring.png",
-    codeUrl: "https://github.com/felipevega-dev/Featuring",
-    tags: ["React", "React Native", "Expo", "TypeScript", "Supabase", "PostgreSQL", "NativeWind"],
-    fullDescription: "Featuring es una aplicación móvil desarrollada con React Native y Expo, diseñada específicamente para músicos que buscan colaborar. La plataforma permite a los artistas conectarse, compartir contenido musical, realizar colaboraciones y recibir valoraciones de la comunidad. Incluye un completo panel de administración para gestionar el contenido de la plataforma.",
-    features: [
-      "Sistema de perfiles para artistas con valoraciones y estadísticas",
-      "Feed de publicaciones para compartir música y videos cortos",
-      "Sistema de match basado en preferencias musicales y filtros",
-      "Colaboraciones entre artistas con sistema de valoración mutua",
-      "Reproductor de audio y video integrado",
-      "Notificaciones push para nuevas interacciones",
-      "Panel de administración completo para gestionar contenido",
-      "Integración con APIs de divisas para pagos internacionales",
-      "Nivel premium con características adicionales",
-      "Sistema de reportes y moderación de contenido"
-    ],
-    screenshots: [
-      "/images/projects/featuring/screenshot1.png",
-      "/images/projects/featuring/screenshot2.png"
-    ],
-    videoUrl: "https://youtube.com/embed/example1"
-  },
+  // {
+  //   id: "featuring",
+  //   title: "Featuring - App para músicos",
+  //   description: "Aplicación móvil para conectar músicos y facilitar colaboraciones artísticas. Incluye publicaciones, videos cortos, sistema de match, perfiles y valoraciones.",
+  //   imageUrl: "/images/projects/featuring.png",
+  //   codeUrl: "https://github.com/felipevega-dev/Featuring",
+  //   tags: ["React", "React Native", "Expo", "TypeScript", "Supabase", "PostgreSQL", "NativeWind"],
+  //   fullDescription: "Featuring es una aplicación móvil desarrollada con React Native y Expo, diseñada específicamente para músicos que buscan colaborar. La plataforma permite a los artistas conectarse, compartir contenido musical, realizar colaboraciones y recibir valoraciones de la comunidad. Incluye un completo panel de administración para gestionar el contenido de la plataforma.",
+  //   features: [
+  //     "Sistema de perfiles para artistas con valoraciones y estadísticas",
+  //     "Feed de publicaciones para compartir música y videos cortos",
+  //     "Sistema de match basado en preferencias musicales y filtros",
+  //     "Colaboraciones entre artistas con sistema de valoración mutua",
+  //     "Reproductor de audio y video integrado",
+  //     "Notificaciones push para nuevas interacciones",
+  //     "Panel de administración completo para gestionar contenido",
+  //     "Integración con APIs de divisas para pagos internacionales",
+  //     "Nivel premium con características adicionales",
+  //     "Sistema de reportes y moderación de contenido"
+  //   ],
+  //   screenshots: [
+  //     "/images/projects/featuring/screenshot1.png",
+  //     "/images/projects/featuring/screenshot2.png"
+  //   ],
+  //   videoUrl: "https://youtube.com/embed/example1"
+  // },
 ];
 
 // Función para obtener proyectos por tecnología

@@ -13,7 +13,7 @@ export const SoundProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const initSound = useCallback(() => {
     if (!selectorSoundRef.current) {
       selectorSoundRef.current = new Audio('/sounds/selector1.mp3');
-      selectorSoundRef.current.volume = 0.09;
+      selectorSoundRef.current.volume = 0.1;
     }
   }, []);
 
