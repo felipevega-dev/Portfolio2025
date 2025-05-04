@@ -24,11 +24,14 @@ interface ProjectCardProps {
 }
 
 // Badge component for featured projects
-const FeaturedBadge = () => (
-  <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
-    Destacado
-  </div>
-)
+const FeaturedBadge = () => {
+  const { t } = useTranslation()
+  return (
+    <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
+      {t('projects.featured')}
+    </div>
+  )
+}
 
 const ProjectCard = ({ project, index, featured = false }: ProjectCardProps) => {
   const { t } = useTranslation()
@@ -330,10 +333,10 @@ const Projects = () => {
   
   // Categorías para las pestañas con iconos
   const categories = [
-    { id: 'all', label: 'All', icon: <FaLaptopCode className="w-4 h-4" /> },
-    { id: 'react', label: 'React', icon: <FaReact className="w-4 h-4" /> },
-    { id: 'wordpress', label: 'WordPress', icon: <FaWordpress className="w-4 h-4" /> },
-    { id: 'mobile', label: 'Mobile', icon: <FaMobileAlt className="w-4 h-4" /> },
+    { id: 'all', label: t('projects.categories.all'), icon: <FaLaptopCode className="w-4 h-4" /> },
+    { id: 'react', label: t('projects.categories.react'), icon: <FaReact className="w-4 h-4" /> },
+    { id: 'wordpress', label: t('projects.categories.wordpress'), icon: <FaWordpress className="w-4 h-4" /> },
+    { id: 'mobile', label: t('projects.categories.mobile'), icon: <FaMobileAlt className="w-4 h-4" /> },
   ]
 
   // Controladores de navegación carrusel
@@ -357,7 +360,7 @@ const Projects = () => {
     <section id="projects" className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-neutral-900/30 dark:to-gray-900/50">
       <div className="container mx-auto px-4">
         <SectionHeading
-          title="Proyectos"
+          title={t('projects.title')}
         />
 
         {/* Barra de búsqueda con estilo RPG */}
@@ -373,7 +376,7 @@ const Projects = () => {
               <FaSearch className="text-gray-400 dark:text-gray-500" />
               <input
                 type="text"
-                placeholder="Buscar proyectos por nombre, descripción o tecnología..."
+                placeholder={t('projects.searchPlaceholder')}
                 className="w-full py-3 px-4 outline-none bg-transparent text-gray-700 dark:text-gray-300"
                 value={searchTerm}
                 onChange={handleSearch}
@@ -429,7 +432,7 @@ const Projects = () => {
                     <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/30"></div>
                     <FaStar className="w-4 h-4 text-white" />
                   </span>
-                  Proyectos Destacados
+                  {t('projects.featuredProjects')}
                 </h3>
                 
               </div>
@@ -464,7 +467,7 @@ const Projects = () => {
                 <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-indigo-400/50 dark:border-indigo-400/50 translate-x-0.5 -translate-y-0.5 rounded-tr-full"></div>
                 <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-indigo-400/50 dark:border-indigo-400/50 -translate-x-0.5 translate-y-0.5 rounded-bl-full"></div>
                 <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-indigo-400/50 dark:border-indigo-400/50 translate-x-0.5 translate-y-0.5 rounded-br-full"></div>
-                Más Proyectos
+                {t('projects.moreProjects')}
               </div>
             </div>
           </>
@@ -486,7 +489,7 @@ const Projects = () => {
           {/* Título y botones de navegación */}
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
-              <span>Página:</span>
+              <span>{t('projects.page')}:</span>
               {regularProjects.length > 0 && (
                 <span className="ml-3 text-sm text-gray-500 dark:text-gray-400">
                   {currentPage + 1}/{totalPages}
@@ -538,14 +541,14 @@ const Projects = () => {
               animate={{ opacity: 1 }}
             >
               <p className="text-gray-500 dark:text-gray-400 mb-6">
-                No se encontraron proyectos que coincidan con tu búsqueda.
+                {t('projects.noResults')}
               </p>
               {searchTerm && (
                 <Button 
                   variant="outline" 
                   onClick={() => setSearchTerm('')}
                 >
-                  Limpiar búsqueda
+                  {t('projects.clearSearch')}
                 </Button>
               )}
             </motion.div>

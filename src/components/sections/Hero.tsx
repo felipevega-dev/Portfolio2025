@@ -161,7 +161,7 @@ const Hero = () => {
               variants={itemVariants}
               className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 leading-tight"
             >
-              Hola, Soy{' '}
+              {t('hero.greeting')}{' '}
               <div className="mt-2">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
                   Felipe

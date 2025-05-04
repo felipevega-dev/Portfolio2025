@@ -38,8 +38,25 @@
     "projectsFound": "project(s) found",
     "noProjectsFound": "No projects found matching your search.",
     "resetFilters": "Reset filters",
-    "noDescription": "No description available for this project."
+    "noDescription": "No description available for this project.",
+    "featuredProjects": "Featured Projects",
+    "moreProjects": "More Projects",
+    "page": "Page",
+    "categories": {
+      "all": "All",
+      "react": "React",
+      "wordpress": "WordPress",
+      "mobile": "Mobile"
+    },
+    "featured": "Featured"
   },
+  "projects.page": "Page",
+  "projects.moreProjects": "More Projects",
+  "projects.featuredProjects": "Featured Projects",
+  "projects.categories.all": "All",
+  "projects.categories.react": "React",
+  "projects.categories.wordpress": "WordPress",
+  "projects.categories.mobile": "Mobile",
   "skills": {
     "title": "Skills & Services",
     "description": "I offer complete development solutions, from frontend to backend, using the most modern and efficient technologies on the market.",
