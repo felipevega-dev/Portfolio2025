@@ -37,7 +37,7 @@ const smoothScrollTo = (elementId: string) => {
 }
 
 const Hero = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [windowHeight, setWindowHeight] = useState(0)
 
   // Track window height for responsive sizing
@@ -50,6 +50,11 @@ const Hero = () => {
     window.addEventListener('resize', updateHeight)
     return () => window.removeEventListener('resize', updateHeight)
   }, [])
+
+  // Determine CV file based on current language
+  const getCvFileName = () => {
+    return i18n.language === 'en' ? '/cv/CV_ENG.pdf' : '/cv/CV_ESP.pdf'
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -186,7 +191,7 @@ const Hero = () => {
               className="flex flex-wrap justify-center lg:justify-start gap-4"
             >
               <motion.a
-                href="/CV-FelipeVega.pdf"
+                href={getCvFileName()}
                 className="group relative px-8 py-3 text-white bg-indigo-600 rounded-lg overflow-hidden w-full sm:w-auto text-center"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
